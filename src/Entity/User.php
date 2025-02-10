@@ -32,10 +32,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?string $password = null;
+    
+    /**
+     * @var Collection<int, Reclamation>
+     */
+    #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $reclamations;
 
     public function __construct()
     {
         $this->roles = [EnumRole::USER->value]; // Stocke directement la valeur string
+        $this->reclamations = new ArrayCollection();
     }
     
     public function getId(): ?int
@@ -90,4 +97,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // Si tu stockes des données sensibles temporaires, efface-les ici
     }
+    
+    /**
+     * @return Collection<int, Reclamation>
+     */
+    public function getReclamations(): Collection
+    {
+        return $this->reclamations;
+    }
+
+    public function addReclamation(Reclamation $reclamation): static
+    {
+        if (!$this->reclamations->contains($reclamation)) {
+            $this->reclamations->add($reclamation);
+            $reclamation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReclamation(Reclamation $reclamation): static
+    {
+        if ($this->reclamations->removeElement($reclamation)) {
+            if ($reclamation->getUser() === $this) {
+                $reclamation->setUser(null);
+            }
+        }
+        
+        return $this;
+    }
+
+
 }
