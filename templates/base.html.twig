@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        {% block stylesheets %}
+        <link rel="stylesheet" href="{{asset('Back/vendors/mdi/css/materialdesignicons.min.css')}}">
+        <link rel="stylesheet" href="{{asset('Back/vendors/ti-icons/css/themify-icons.css')}}">
+        <link rel="stylesheet" href="{{asset('Back/vendors/css/vendor.bundle.base.css')}}">
+        <link rel="stylesheet" href="{{asset('Back/vendors/font-awesome/css/font-awesome.min.css')}}">
+        <!-- endinject -->
+        <!-- Plugin css for this page -->
+        <link rel="stylesheet" href="{{asset('Back/vendors/jquery-bar-rating/css-stars.css')}}">
+        <link rel="stylesheet" href="{{asset('Back/vendors/font-awesome/css/font-awesome.min.css')}}">
+        <link rel="stylesheet" href="{{asset('Back/css/style.css')}}">
+        <!-- End layout styles -->
+        <link rel="shortcut icon" href="{{asset('Back/images/favicon.png')}}">
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}
+
+        {% block javascripts %}
+            
+        <script src="{{asset('Back/vendors/js/vendor.bundle.base.js')}}"></script>
+        <!-- endinject -->
+        <!-- Plugin js for this page -->
+        <script src="{{asset('Back/vendors/jquery-bar-rating/jquery.barrating.min.js')}}"></script>
+        <script src="{{asset('Back/vendors/chart.js/chart.umd.js')}}"></script>
+        <script src="{{asset('Back/vendors/flot/jquery.flot.js')}}"></script>
+        <script src="{{asset('Back/vendors/flot/jquery.flot.resize.js')}}"></script>
+        <script src="{{asset('Back/vendors/flot/jquery.flot.categories.js')}}"></script>
+        <script src="{{asset('Back/vendors/flot/jquery.flot.fillbetween.js')}}"></script>
+        <script src="{{asset('Back/vendors/flot/jquery.flot.stack.js')}}"></script>
+        <script src="{{asset('Back/js/jquery.cookie.js')}}" type="text/javascript"></script>
+        <!-- End plugin js for this page -->
+        <!-- inject:js -->
+        <script src="{{asset('Back/js/off-canvas.js')}}"></script>
+        <script src="{{asset('Back/js/misc.js')}}"></script>
+        <script src="{{asset('Back/js/settings.js')}}"></script>
+        <script src="{{asset('Back/js/todolist.js')}}"></script>
+        <script src="{{asset('Back/js/hoverable-collapse.js')}}"></script>
+        <!-- endinject -->
+        <!-- Custom js for this page -->
+        <script src="{{asset('Back/js/proBanner.js')}}"></script>
+        <script src="{{asset('Back/js/dashboard.js')}}"></script>
+        {% endblock %}
+        {% endblock %}
+    </body>
+</html>
