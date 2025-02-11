@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\Workshop;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -14,7 +16,11 @@ class WorkshopType extends AbstractType
         $builder
             ->add('titre')
             ->add('description')
-            ->add('date', null)
+            ->add('date', DateTimeType::class, [
+                'widget' => 'single_text',
+                'html5' => true,
+                'attr' => ['class' => 'datetime-picker'],
+            ])                    
             ->add('prix')
             ->add('theme')
             ->add('duration', null)

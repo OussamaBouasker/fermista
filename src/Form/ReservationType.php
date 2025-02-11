@@ -6,6 +6,7 @@ use App\Entity\Reservation;
 use App\Entity\Workshop;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -29,11 +30,15 @@ class ReservationType extends AbstractType
             ])
             ->add('prix')
             ->add('commentaire')
-            ->add('confirmation')
             ->add('workshop', EntityType::class, [
                 'class' => Workshop::class,
                 'choice_label' => 'titre',
             ])
+            ->add('confirmation', CheckboxType::class, [
+                'required' => true, // Allow the checkbox to be unchecked
+                'label' => 'Accepter le reglement des workshops',
+            ])
+
         ;
     }
 
