@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Enum\EnumRole;
+
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,7 +26,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
-    #[ORM\Column(type: Types::JSON)]
+    /**
+     * @var list<string> The user roles
+     */
+    #[ORM\Column(type: 'json')]
     private array $roles = [];
 
 
@@ -39,12 +42,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $reclamations;
 
-    public function __construct()
-    {
-        $this->roles = [EnumRole::USER->value]; // Stocke directement la valeur string
-        $this->reclamations = new ArrayCollection();
-    }
-    
+  
+
     public function getId(): ?int
     {
         return $this->id;
@@ -66,21 +65,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
+  
     /**
-     * @return string[] Liste des rôles sous forme de chaînes de caractères
+     * @see UserInterface
+     *
+     * @return list<string>
      */
     public function getRoles(): array
     {
-        return $this->roles;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
-    
-    public function setRoles(array $roles): static
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): self
     {
-        // Assure-toi que seules les valeurs valides de EnumRole sont stockées
-        $this->roles = array_map(fn(string $role) => EnumRole::from($role)->value, $roles);
+        $this->roles = $roles;
+
         return $this;
     }
-    
+
 
     public function getPassword(): ?string
     {
@@ -119,11 +128,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeReclamation(Reclamation $reclamation): static
     {
         if ($this->reclamations->removeElement($reclamation)) {
+            // set the owning side to null (unless already changed)
             if ($reclamation->getUser() === $this) {
                 $reclamation->setUser(null);
             }
         }
-        
+
         return $this;
     }
 

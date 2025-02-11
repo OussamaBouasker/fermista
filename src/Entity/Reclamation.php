@@ -20,9 +20,9 @@ class Reclamation
     #[ORM\Column(type: "text")]
     private string $description;
 
-    #[ORM\Column(type: "string", enumType: StatutReclamation::class, length: 20)]
-    private StatutReclamation $statut = StatutReclamation::EN_ATTENTE;
-
+    #[ORM\Column(nullable: true)]
+    private ?string $status = self::STATUS_PENDING;
+   
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateSoumission = null;
 
@@ -59,16 +59,7 @@ class Reclamation
         return $this;
     }
 
-    public function getStatut(): StatutReclamation
-    {
-        return $this->statut;
-    }
-    
-    public function setStatut(StatutReclamation $statut): self
-    {
-        $this->statut = $statut;
-        return $this;
-    }
+   
 
     public function getDateSoumission(): ?\DateTimeInterface
     {
@@ -90,6 +81,30 @@ class Reclamation
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_CONFIRMED = 'confirmed';
+    public const STATUS_CANCELED = 'canceled';
+
+    public static function getAvailableStatuses(): array
+    {
+        return [
+            self::STATUS_PENDING,
+            self::STATUS_CONFIRMED,
+            self::STATUS_CANCELED,
+        ];
+    }
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
