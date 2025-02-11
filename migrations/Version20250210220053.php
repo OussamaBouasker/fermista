@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250210151831 extends AbstractMigration
+final class Version20250210220053 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,12 +20,12 @@ final class Version20250210151831 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE consultation (id INT AUTO_INCREMENT NOT NULL, date DATE DEFAULT NULL, heure TIME DEFAULT NULL, duree VARCHAR(255) DEFAULT NULL COMMENT \'(DC2Type:dateinterval)\', lieu VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE reservation (id INT AUTO_INCREMENT NOT NULL, reservation_date DATETIME DEFAULT NULL, status JSON DEFAULT NULL COMMENT \'(DC2Type:json)\', prix VARCHAR(255) DEFAULT NULL, commentaire VARCHAR(255) DEFAULT NULL, confirmation TINYINT(1) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('DROP TABLE consultation');
+        $this->addSql('DROP TABLE reservation');
     }
 }

@@ -1,0 +1,14 @@
+{{ form_start(form, {'attr': {'class': 'form-group'}}) }}
+
+{% for field in form %}
+    <div class="mb-3" style="gap: 20px; width:600px">
+        {{ form_label(field, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(field, {'attr': {'class': 'form-control', 'placeholder': field.vars.label}}) }}
+
+        {{ form_errors(field) }}
+    </div>
+{% endfor %}
+
+<button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+
+{{ form_end(form) }}
