@@ -65,8 +65,8 @@
                   </a>
                   <div class="collapse" id="ui-basic">
                     <ul class="nav flex-column sub-menu">
-                      <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Users</a></li>
-                      <li class="nav-item"> <a class="nav-link" href="pages/ui-features/dropdowns.html">Reclamations</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/user">Users</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/reclamation">Reclamations</a></li>
                     </ul>
                   </div>
                 </li>
@@ -78,9 +78,15 @@
                   </a>
                   <div class="collapse" id="icons">
                     <ul class="nav flex-column sub-menu">
-                      <li class="nav-item"> <a class="nav-link" href="pages/icons/font-awesome.html">Consultation</a></li>
-                      <li class="nav-item"> <a class="nav-link" href="pages/icons/font-awesome.html">Rendez Vous</a></li>
-                      <li class="nav-item"> <a class="nav-link" href="pages/icons/font-awesome.html">Rapport Medical</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/consultation">Consultation</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/rapport/medical">Rapport Medical</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/rendez/vous">Rendez Vous</a>
+                        </li>
 
                     </ul>
                   </div>
@@ -93,14 +99,11 @@
                   </a>
                   <div class="collapse" id="forms">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/workshop">Workshop</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/reservation">Reservation</a>
-                        </li>
+                      <li class="nav-item"> <a class="nav-link" href="/workshop">Workshop</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/reservation">Reservation</a></li>
+
                     </ul>
-                </div>
+                  </div>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
@@ -110,9 +113,9 @@
                   </a>
                   <div class="collapse" id="charts">
                     <ul class="nav flex-column sub-menu">
-                      <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Produits</a></li>
-                      <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Commandes</a></li>
-                      <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Livraisons</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/produit">Produits</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/commande">Commandes</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/livraison">Livraisons</a></li>
 
                     </ul>
                   </div>
@@ -125,8 +128,8 @@
                   </a>
                   <div class="collapse" id="tables">
                     <ul class="nav flex-column sub-menu">
-                      <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Vache</a></li>
-                      <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Colier</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/vache">Vache</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/collier">Colier</a></li>
 
                     </ul>
                   </div>
@@ -293,11 +296,12 @@
               <!-- partial -->
               <div class="main-panel">
                 <div class="content-wrapper pb-0">
-                    <h1>Creation new Workshop</h1>
-
-                    {{ include('Back/workshop/_form.html.twig') }}
-                
-                    <a href="{{ path('app_workshop_index') }}">back to list</a>
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; width:100% ">
+                        <h1>Creation Workshop</h1>
+                        {{ include('Back/workshop/_form.html.twig') }}
+                        <a href="{{ path('app_workshop_index') }}" style="text-decoration: none; color: black; padding-left:500px">back to list</a>
+                    </div>
+                    
                 </div>
               </div>
             </div>

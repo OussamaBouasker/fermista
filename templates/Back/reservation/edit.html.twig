@@ -1,5 +1,3 @@
-
-
 {% extends 'base.html.twig' %}
 {% block content %}
 <!DOCTYPE html>
@@ -15,7 +13,6 @@
     </head>
     <body>
         {% block body %}
-        
         <div class="container-scroller">
             <!-- partial:partials/_sidebar.html -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
@@ -67,8 +64,8 @@
                   </a>
                   <div class="collapse" id="ui-basic">
                     <ul class="nav flex-column sub-menu">
-                      <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Users</a></li>
-                      <li class="nav-item"> <a class="nav-link" href="pages/ui-features/dropdowns.html">Reclamations</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/user">Users</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/reclamation">Reclamations</a></li>
                     </ul>
                   </div>
                 </li>
@@ -80,9 +77,15 @@
                   </a>
                   <div class="collapse" id="icons">
                     <ul class="nav flex-column sub-menu">
-                      <li class="nav-item"> <a class="nav-link" href="pages/icons/font-awesome.html">Consultation</a></li>
-                      <li class="nav-item"> <a class="nav-link" href="pages/icons/font-awesome.html">Rendez Vous</a></li>
-                      <li class="nav-item"> <a class="nav-link" href="pages/icons/font-awesome.html">Rapport Medical</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/consultation">Consultation</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/rapport/medical">Rapport Medical</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/rendez/vous">Rendez Vous</a>
+                        </li>
 
                     </ul>
                   </div>
@@ -95,14 +98,11 @@
                   </a>
                   <div class="collapse" id="forms">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/workshop">Workshop</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/reservation">Reservation</a>
-                        </li>
+                      <li class="nav-item"> <a class="nav-link" href="/workshop">Workshop</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/reservation">Reservation</a></li>
+
                     </ul>
-                </div>
+                  </div>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
@@ -112,9 +112,9 @@
                   </a>
                   <div class="collapse" id="charts">
                     <ul class="nav flex-column sub-menu">
-                      <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Produits</a></li>
-                      <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Commandes</a></li>
-                      <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Livraisons</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/produit">Produits</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/commande">Commandes</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/livraison">Livraisons</a></li>
 
                     </ul>
                   </div>
@@ -127,8 +127,8 @@
                   </a>
                   <div class="collapse" id="tables">
                     <ul class="nav flex-column sub-menu">
-                      <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Vache</a></li>
-                      <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Colier</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/vache">Vache</a></li>
+                      <li class="nav-item"> <a class="nav-link" href="/collier">Colier</a></li>
 
                     </ul>
                   </div>
@@ -292,21 +292,19 @@
                   </button>
                 </div>
               </nav>
-              <!-- partial -->
-              <div class="main-panel">
-                <div class="content-wrapper pb-0">
-                    <h1>Edit Reservation</h1>
-
-                    {{ include('Back/reservation/_form.html.twig', {'button_label': 'Update'}) }}
-                
-                    <a href="{{ path('app_reservation_index') }}">back to list</a>
-                
-                    {{ include('Back/reservation/_delete_form.html.twig') }}
+                <!-- partial -->
+                <div class="main-panel">
+                    <div class="content-wrapper pb-0">
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; width:100% ">
+                            <h1>Modifier Réservation</h1>
+                            {{ include('Back/reservation/_form.html.twig', {'button_label': 'Modifier'}) }}
+                            <a href="{{ path('app_reservation_index') }}" style="text-decoration: none; color: black; padding-left:500px">back to list</a>
+                            <!-- {{ include('Back/reservation/_delete_form.html.twig') }} -->
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-
+        </div>
         {% block javascripts %}
         {{ parent() }}
         {% endblock %}
