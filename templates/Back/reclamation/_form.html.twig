@@ -1,15 +1,41 @@
-
 {{ form_start(form, {'attr': {'class': 'form-group'}}) }}
+{{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }}
+<!-- Champ Titre -->
+<div class="mb-3" style="gap: 20px; width:600px">
+    {{ form_label(form.titre, "Titre de la réclamation", {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le titre'}}) }}
+    {{ form_errors(form.titre) }}
+</div>
 
-{% for field in form %}
-    <div class="mb-3" style="gap: 20px; width:600px">
-        {{ form_label(field, null, {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(field, {'attr': {'class': 'form-control', 'placeholder': field.vars.label}}) }}
+<!-- Champ Description -->
+<div class="mb-3" style="gap: 20px; width:600px">
+    {{ form_label(form.description, "Description", {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Décrivez votre réclamation'}}) }}
+    {{ form_errors(form.description) }}
+</div>
 
-        {{ form_errors(field) }}
-    </div>
-{% endfor %}
+<!-- Champ Status -->
+<div class="mb-3" style="gap: 20px; width:600px">
+    {{ form_label(form.status, "Statut de la réclamation", {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.status, {'attr': {'class': 'form-select'}}) }}
+    {{ form_errors(form.status) }}
+</div>
 
-<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Save') }}</button>
+<!-- Champ Date de Soumission -->
+<div class="mb-3" style="gap: 20px; width:600px">
+    {{ form_label(form.dateSoumission, "Date de soumission", {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.dateSoumission, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.dateSoumission) }}
+</div>
+
+<!-- Champ Utilisateur -->
+<div class="mb-3" style="gap: 20px; width:600px">
+    {{ form_label(form.user, "Utilisateur concerné", {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.user, {'attr': {'class': 'form-select'}}) }}
+    {{ form_errors(form.user) }}
+</div>
+
+<!-- Bouton Soumettre -->
+<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Soumettre la réclamation') }}</button>
 
 {{ form_end(form) }}

@@ -1,14 +1,23 @@
 {{ form_start(form, {'attr': {'class': 'form-group'}}) }}
 
-{% for field in form %}
-    <div class="mb-3" style="gap: 20px; width:600px">
-        {{ form_label(field, null, {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(field, {'attr': {'class': 'form-control', 'placeholder': field.vars.label}}) }}
+<div class="mb-3" style="gap: 20px; width:600px">
+    {{ form_label(form.email, "Adresse Email", {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre email'}}) }}
+    {{ form_errors(form.email) }}
+</div>
 
-        {{ form_errors(field) }}
-    </div>
-{% endfor %}
+<div class="mb-3" style="gap: 20px; width:600px">
+    {{ form_label(form.password, "Mot de passe", {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.password, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre mot de passe'}}) }}
+    {{ form_errors(form.password) }}
+</div>
 
-<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Save') }}</button>
+<div class="mb-3" style="gap: 20px; width:600px">
+    {{ form_label(form.roles, "Sélectionnez votre rôle", {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.roles, {'attr': {'class': 'form-select'}}) }}
+    {{ form_errors(form.roles) }}
+</div>
+
+<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>
 
 {{ form_end(form) }}
