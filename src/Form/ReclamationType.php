@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType; // Import the ChoiceType
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class ReclamationType extends AbstractType
 {
@@ -26,9 +27,11 @@ class ReclamationType extends AbstractType
                 'expanded' => false,  // Set to true for radio buttons instead of a dropdown
                 'multiple' => false,  // Ensure only one option can be selected
             ])
-            ->add('dateSoumission', null, [
+            ->add('dateSoumission', DateTimeType::class, [
                 'widget' => 'single_text',
-            ])
+                'html5' => true,
+                'attr' => ['class' => 'datetime-picker'],
+            ])    
             ->add('user', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'id',
