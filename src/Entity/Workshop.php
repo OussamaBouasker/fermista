@@ -40,6 +40,12 @@ class Workshop
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'workshop',orphanRemoval:true)]
     private Collection $reservation;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $nbr_places_max_ = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $nbr_places_restantes = null;
+
     public function __construct()
     {
         $this->reservation = new ArrayCollection();
@@ -148,6 +154,30 @@ class Workshop
                 $reservation->setWorkshop(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNbrPlacesMax(): ?int
+    {
+        return $this->nbr_places_max_;
+    }
+
+    public function setNbrPlacesMax(?int $nbr_places_max_): static
+    {
+        $this->nbr_places_max_ = $nbr_places_max_;
+
+        return $this;
+    }
+
+    public function getNbrPlacesRestantes(): ?int
+    {
+        return $this->nbr_places_restantes;
+    }
+
+    public function setNbrPlacesRestantes(?int $nbr_places_restantes): static
+    {
+        $this->nbr_places_restantes = $nbr_places_restantes;
 
         return $this;
     }
