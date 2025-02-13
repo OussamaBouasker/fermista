@@ -156,27 +156,27 @@
 								</div>
 							</li>
 							<!-- <li class="nav-item">
-														                  <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-														                    <i class="mdi mdi-lock menu-icon"></i>
-														                    <span class="menu-title">User Pages</span>
-														                    <i class="menu-arrow"></i>
-														                  </a>
-														                  <div class="collapse" id="auth">
-														                    <ul class="nav flex-column sub-menu">
-														                      <li class="nav-item"> <a class="nav-link" href="pages/samples/blank-page.html"> Blank Page </a></li>
-														                      <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>
-														                      <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>
-														                      <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
-														                      <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
-														                    </ul>
-														                  </div>
-														                </li> -->
+																					                  <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+																					                    <i class="mdi mdi-lock menu-icon"></i>
+																					                    <span class="menu-title">User Pages</span>
+																					                    <i class="menu-arrow"></i>
+																					                  </a>
+																					                  <div class="collapse" id="auth">
+																					                    <ul class="nav flex-column sub-menu">
+																					                      <li class="nav-item"> <a class="nav-link" href="pages/samples/blank-page.html"> Blank Page </a></li>
+																					                      <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>
+																					                      <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>
+																					                      <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
+																					                      <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
+																					                    </ul>
+																					                  </div>
+																					                </li> -->
 							<!-- <li class="nav-item pt-3">
-														                  <a class="nav-link" href="docs/documentation.html" target="_blank">
-														                    <i class="mdi mdi-file-document-box menu-icon"></i>
-														                    <span class="menu-title">Documentation</span>
-														                  </a>
-														                </li> -->
+																					                  <a class="nav-link" href="docs/documentation.html" target="_blank">
+																					                    <i class="mdi mdi-file-document-box menu-icon"></i>
+																					                    <span class="menu-title">Documentation</span>
+																					                  </a>
+																					                </li> -->
 						</ul>
 					</nav>
 					<!-- partial -->
@@ -296,8 +296,8 @@
 										<a class="nav-link" href="#">Status</a>
 									</li>
 									<!-- <li class="nav-item nav-logout d-none d-md-block">
-																		                      <button style="background-color: #a6a37d;border-color: #a87e7e;" class="btn btn-sm btn-danger">Trailing</button>
-																		                    </li> -->
+																											                      <button style="background-color: #a6a37d;border-color: #a87e7e;" class="btn btn-sm btn-danger">Trailing</button>
+																											                    </li> -->
 									<li class="nav-item nav-profile dropdown d-none d-md-block">
 										<a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
 											<div class="nav-profile-text">English
@@ -339,7 +339,7 @@
 						<div class="main-panel">
 							<div class="content-wrapper pb-0">
 								<div style="display: flex; justify-content: space-between; align-items: center; padding-left: 50px;">
-									<h1 >Gestion User</h1>
+									<h1>Gestion User</h1>
 									<div class="col-sm-6 col-md-4 col-lg-3" style="padding: 10px; size:20px">
 										<i class="fa fa-plus-square"></i>
 										<a href="{{ path('app_user_new') }}" style="text-decoration: none; color: black;">Create new</a>
@@ -360,6 +360,7 @@
 											<tr>
 												<td>{{ user.id }}</td>
 												<td>{{ user.email }}</td>
+
 												<td>{{ user.roles ? user.roles|json_encode : '' }}</td>
 												<td>{{ user.password }}</td>
 												<td>
