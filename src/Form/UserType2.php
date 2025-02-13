@@ -11,7 +11,7 @@ use App\Enum\EnumRole;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
-class UserType extends AbstractType
+class UserType2 extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -31,10 +31,7 @@ class UserType extends AbstractType
         ])
         ->add('email', TextType::class)
         
-        ->add('password', PasswordType::class, [
-            'mapped' => true, // This prevents Symfony from trying to set it directly on the entity
-            'required' =>false,
-        ])
+        
         ->add('roles', ChoiceType::class, [
             'label' => 'Choisissez votre rôle',
             'choices' => [
