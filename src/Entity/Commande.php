@@ -33,6 +33,9 @@ class Commande
     #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'commande')]
     private Collection $prodcommande;
 
+    #[ORM\ManyToOne(inversedBy: 'livcom')]
+    private ?Livraison $livcom = null;
+
     public function __construct()
     {
         $this->prodcommande = new ArrayCollection();
@@ -112,6 +115,18 @@ class Commande
                 $prodcommande->setCommande(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLivcom(): ?Livraison
+    {
+        return $this->livcom;
+    }
+
+    public function setLivcom(?Livraison $livcom): static
+    {
+        $this->livcom = $livcom;
 
         return $this;
     }
