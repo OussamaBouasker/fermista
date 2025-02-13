@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LivraisonRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -24,6 +26,17 @@ class Livraison
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $Livreur = null;
+
+    /**
+     * @var Collection<int, Commande>
+     */
+    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'livcom')]
+    private Collection $livcom;
+
+    public function __construct()
+    {
+        $this->livcom = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -69,6 +82,36 @@ class Livraison
     public function setLivreur(?string $Livreur): static
     {
         $this->Livreur = $Livreur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commande>
+     */
+    public function getLivcom(): Collection
+    {
+        return $this->livcom;
+    }
+
+    public function addLivcom(Commande $livcom): static
+    {
+        if (!$this->livcom->contains($livcom)) {
+            $this->livcom->add($livcom);
+            $livcom->setLivcom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLivcom(Commande $livcom): static
+    {
+        if ($this->livcom->removeElement($livcom)) {
+            // set the owning side to null (unless already changed)
+            if ($livcom->getLivcom() === $this) {
+                $livcom->setLivcom(null);
+            }
+        }
 
         return $this;
     }

@@ -2,6 +2,8 @@
 
 namespace App\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Livraison;
 use App\Entity\Commande;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,6 +19,11 @@ class CommandeType extends AbstractType
             ])
             ->add('statut')
             ->add('montantTotal')
+            ->add('livcom', EntityType::class, [
+                'class' => Livraison::class,
+                'choice_label' => 'id',
+
+            ])
         ;
     }
 
