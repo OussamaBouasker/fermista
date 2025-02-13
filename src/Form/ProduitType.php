@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Form;
-
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Entity\Produit;
+use App\Entity\Commande;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,6 +18,11 @@ class ProduitType extends AbstractType
             ->add('Etat')
             ->add('Description')
             ->add('categorie')
+            ->add('commande', EntityType::class, [
+                'class' => Commande::class,
+                'choice_label' => 'id',
+
+            ])
         ;
     }
 
