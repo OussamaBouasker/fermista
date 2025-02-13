@@ -6,6 +6,8 @@ use App\Repository\WorkshopRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Validator\Constraints as Assert;
+
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: WorkshopRepository::class)]
@@ -17,6 +19,7 @@ class Workshop
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le titre est obligatoire.")]
     private ?string $titre = null;
 
     #[ORM\Column(length: 255, nullable: true)]
