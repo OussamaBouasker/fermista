@@ -63,20 +63,6 @@
 	{% endif %}
 </div>
 
-<div class="mb-3" style="gap: 20px; width:600px">
-	{{ form_label(form.password, "Mot de passe", {'label_attr': {'class': 'form-label'}}) }}
-	{{ form_widget(form.password, {
-        'attr': {
-            'class': 'form-control' ~ (form.password.vars.errors|length > 0 ? ' is-invalid' : ''), 
-            'placeholder': 'Entrez votre  mot de passe'
-        }
-    }) }}
-	{% if form.password.vars.errors|length > 0 %}
-		<div class="invalid-feedback">
-			{{ form_errors(form.password) }}
-		</div>
-	{% endif %}
-</div>
 
 <div class="mb-3" style="gap: 20px; width:600px">
 	{{ form_label(form.roles, "Sélectionnez votre rôle", {'label_attr': {'class': 'form-label'}}) }}
