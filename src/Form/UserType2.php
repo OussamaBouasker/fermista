@@ -44,7 +44,7 @@ class UserType2 extends AbstractType
             'expanded' => false, // Dropdown menu
             'multiple' => false, // Ensure single selection
             'required' => true, // Mandatory field
-            'mapped'   => false, // Prevent Symfony from directly setting it
+            'mapped'   => false , // Prevent Symfony from directly setting it
             'attr' => [
                 'class' => 'block w-full p-3 border border-gray-300 rounded-md text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'
             ]
@@ -56,7 +56,7 @@ class UserType2 extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'is_edit' => false, // Définit si c'est une édition ou une création
-        ]);
+            'is_edit' => false,
+]);
     }
 }
