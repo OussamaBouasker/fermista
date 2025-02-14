@@ -18,24 +18,24 @@ class Reclamation
     #[ORM\Column(length: 30, nullable: true)]
     #[Assert\NotBlank(message: "Le titre ne peut pas être vide.")]
     #[Assert\Length(
-        min: 8, 
+        min: 8,
         minMessage: "Le titre doit contenir au moins 8 caractères.",
-        max: 20, 
-        maxMessage: "Le titre ne doit pas dépasser 20 caractères."
-    )] 
-    #[Assert\Regex(pattern: '/^[a-zA-ZÀ-ÿ\s-]+$/', message: 'Le titre ne doit contenir que des lettres et des espaces.')]  
-     private ?string $titre = null;
+        max: 30,
+        maxMessage: "Le titre ne doit pas dépasser 30 caractères."
+    )]
+    #[Assert\Regex(pattern: '/^[a-zA-ZÀ-ÿ\s-]+$/', message: 'Le titre ne doit contenir que des lettres et des espaces.')]
+    private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\NotBlank(message: "La description ne peut pas être vide.")]
     #[Assert\Length(
-        min: 8, 
+        min: 8,
         minMessage: "Le titre doit contenir au moins 8 caractères.",
-        max: 30, 
-        maxMessage: "Le titre ne doit pas dépasser 30 caractères."
-    )] 
+        max: 50,
+        maxMessage: "Le titre ne doit pas dépasser 50 caractères."
+    )]
     #[Assert\Regex(pattern: '/^[a-zA-ZÀ-ÿ\s-]+$/', message: 'La déscription ne doit contenir que des lettres et des espaces.')]
-    
+
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
@@ -45,9 +45,13 @@ class Reclamation
     )]
     private ?string $status = self::STATUS_PENDING;
 
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Assert\Type(\DateTimeInterface::class)]
+    #[Assert\Type(\DateTimeInterface::class, message: "La date de soumission doit être une date valide.")]
+    #[Assert\NotNull(message: "La date de soumission est obligatoire.")]
+    #[Assert\LessThanOrEqual("today", message: "La date de soumission ne peut pas être dans le fututr.")]
     private ?\DateTimeInterface $dateSoumission = null;
+
 
     #[ORM\ManyToOne(inversedBy: 'reclamations')]
     #[ORM\JoinColumn(nullable: true, onDelete: "CASCADE")]
