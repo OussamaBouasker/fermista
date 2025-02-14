@@ -67,9 +67,11 @@ final class UserController extends AbstractController
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $form = $this->createForm(UserType2::class, $user);
+
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
+            // Get the new password from the form
            
             $selectedRole = $form->get('roles')->getData(); // Get the selected role
             $user->setRoles([$selectedRole]); // Store it as an array

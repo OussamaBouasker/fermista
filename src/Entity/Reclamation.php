@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Entity;
-use App\Enum\StatutReclamation;
+
 use App\Repository\ReclamationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReclamationRepository::class)]
 class Reclamation
@@ -14,20 +15,42 @@ class Reclamation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 30)]
-    private ?string $titre = null;
+    #[ORM\Column(length: 30, nullable: true)]
+    #[Assert\NotBlank(message: "Le titre ne peut pas être vide.")]
+    #[Assert\Length(
+        min: 8, 
+        minMessage: "Le titre doit contenir au moins 8 caractères.",
+        max: 20, 
+        maxMessage: "Le titre ne doit pas dépasser 20 caractères."
+    )] 
+    #[Assert\Regex(pattern: '/^[a-zA-ZÀ-ÿ\s-]+$/', message: 'Le titre ne doit contenir que des lettres et des espaces.')]  
+     private ?string $titre = null;
 
-    #[ORM\Column(type: "text")]
-    private string $description;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\NotBlank(message: "La description ne peut pas être vide.")]
+    #[Assert\Length(
+        min: 8, 
+        minMessage: "Le titre doit contenir au moins 8 caractères.",
+        max: 30, 
+        maxMessage: "Le titre ne doit pas dépasser 30 caractères."
+    )] 
+    #[Assert\Regex(pattern: '/^[a-zA-ZÀ-ÿ\s-]+$/', message: 'La déscription ne doit contenir que des lettres et des espaces.')]
+    
+    private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Choice(
+        choices: self::AVAILABLE_STATUSES,
+        message: "Le statut doit être l'un des suivants : pending, confirmed, canceled."
+    )]
     private ?string $status = self::STATUS_PENDING;
-   
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Assert\Type(\DateTimeInterface::class)]
     private ?\DateTimeInterface $dateSoumission = null;
 
     #[ORM\ManyToOne(inversedBy: 'reclamations')]
-    #[ORM\JoinColumn(nullable: false ,onDelete: "CASCADE")]
+    #[ORM\JoinColumn(nullable: true, onDelete: "CASCADE")]
     private ?User $user = null;
 
     public function getId(): ?int
@@ -40,10 +63,9 @@ class Reclamation
         return $this->titre;
     }
 
-    public function setTitre(string $titre): static
+    public function setTitre(?string $titre): static
     {
         $this->titre = $titre;
-
         return $this;
     }
 
@@ -52,24 +74,20 @@ class Reclamation
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
-
-   
 
     public function getDateSoumission(): ?\DateTimeInterface
     {
         return $this->dateSoumission;
     }
 
-    public function setDateSoumission(\DateTimeInterface $dateSoumission): static
+    public function setDateSoumission(?\DateTimeInterface $dateSoumission): static
     {
         $this->dateSoumission = $dateSoumission;
-
         return $this;
     }
 
@@ -81,7 +99,6 @@ class Reclamation
     public function setUser(?User $user): static
     {
         $this->user = $user;
-
         return $this;
     }
 
@@ -89,14 +106,17 @@ class Reclamation
     public const STATUS_CONFIRMED = 'confirmed';
     public const STATUS_CANCELED = 'canceled';
 
+    public const AVAILABLE_STATUSES = [
+        self::STATUS_PENDING,
+        self::STATUS_CONFIRMED,
+        self::STATUS_CANCELED,
+    ];
+
     public static function getAvailableStatuses(): array
     {
-        return [
-            self::STATUS_PENDING,
-            self::STATUS_CONFIRMED,
-            self::STATUS_CANCELED,
-        ];
+        return self::AVAILABLE_STATUSES;
     }
+
     public function getStatus(): ?string
     {
         return $this->status;
@@ -105,7 +125,6 @@ class Reclamation
     public function setStatus(?string $status): static
     {
         $this->status = $status;
-
         return $this;
     }
 }
