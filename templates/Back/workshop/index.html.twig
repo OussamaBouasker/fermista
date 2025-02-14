@@ -13,54 +13,61 @@
     </head>
     <body>
         {% block body %}
-
         <div style="display: flex; justify-content: space-between; align-items: center; padding-left: 50px;">
-          <h1 class="display-1 ">Gestion des Workshop</h1>
-          <div class="col-sm-6 col-md-4 col-lg-3" style="padding: 10px; size:20px">
-              <i class="fa fa-plus-square"></i>
-              <a href="{{ path('app_workshop_new') }}" style="text-decoration: none; color: black;">Creation d'un workshop</a>
-          </div>
-      </div>
-      <br>
-      <table class="table">
-          <thead>
-              <tr>
-                  <th>Id</th>
-                  <th>Titre</th>
-                  <th>Description</th>
-                  <th>Date</th>
-                  <th>Prix</th>
-                  <th>Theme</th>
-                  <th>Duration</th>
-                  <th>Actions</th>
-              </tr>
-          </thead>
-          <tbody>
-              {% for workshop in workshops %}
-              <tr>
-                  <td>{{ workshop.id }}</td>
-                  <td>{{ workshop.titre }}</td>
-                  <td>{{ workshop.description }}</td>
-                  <td>{{ workshop.date ? workshop.date|date('Y-m-d H:i:s') : '' }}</td>
-                  <td>{{ workshop.prix }}</td>
-                  <td>{{ workshop.theme }}</td>
-                  <td>{{ workshop.duration ? workshop.duration|date('H:i:s') : '' }}</td>
-                  <td>
-                      <button type="button" class="btn btn-success">
-                          <a href="{{ path('app_workshop_edit', {'id': workshop.id}) }}" style="text-decoration: none; color: #F2F2F2;">Edit</a>
-                      </button>
-                      <button type="button" class="btn btn-danger">
-                          <a href="{{ path('app_workshop_delete', {'id': workshop.id}) }}" style="text-decoration: none; color: #F2F2F2;">Delete</a>
-                      </button>
-                  </td>
-              </tr>
-              {% else %}
-              <tr>
-                  <td colspan="8">no records found</td>
-              </tr>
-              {% endfor %}
-          </tbody>
-      </table>
+            <h1 class="display-1 ">Gestion des Workshop</h1>
+            <div class="col-sm-6 col-md-4 col-lg-3" style="padding: 10px; size:20px">
+                <i class="fa fa-plus-square"></i>
+                <a href="{{ path('app_workshop_new') }}" style="text-decoration: none; color: black;">Creation d'un workshop</a>
+            </div>
+        </div>
+        <br>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Titre</th>
+                    <th>Image</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Prix</th>
+                    <th>Theme</th>
+                    <th>Duration</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for workshop in workshops %}
+                <tr>
+                    <td>{{ workshop.id }}</td>
+                    <td>{{ workshop.titre }}</td>
+                    <td>
+                      {% if workshop.image %}
+                          <img src="{{ asset('uploads/images/' ~ workshop.image) }}" alt="Image" style="max-width: 100px; height: auto;" />
+                      {% else %}
+                          <span>No image</span>
+                      {% endif %}
+                  </td> 
+                    <td>{{ workshop.type }}</td>
+                    <td>{{ workshop.description }}</td>
+                    <td>{{ workshop.date ? workshop.date|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ workshop.prix }}</td>
+                    <td>{{ workshop.theme }}</td>
+                    <td>{{ workshop.duration ? workshop.duration|date('H:i:s') : '' }}</td>
+                    <td>
+                        <a href="{{ path('app_workshop_edit', {'id': workshop.id}) }}" class="btn btn-success" style="text-decoration: none; color: #F2F2F2;">
+                            Edit
+                        </a>
+                        <a href="{{ path('app_workshop_delete', {'id': workshop.id}) }}" class="btn btn-danger" style="text-decoration: none; color: #F2F2F2;">Delete</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8">no records found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         {% block javascripts %}
         {{ parent() }}
         {% endblock %}
