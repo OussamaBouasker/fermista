@@ -32,6 +32,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'json', nullable: true)]
     private array $roles = [];
 
+
     #[ORM\Column(nullable: true)]
     #[Assert\NotBlank(message: 'Le mot de passe est obligatoire.')]
     #[Assert\Length(min: 8, minMessage: 'Le mot de passe doit contenir au moins 8 caractères.')]
@@ -110,6 +111,7 @@ public function getRoles(): array
         'ROLE_AGRICULTOR' => 'Agriculteur',
         'ROLE_VETERINAIR' => 'Vétérinaire',
         'ROLE_CLIENT' => 'Client',
+        
         // Ajoute d'autres rôles ici
     ];
 
@@ -117,6 +119,7 @@ public function getRoles(): array
     return array_map(function($role) use ($roleNames) {
         return $roleNames[$role] ?? $role; // Si le rôle n'existe pas dans le tableau, laisse-le tel quel
     }, $roles);
+    return $this->roles ?: ['ROLE_USER'];
 }
 
 
@@ -212,4 +215,5 @@ public function getRoles(): array
 
         return $this;
     }
+    
 }
