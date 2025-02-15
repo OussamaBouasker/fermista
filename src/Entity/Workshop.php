@@ -20,18 +20,32 @@ class Workshop
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(message: "Le titre est obligatoire.")]
+    #[Assert\Length(
+        min: 6,
+        minMessage: "Le titre doit comporter au moins 6 caractères."
+    )]
     private ?string $titre = null;
-
+    
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 10,
+        minMessage: "La description doit comporter au moins 10 caractères."
+    )]
     private ?string $description = null;
-
+    
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date = null;
+    #[Assert\NotBlank(message: "time .")]
+    #[Assert\GreaterThan("now", message: "L'heure doit être supérieure à l'heure actuelle.")]
+    private ?\DateTimeInterface $date = null;    
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $prix = null;
-
+    
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(
+        max: 10,
+        maxMessage: "Le thème ne doit pas dépasser 10 caractères."
+    )]
     private ?string $theme = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
@@ -48,6 +62,23 @@ class Workshop
 
     #[ORM\Column(nullable: true)]
     private ?int $nbr_places_restantes = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $type = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
+    public const TYPE_LIVE_WORKSHOP = 'Atelier Live';
+    public const TYPE_SELF_PACED_WORKSHOP = 'Formation Autonome';
+    
+    public static function getAvailableWorkshopTypes(): array
+    {
+        return [
+            self::TYPE_LIVE_WORKSHOP,
+            self::TYPE_SELF_PACED_WORKSHOP,
+        ];
+    }
 
     public function __construct()
     {
@@ -181,6 +212,30 @@ class Workshop
     public function setNbrPlacesRestantes(?int $nbr_places_restantes): static
     {
         $this->nbr_places_restantes = $nbr_places_restantes;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }
