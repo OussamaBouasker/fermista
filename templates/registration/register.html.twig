@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+
+    <h1 class="mb-4">Créer un compte</h1>
+
+    {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+
+    <div class="mb-3" style="gap: 20px; width:600px">
+        {{ form_label(registrationForm.firstName, "Prénom", {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(registrationForm.firstName, {
+            'attr': {
+                'class': 'form-control' ~ (registrationForm.firstName.vars.errors|length > 0 ? ' is-invalid' : ''), 
+                'placeholder': 'Entrez votre prénom'
+            }
+        }) }}
+        {% if registrationForm.firstName.vars.errors|length > 0 %}
+            <div class="invalid-feedback">
+                {{ form_errors(registrationForm.firstName) }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3" style="gap: 20px; width:600px">
+        {{ form_label(registrationForm.lastName, "Nom", {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(registrationForm.lastName, {
+            'attr': {
+                'class': 'form-control' ~ (registrationForm.lastName.vars.errors|length > 0 ? ' is-invalid' : ''), 
+                'placeholder': 'Entrez votre nom'
+            }
+        }) }}
+        {% if registrationForm.lastName.vars.errors|length > 0 %}
+            <div class="invalid-feedback">
+                {{ form_errors(registrationForm.lastName) }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3" style="gap: 20px; width:600px">
+        {{ form_label(registrationForm.number, "Numéro de téléphone", {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(registrationForm.number, {
+            'attr': {
+                'class': 'form-control' ~ (registrationForm.number.vars.errors|length > 0 ? ' is-invalid' : ''), 
+                'placeholder': 'Entrez votre numéro de téléphone'
+            }
+        }) }}
+        {% if registrationForm.number.vars.errors|length > 0 %}
+            <div class="invalid-feedback">
+                {{ form_errors(registrationForm.number) }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3" style="gap: 20px; width:600px">
+        {{ form_label(registrationForm.email, "Adresse Email", {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(registrationForm.email, {
+            'attr': {
+                'class': 'form-control' ~ (registrationForm.email.vars.errors|length > 0 ? ' is-invalid' : ''), 
+                'placeholder': 'Entrez votre email'
+            }
+        }) }}
+        {% if registrationForm.email.vars.errors|length > 0 %}
+            <div class="invalid-feedback">
+                {{ form_errors(registrationForm.email) }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3" style="gap: 20px; width:600px">
+        {{ form_label(registrationForm.password, "Mot de passe", {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(registrationForm.password, {
+            'attr': {
+                'class': 'form-control' ~ (registrationForm.password.vars.errors|length > 0 ? ' is-invalid' : ''), 
+                'placeholder': 'Entrez votre  mot de passe'
+            }
+        }) }}
+        {% if registrationForm.password.vars.errors|length > 0 %}
+            <div class="invalid-feedback">
+                {{ form_errors(registrationForm.password) }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3" style="gap: 20px; width:600px">
+        {{ form_label(registrationForm.roles, "Sélectionnez votre rôle", {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(registrationForm.roles, {'attr': {'class': 'form-select'}}) }}
+        {% if registrationForm.roles.vars.errors|length > 0 %}
+            <div class="invalid-feedback d-block">
+                {% for error in registrationForm.roles.vars.errors %}
+                    <p>{{ error.message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>
+
+    {{ form_end(registrationForm) }}
+{% endblock %}
