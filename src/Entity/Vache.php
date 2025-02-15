@@ -13,13 +13,13 @@ class Vache
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $age = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $race = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $EtatMedical = null;
 
     public function getId(): ?int
@@ -32,7 +32,7 @@ class Vache
         return $this->age;
     }
 
-    public function setAge(int $age): static
+    public function setAge(?int $age): static
     {
         $this->age = $age;
 
@@ -44,7 +44,7 @@ class Vache
         return $this->race;
     }
 
-    public function setRace(string $race): static
+    public function setRace(?string $race): static
     {
         $this->race = $race;
 
@@ -56,7 +56,7 @@ class Vache
         return $this->EtatMedical;
     }
 
-    public function setEtatMedical(string $EtatMedical): static
+    public function setEtatMedical(?string $EtatMedical): static
     {
         $this->EtatMedical = $EtatMedical;
 
