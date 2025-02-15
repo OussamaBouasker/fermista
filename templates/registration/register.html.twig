@@ -1,104 +1,222 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<title>Inscription</title>
+		<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+		<!-- Ajout de la police Poppins -->
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+		<style>
+			body {
+				background: linear-gradient(135deg, #DCDFDA, #e0f7f1);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+				margin: 0;
+				font-family: 'Poppins', sans-serif;
+				overflow-x: hidden;
+			}
 
-{% block title %}Inscription{% endblock %}
+			.registration-container {
+				background: #fff;
+				padding: 30px;
+				border-radius: 15px;
+				box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+				width: 100%;
+				max-width: 600px;
+				height: auto;
+				box-sizing: border-box;
+			}
 
-{% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+			/* Mise à jour du style des labels */
+			.form-label {
+				font-weight: 600;
+				font-size: 16px;
+				color: #5D7052;
+				margin-bottom: 10px;
+				letter-spacing: 1px;
+				text-transform: capitalize;
+			}
 
-    <h1 class="mb-4">Créer un compte</h1>
+			.form-control,
+			.form-select {
+				border-radius: 10px;
+				padding: 12px 15px;
+				font-size: 14px;
+				transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+			}
 
-    {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+			.form-control:focus,
+			.form-select:focus {
+				box-shadow: 0 0 5px rgba(93, 112, 82, 0.4);
+				border-color: #5D7052;
+			}
 
-    <div class="mb-3" style="gap: 20px; width:600px">
-        {{ form_label(registrationForm.firstName, "Prénom", {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(registrationForm.firstName, {
-            'attr': {
-                'class': 'form-control' ~ (registrationForm.firstName.vars.errors|length > 0 ? ' is-invalid' : ''), 
-                'placeholder': 'Entrez votre prénom'
-            }
-        }) }}
-        {% if registrationForm.firstName.vars.errors|length > 0 %}
-            <div class="invalid-feedback">
-                {{ form_errors(registrationForm.firstName) }}
-            </div>
-        {% endif %}
-    </div>
+			.form-select {
+				position: relative;
+				background-color: rgba(112, 134, 99, 0.4);
+				border: 1px solid #5D7052;
+				padding-right: 40px;
+				appearance: none;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				background-image: url("data:image/svg+xml, %3Csvg width='24' height='24' fill='%235D7052' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.41 8.29L12 12.88l4.59-4.59L18 9.71l-6 6-6-6z'/%3E%3C/svg%3E");
+				background-repeat: no-repeat;
+				background-position: right 10px center;
+				background-size: 16px;
+			}
+			/* Modifier la couleur au survol des options dans le select */
+			.form-select option:hover {
+				background-color: #D1E2D3; /* couleur de survol personnalisée */
+				color: #333; /* couleur du texte lors du survol */
+			}
 
-    <div class="mb-3" style="gap: 20px; width:600px">
-        {{ form_label(registrationForm.lastName, "Nom", {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(registrationForm.lastName, {
-            'attr': {
-                'class': 'form-control' ~ (registrationForm.lastName.vars.errors|length > 0 ? ' is-invalid' : ''), 
-                'placeholder': 'Entrez votre nom'
-            }
-        }) }}
-        {% if registrationForm.lastName.vars.errors|length > 0 %}
-            <div class="invalid-feedback">
-                {{ form_errors(registrationForm.lastName) }}
-            </div>
-        {% endif %}
-    </div>
+			.btn-custom {
+				background: #5D7052;
+				color: white;
+				padding: 10px;
+				border-radius: 10px;
+				width: 100%;
+				border: none;
+				font-size: 14px;
+				font-weight: bold;
+				text-transform: uppercase;
+				transition: 0.3s ease-in-out;
+			}
 
-    <div class="mb-3" style="gap: 20px; width:600px">
-        {{ form_label(registrationForm.number, "Numéro de téléphone", {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(registrationForm.number, {
-            'attr': {
-                'class': 'form-control' ~ (registrationForm.number.vars.errors|length > 0 ? ' is-invalid' : ''), 
-                'placeholder': 'Entrez votre numéro de téléphone'
-            }
-        }) }}
-        {% if registrationForm.number.vars.errors|length > 0 %}
-            <div class="invalid-feedback">
-                {{ form_errors(registrationForm.number) }}
-            </div>
-        {% endif %}
-    </div>
+			.btn-custom:hover {
+				background: #4C5B3A;
+				transform: translateY(-2px);
+			}
 
-    <div class="mb-3" style="gap: 20px; width:600px">
-        {{ form_label(registrationForm.email, "Adresse Email", {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(registrationForm.email, {
-            'attr': {
-                'class': 'form-control' ~ (registrationForm.email.vars.errors|length > 0 ? ' is-invalid' : ''), 
-                'placeholder': 'Entrez votre email'
-            }
-        }) }}
-        {% if registrationForm.email.vars.errors|length > 0 %}
-            <div class="invalid-feedback">
-                {{ form_errors(registrationForm.email) }}
-            </div>
-        {% endif %}
-    </div>
+			.btn-custom:active {
+				transform: translateY(0);
+			}
 
-    <div class="mb-3" style="gap: 20px; width:600px">
-        {{ form_label(registrationForm.password, "Mot de passe", {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(registrationForm.password, {
-            'attr': {
-                'class': 'form-control' ~ (registrationForm.password.vars.errors|length > 0 ? ' is-invalid' : ''), 
-                'placeholder': 'Entrez votre  mot de passe'
-            }
-        }) }}
-        {% if registrationForm.password.vars.errors|length > 0 %}
-            <div class="invalid-feedback">
-                {{ form_errors(registrationForm.password) }}
-            </div>
-        {% endif %}
-    </div>
+			/* Styled error messages */
+			.error-feedback {
+				display: flex;
+				align-items: center;
+				background-color: #f8d7da;
+				color: #721c24;
+				border-radius: 5px;
+				padding: 2px;
+				margin-top: 3px;
+				font-size: 12px;
+				font-weight: 500;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+				animation: fadeInError 0.5s ease-out;
+			}
 
-    <div class="mb-3" style="gap: 20px; width:600px">
-        {{ form_label(registrationForm.roles, "Sélectionnez votre rôle", {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(registrationForm.roles, {'attr': {'class': 'form-select'}}) }}
-        {% if registrationForm.roles.vars.errors|length > 0 %}
-            <div class="invalid-feedback d-block">
-                {% for error in registrationForm.roles.vars.errors %}
-                    <p>{{ error.message }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
-    </div>
+			.error-feedback i {
+				margin-right: 8px;
+			}
 
-    <button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>
+			@keyframes fadeInError {
+				0% {
+					opacity: 0;
+					transform: translateY(10px);
+				}
+				100% {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
 
-    {{ form_end(registrationForm) }}
-{% endblock %}
+			.alert {
+				font-size: 14px;
+				margin-bottom: 10px;
+				font-weight: 500;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="registration-container">
+			<h2 class="text-center mb-4" style="color: #5D7052;">Créer un compte</h2>
+
+			{% for flash_error in app.flashes('verify_email_error') %}
+				<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+			{% endfor %}
+
+			{{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+
+			<div class="mb-3">
+				{{ form_label(registrationForm.firstName, "Prénom", {'label_attr': {'class': 'form-label'}}) }}
+				{{ form_widget(registrationForm.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre prénom'}}) }}
+				{% if registrationForm.firstName.vars.errors|length > 0 %}
+					<div class="error-feedback">
+						<i class="bi bi-exclamation-triangle-fill"></i>
+						{{ form_errors(registrationForm.firstName) }}
+					</div>
+				{% endif %}
+			</div>
+
+			<div class="mb-3">
+				{{ form_label(registrationForm.lastName, "Nom", {'label_attr': {'class': 'form-label'}}) }}
+				{{ form_widget(registrationForm.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre nom'}}) }}
+				{% if registrationForm.lastName.vars.errors|length > 0 %}
+					<div class="error-feedback">
+						<i class="bi bi-exclamation-triangle-fill"></i>
+						{{ form_errors(registrationForm.lastName) }}
+					</div>
+				{% endif %}
+			</div>
+
+			<div class="mb-3">
+				{{ form_label(registrationForm.number, "Numéro de téléphone", {'label_attr': {'class': 'form-label'}}) }}
+				{{ form_widget(registrationForm.number, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre numéro'}}) }}
+				{% if registrationForm.number.vars.errors|length > 0 %}
+					<div class="error-feedback">
+						<i class="bi bi-exclamation-triangle-fill"></i>
+						{{ form_errors(registrationForm.number) }}
+					</div>
+				{% endif %}
+			</div>
+
+			<div class="mb-3">
+				{{ form_label(registrationForm.email, "Adresse Email", {'label_attr': {'class': 'form-label'}}) }}
+				{{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre email'}}) }}
+				{% if registrationForm.email.vars.errors|length > 0 %}
+					<div class="error-feedback">
+						<i class="bi bi-exclamation-triangle-fill"></i>
+						{{ form_errors(registrationForm.email) }}
+					</div>
+				{% endif %}
+			</div>
+
+			<div class="mb-3">
+				{{ form_label(registrationForm.password, "Mot de passe", {'label_attr': {'class': 'form-label'}}) }}
+				{{ form_widget(registrationForm.password, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre mot de passe'}}) }}
+				{% if registrationForm.password.vars.errors|length > 0 %}
+					<div class="error-feedback">
+						<i class="bi bi-exclamation-triangle-fill"></i>
+						{{ form_errors(registrationForm.password) }}
+					</div>
+				{% endif %}
+			</div>
+
+			<div class="mb-3">
+				{{ form_label(registrationForm.roles, "Sélectionnez votre rôle", {'label_attr': {'class': 'form-label'}}) }}
+				{{ form_widget(registrationForm.roles, {
+                'attr': {
+                    'class': 'form-select'
+                }
+            }) }}
+				{% if registrationForm.roles.vars.errors|length > 0 %}
+					<div class="error-feedback">
+						<i class="bi bi-exclamation-triangle-fill"></i>
+						{{ form_errors(registrationForm.roles) }}
+					</div>
+				{% endif %}
+			</div>
+
+			<button class="btn btn-custom">{{ button_label|default('Enregistrer') }}</button>
+
+			{{ form_end(registrationForm) }}
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>
