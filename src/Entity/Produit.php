@@ -5,6 +5,9 @@ namespace App\Entity;
 use App\Repository\ProduitRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
@@ -14,23 +17,52 @@ class Produit
     #[ORM\Column]
     private ?int $id = null;
 
+
     
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le nom du produit est obligatoire.")]
+    #[Assert\Length(
+        min: 3,
+        max: 255,
+        minMessage: "Le nom doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères."
+    )]
     private ?string $Nom = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0, nullable: true)]
-    private ?string $Prix = null;
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    #[Assert\NotBlank(message: "Le prix est obligatoire.")]
+    #[Assert\Positive(message: "Le prix doit être un nombre positif.")]
+     private ?string $Prix = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "L'état du produit est obligatoire.")]
+    #[Assert\Choice(
+        choices: ["Frais", "Périmé", "À consommer bientôt", "Non réfrigéré"],
+        message: "L'état du produit doit être parmi : 'Frais', 'Périmé', 'À consommer bientôt', 'Non réfrigéré'."
+    )]
     private ?string $Etat = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: false)]
+    #[Assert\NotBlank(message: "La description est obligatoire.")]
+    #[Assert\Length(
+        min: 10,
+        max: 1000,
+        minMessage: "La description doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "La description ne peut pas dépasser {{ limit }} caractères."
+    )]
     private ?string $Description = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: false)]
+    #[Assert\NotBlank(message: "La catégorie est obligatoire.")]
+    #[Assert\Choice(
+        choices: ["Lait", "Fromage", "Yaourt", "Beurre", "Crème-fraiche"],
+        message: "La catégorie doit être parmi : 'Lait', 'Fromage', 'Yaourt', 'Beurre', 'Crème-fraiche'."
+    )]
     private ?string $categorie=null;
 
     #[ORM\ManyToOne(inversedBy: 'prodcommande')]
+    #[Assert\NotNull(message: "Une commande doit être associée au produit.")]
+
     private ?Commande $commande = null;
 
     public function getId(): ?int
