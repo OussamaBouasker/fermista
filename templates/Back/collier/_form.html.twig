@@ -1,14 +1,31 @@
-{{ form_start(form, {'attr': {'class': 'form-group'}}) }}
+{{ form_start(form,{'attr': {'novalidate': 'novalidate'}} ) }}
+      
 
-{% for field in form %}
-    <div class="mb-3" style="gap: 20px; width:600px">
-        {{ form_label(field, null, {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(field, {'attr': {'class': 'form-control', 'placeholder': field.vars.label}}) }}
+    {{ form_start(form) }}
+        <div class="form-group">
+            {{ form_label(form.reference) }}
+            {{ form_widget(form.reference, {'attr': {'class': 'form-control'}}) }}
+        </div>
 
-        {{ form_errors(field) }}
-    </div>
-{% endfor %}
+        <div class="form-group">
+            {{ form_label(form.taille) }}
+            {{ form_widget(form.taille, {'attr': {'class': 'form-control'}}) }}
+        </div>
 
-<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Save') }}</button>
+        <div class="form-group">
+            {{ form_label(form.valeurTemperature) }}
+            {{ form_widget(form.valeurTemperature, {'attr': {'class': 'form-control'}}) }}
+        </div>
 
-{{ form_end(form) }}
+        <div class="form-group">
+            {{ form_label(form.valeurAgitation) }}
+            {{ form_widget(form.valeurAgitation, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.vache) }}
+            {{ form_widget(form.vache, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <button type="submit" class="btn btn-outline-dark btn-fw">Enregistrer</button>
+    {{ form_end(form) }}
