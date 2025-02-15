@@ -1,5 +1,7 @@
-{% extends 'base.html.twig' %}
+{% extends 'Front/frontbase.html.twig' %}
 {% block content %}
+
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -8,22 +10,21 @@
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
         {{ parent() }}
-        
+
         {% endblock %}
     </head>
     <body>
+
         {% block body %}
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; width:100% ">
-            <h1>Edit Workshop</h1>
-            {{ include('Back/workshop/_form.html.twig') }}
-            <a href="{{ path('app_workshop_index') }}" style="text-decoration: none; color: black; padding-left:500px">back to list</a>
-            <!-- {{ include('Back/workshop/_delete_form.html.twig') }} -->
-        </div>
+            <h1 style="margin-top: 200px;">hello world</h1>
         {% block javascripts %}
         {{ parent() }}
-        {% endblock %}
+
 
         {% endblock %}
+{% endblock %}
+        
     </body>
 </html>
 {% endblock %}
+
