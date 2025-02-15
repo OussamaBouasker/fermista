@@ -4,10 +4,13 @@ namespace App\Form;
 
 use App\Entity\Workshop;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class WorkshopType extends AbstractType
 {
@@ -20,11 +23,33 @@ class WorkshopType extends AbstractType
                 'widget' => 'single_text',
                 'html5' => true,
                 'attr' => ['class' => 'datetime-picker'],
-            ])                    
+            ])
+            ->add('type', ChoiceType::class, [
+                'choices' => [
+                    'Atelier Live' => 'Atelier Live',
+                    'Formation Autonome' => 'Formation Autonome',
+                ],
+                'expanded' => false, // false = dropdown, true = boutons radio
+                'multiple' => false, // false = une seule option possible
+                'attr' => ['class' => 'form-control'], // Pour le styling Bootstrap
+                'placeholder' => 'Sélectionnez un type',
+            ])            
             ->add('prix')
             ->add('theme')
             ->add('duration', null)
-        ;
+            ->add('image', FileType::class, [
+                'label' => 'Image (JPG, PNG, WEBP)',
+                'mapped' => false, // Important: Do not map directly to entity
+                'required' => false, // Make it optional
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp'],
+                        'mimeTypesMessage' => 'Please upload a valid image (JPEG, PNG, WEBP)',
+                    ])
+                ],
+                'attr' => ['class' => 'form-control'],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
