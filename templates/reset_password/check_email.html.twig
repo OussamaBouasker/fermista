@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Réinitialisation du mot de passe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Ajout de la police Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0f7f1, #ffffff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .message-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            box-sizing: border-box;
+        }
+
+        .message-container h2 {
+            color: #5D7052;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .message-container p {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .message-container a {
+            color: #5D7052;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .message-container a:hover {
+            color: #4C5B3A;
+        }
+
+        .alert {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: fadeInError 0.5s ease-out;
+        }
+
+        @keyframes fadeInError {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-container .btn-custom {
+            background: #5D7052;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            width: 100%;
+            border: none;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: 0.3s ease-in-out;
+            margin-top: 20px;
+        }
+
+        .message-container .btn-custom:hover {
+            background: #4C5B3A;
+            transform: translateY(-2px);
+        }
+
+        .message-container .btn-custom:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="message-container">
+        <h2>Réinitialisation du mot de passe</h2>
+
+        <p>
+            Si un compte correspondant à votre email existe, un email vient de vous être envoyé contenant un lien pour réinitialiser votre mot de passe.
+            Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+        </p>
+        
+        <p>
+            Si vous ne recevez pas cet email, veuillez vérifier votre dossier spam ou <a href="{{ path('app_forgot_password_request') }}">réessayer</a>.
+        </p>
+
+        <a href="{{ path('app_forgot_password_request') }}">
+            <button class="btn btn-custom">Réessayer</button>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
