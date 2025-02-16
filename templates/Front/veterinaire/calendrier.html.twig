@@ -1,0 +1,482 @@
+{% extends 'Front/frontbase.html.twig' %}
+
+{% block title %}Calendrier des Consultations
+{% endblock %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+	<style>
+		body {
+			font-family: 'Poppins', sans-serif;
+			background: white;
+			color: #333;
+			margin: 150px 0 0;
+			padding: 170px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: flex-start;
+			height: 100vh; /* Décalage pour compenser la navbar */
+		}
+		h1 {
+			margin-top: 250px;
+			font-size: 2.5rem;
+			text-align: center;
+			color: #fff;
+			font-weight: 700;
+			letter-spacing: 1px;
+			text-transform: uppercase;
+			margin-bottom: 40px;
+		}
+		.calendar-container {
+			background: rgba(255, 255, 255, 0.9);
+			padding: 40px;
+			border-radius: 20px;
+			box-shadow: 0 5px 40px rgba(0, 0, 0, 0.2);
+			backdrop-filter: blur(15px);
+			text-align: center;
+			width: 80%;
+			max-width: 700px;
+			margin-top: 20px;
+		}
+		#calendar-input {
+			background: #fff;
+			border: 2px solid #aaa;
+			padding: 15px;
+			border-radius: 10px;
+			font-size: 20px;
+			width: 100%;
+			text-align: center;
+			box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+			transition: border-color 0.3s ease;
+		}
+		#calendar-input:focus {
+			outline: none;
+			border-color: #5e5e5e;
+		}
+		.flatpickr-calendar.inline {
+			display: grid;
+			grid-gap: 30px;
+			position: relative;
+			left: 150px;
+			top: 15px;
+		}
+		.flatpickr-day {
+			transition: background 0.3s, transform 0.3s;
+		}
+		.flatpickr-day:hover {
+			background: #b3e6b3;
+			transform: scale(1.1);
+			cursor: pointer;
+		}
+		.flatpickr-day.consultation {
+			background: #c8e6c9 !important;
+			color: #2e4d3d !important;
+			border-radius: 50%;
+			font-weight: bold;
+			border: 2px solid #66cc66 !important;
+			transition: all 0.3s ease-in-out;
+		}
+		.flatpickr-day.consultation:hover {
+			background: #66cc66 !important;
+			color: white !important;
+			transform: scale(1.15);
+			cursor: pointer;
+		}
+		/* Styles pour les popups */
+		/* Styles pour le fond de la popup (pour la rendre modale) */
+		#consultation-popup {
+			position: fixed;
+			top: 40px;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.5);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 1000; /* S'assurer qu'il est bien au-dessus du calendrier */
+		}
+
+		/* Centrer la popup */
+		.popup-content {
+			background: #ffffff;
+			padding: 20px;
+			border-radius: 10px;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+			max-width: 500px;
+			width: 90%;
+			text-align: center;
+			position: relative;
+			animation: fadeIn 0.3s ease-in-out;
+			z-index: 1001; /* Priorité supérieure pour s'afficher au-dessus de tout */
+		}
+
+		/* Fermer le popup */
+		.popup-close {
+			position: absolute;
+			top: 10px;
+			right: 15px;
+			cursor: pointer;
+			font-size: 18px;
+			color: #ff4d4d;
+		}
+
+		@keyframes fadeIn {
+			from {
+				transform: translateY(-10px);
+				opacity: 0;
+			}
+			to {
+				transform: translateY(0);
+				opacity: 1;
+			}
+		}
+		button {
+			background: #66cc66;
+			color: white;
+			padding: 10px 15px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background 0.3s ease-in-out;
+			font-size: 14px;
+			margin-top: 15px;
+		}
+		button:hover {
+			background: #28a745;
+		}
+		ul {
+			list-style: none;
+			padding: 0;
+		}
+		li {
+			margin: 10px 0;
+		}
+		li button {
+			background: #28a745;
+			padding: 8px 12px;
+			font-size: 14px;
+		}
+		li button:hover {
+			background: #218838;
+		}
+		.popup-content form label {
+			display: block;
+			margin-bottom: 5px;
+			font-weight: bold;
+		}
+		.popup-content form input,
+		.popup-content form textarea,
+		.popup-content form select {
+			width: 100%;
+			padding: 8px;
+			margin-bottom: 15px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			box-sizing: border-box;
+		}
+	</style>
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{# Attendu depuis le contrôleur :
+				       - consultations : liste des consultations
+				       - tomorrow : date minimale pour le champ date
+				       Nous générons le token CSRF pour les opérations sur consultation.
+				  #}
+	{% set tomorrow = "now"|date("Y-m-d", "+1 day") %}
+	{% set consultationToken = csrf_token('consultation') %}
+
+	<h1>📆 Consultations</h1>
+	<button onclick="openAddForm()">Ajouter une consultation</button>
+
+	<div class="calendar-container">
+		<input type="text" id="calendar-input">
+	</div>
+
+	{# Popup pour l'ajout, les détails et l'édition d'une consultation #}
+	<div id="consultation-popup" style="display: none;">
+		<div class="popup-content">
+			<span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
+			{# Le contenu sera chargé via JavaScript #}
+		</div>
+	</div>
+
+	{% block javascripts %}
+		<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<script>
+			document.addEventListener("DOMContentLoaded", function () { // Regroupement des consultations par date
+var consultationsByDate = {};{% for consultation in consultations %}{% set dateStr = consultation.date|date('Y-m-d') %}if (! consultationsByDate["{{ dateStr }}"]) {
+consultationsByDate["{{ dateStr }}"] = [];
+}
+consultationsByDate["{{ dateStr }}"].push({
+id: "{{ consultation.id }}",
+time: "{{ consultation.heure|date('H:i') }}",
+nom: "{{ consultation.nom }}",
+location: "{{ consultation.lieu }}",
+csrfToken: "{{ csrf_token('delete' ~ consultation.id) }}"
+});{% endfor %}console.log("ConsultationsByDate:", consultationsByDate);
+
+function formatDate(dateObj) {
+var year = dateObj.getFullYear();
+var month = ('0' + (
+dateObj.getMonth() + 1
+)).slice(-2);
+var day = ('0' + dateObj.getDate()).slice(-2);
+return year + '-' + month + '-' + day;
+}
+
+// Initialisation du calendrier Flatpickr
+flatpickr("#calendar-input", {
+inline: true,
+locale: "fr",
+dateFormat: "Y-m-d",
+onDayCreate: function (dObj, dStr, fp, dayElem) {
+var dateStr = formatDate(dayElem.dateObj);
+if (consultationsByDate[dateStr]) {
+dayElem.classList.add("consultation");
+}
+},
+onChange: function (selectedDates, dateStr) {
+var consultations = consultationsByDate[dateStr] || [];
+if (consultations.length > 0) {
+showConsultations(dateStr);
+}
+}
+});
+
+// Affichage de la liste des consultations pour une date donnée
+window.showConsultations = function (dateStr) {
+var consultations = consultationsByDate[dateStr] || [];
+var listHtml = `<h3>Consultations du ${dateStr}</h3><ul>`;
+consultations.forEach((c, index) => {
+listHtml += `<li>
+              <button onclick="showDetails('${dateStr}', ${index})">
+                ${
+c.time
+} - ${
+c.nom
+}
+              </button>
+            </li>`;
+});
+listHtml += `</ul>
+            <button onclick="closePopup('consultation-popup')">⬅ Retour</button>`;
+document.querySelector("#consultation-popup .popup-content").innerHTML = listHtml;
+document.getElementById("consultation-popup").style.display = "flex";
+};
+
+// Affichage du détail d'une consultation
+window.showDetails = function (dateStr, index) {
+var consultation = consultationsByDate[dateStr][index];
+if (! consultation) 
+return;
+
+
+
+var detailsHtml = `
+            <span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
+            <h3>Détails de la consultation</h3>
+            <p><strong>Nom :</strong> ${
+consultation.nom
+}</p>
+            <p>📍 Lieu : ${
+consultation.location
+}</p>
+            <p>⏰ Heure : ${
+consultation.time
+}</p>
+            <button onclick="showConsultations('${dateStr}')">⬅ Retour</button>
+            <button onclick="editConsultation('${dateStr}', ${index})">Modifier</button>
+            <button onclick="deleteConsultation('${dateStr}', ${index})">Supprimer</button>
+          `;
+document.querySelector("#consultation-popup .popup-content").innerHTML = detailsHtml;
+document.getElementById("consultation-popup").style.display = "flex";
+};
+
+// Fermeture de la popup
+window.closePopup = function (popupId) {
+document.getElementById(popupId).style.display = "none";
+};
+
+/* --- GESTION DES CONSULTATIONS --- */
+// Ouverture du formulaire d'ajout de consultation
+window.openAddForm = function () {
+var formHtml = `
+            <span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
+            <h3>Ajouter une consultation</h3>
+            <form id="consultation-add-form">
+              <label for="consultation-nom">Nom :</label>
+              <input type="text" id="consultation-nom" name="consultation[nom]" required pattern="^[A-Za-z0-9À-ÿ\\s]+$" title="Lettres et chiffres uniquement" /><br/>
+              <label for="consultation-date">Date :</label>
+              <input type="date" id="consultation-date" name="consultation[date]" required min="{{ tomorrow }}" /><br/>
+              <label for="consultation-heure">Heure :</label>
+              <input type="time" id="consultation-heure" name="consultation[heure]" required min="09:00" max="18:00" /><br/>
+              <label for="consultation-lieu">Lieu :</label>
+              <input type="text" id="consultation-lieu" name="consultation[lieu]" required pattern="^[A-Za-z0-9À-ÿ\\s]+$" title="Lettres et chiffres uniquement" /><br/>
+              <input type="hidden" id="consultation-token" name="consultation[_token]" value="{{ consultationToken }}" />
+              <button type="button" onclick="confirmAddConsultation()">Enregistrer</button>
+            </form>
+          `;
+document.querySelector("#consultation-popup .popup-content").innerHTML = formHtml;
+document.getElementById("consultation-popup").style.display = "flex";
+};
+
+window.confirmAddConsultation = function () {
+Swal.fire({
+title: "Ajouter la consultation ?",
+text: "Voulez-vous enregistrer cette consultation ?",
+icon: "question",
+showCancelButton: true,
+confirmButtonText: "Oui, enregistrer",
+cancelButtonText: "Annuler"
+}).then((result) => {
+if (result.isConfirmed) {
+addConsultation();
+}
+});
+};
+
+window.addConsultation = function () {
+var formData = new URLSearchParams();
+formData.append('consultation[nom]', document.getElementById('consultation-nom').value);
+formData.append('consultation[date]', document.getElementById('consultation-date').value);
+formData.append('consultation[heure]', document.getElementById('consultation-heure').value);
+formData.append('consultation[lieu]', document.getElementById('consultation-lieu').value);
+formData.append('consultation[_token]', document.getElementById('consultation-token').value);
+
+fetch('/consultation/new', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/x-www-form-urlencoded'
+},
+body: formData.toString()
+}).then(response => {
+if (response.ok) {
+Swal.fire("Ajoutée!", "La consultation a été ajoutée.", "success").then(() => location.reload());
+} else {
+Swal.fire("Erreur", "Erreur lors de l’ajout de la consultation", "error");
+}
+});
+};
+
+window.editConsultation = function (dateStr, index) {
+var consultation = consultationsByDate[dateStr][index];
+if (! consultation) 
+return;
+
+
+
+var formHtml = `
+            <span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
+            <h3>Modifier la consultation</h3>
+            <form id="consultation-edit-form">
+              <input type="hidden" id="consultation-id" value="${
+consultation.id
+}" />
+              <label for="consultation-nom">Nom :</label>
+              <input type="text" id="consultation-nom" name="consultation[nom]" value="${
+consultation.nom
+}" required pattern="^[A-Za-z0-9À-ÿ\\s]+$" /><br/>
+              <label for="consultation-date">Date :</label>
+              <input type="date" id="consultation-date" name="consultation[date]" value="${dateStr}" required min="{{ tomorrow }}" /><br/>
+              <label for="consultation-heure">Heure :</label>
+              <input type="time" id="consultation-heure" name="consultation[heure]" value="${
+consultation.time
+}" required min="09:00" max="18:00" /><br/>
+              <label for="consultation-lieu">Lieu :</label>
+              <input type="text" id="consultation-lieu" name="consultation[lieu]" value="${
+consultation.location
+}" required pattern="^[A-Za-z0-9À-ÿ\\s]+$" /><br/>
+              <input type="hidden" id="consultation-token" name="consultation[_token]" value="{{ consultationToken }}" />
+              <button type="button" onclick="confirmEditConsultation('${dateStr}', ${index})">Enregistrer</button>
+            </form>
+          `;
+document.querySelector("#consultation-popup .popup-content").innerHTML = formHtml;
+document.getElementById("consultation-popup").style.display = "flex";
+};
+
+window.confirmEditConsultation = function (dateStr, index) {
+Swal.fire({
+title: "Modifier la consultation ?",
+text: "Voulez-vous enregistrer les modifications ?",
+icon: "question",
+showCancelButton: true,
+confirmButtonText: "Oui, modifier",
+cancelButtonText: "Annuler"
+}).then((result) => {
+if (result.isConfirmed) {
+submitEditConsultation(dateStr, index);
+}
+});
+};
+
+window.submitEditConsultation = function (dateStr, index) {
+var consultation = consultationsByDate[dateStr][index];
+var editData = new URLSearchParams();
+editData.append('consultation[nom]', document.getElementById('consultation-nom').value);
+editData.append('consultation[date]', document.getElementById('consultation-date').value);
+editData.append('consultation[heure]', document.getElementById('consultation-heure').value);
+editData.append('consultation[lieu]', document.getElementById('consultation-lieu').value);
+editData.append('consultation[_token]', document.getElementById('consultation-token').value);
+
+fetch (`/consultation/${
+consultation.id
+}/edit`, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/x-www-form-urlencoded'
+},
+body: editData.toString()
+}).then(response => {
+if (response.ok) {
+Swal.fire("Modifiée!", "La consultation a été modifiée.", "success").then(() => location.reload());
+} else {
+Swal.fire("Erreur", "Erreur lors de la modification", "error");
+}
+});
+};
+
+window.deleteConsultation = function (dateStr, index) {
+var consultation = consultationsByDate[dateStr][index];
+if (! consultation) 
+return;
+
+
+
+Swal.fire({
+title: "Supprimer la consultation ?",
+text: "Cette action est irréversible.",
+icon: "warning",
+showCancelButton: true,
+confirmButtonText: "Oui, supprimer",
+cancelButtonText: "Annuler"
+}).then((result) => {
+if (result.isConfirmed) {
+fetch (`/consultation/${
+consultation.id
+}`, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/x-www-form-urlencoded'
+},
+body: '_token=' + encodeURIComponent(consultation.csrfToken)
+}).then(response => {
+if (response.ok) {
+Swal.fire("Supprimée!", "La consultation a été supprimée.", "success").then(() => location.reload());
+} else {
+Swal.fire("Erreur", "Erreur lors de la suppression", "error");
+}
+});
+}
+});
+};
+
+});
+		</script>
+	{% endblock %}
+{% endblock %}
