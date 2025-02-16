@@ -43,7 +43,7 @@ class RegistrationFormType extends AbstractType
         ->add('roles', ChoiceType::class, [
             'label' => 'Choisissez votre rôle',
             'choices' => [
-                'Administrateur' => 'ROLE_ADMIN',
+                
                 'Agriculteur' => 'ROLE_AGRICULTOR',
                 'Vétérinaire' => 'ROLE_VETERINAIR',
                 'Client' => 'ROLE_CLIENT',

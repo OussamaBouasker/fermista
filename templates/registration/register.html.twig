@@ -1,222 +1,231 @@
 <!DOCTYPE html>
 <html lang="fr">
-	<head>
-		<meta charset="UTF-8">
-		<title>Inscription</title>
-		<link
-		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-		<!-- Ajout de la police Poppins -->
-		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-		<style>
-			body {
-				background: linear-gradient(135deg, #DCDFDA, #e0f7f1);
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				height: 100vh;
-				margin: 0;
-				font-family: 'Poppins', sans-serif;
-				overflow-x: hidden;
-			}
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #DCDFDA, #e0f7f1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+        }
 
-			.registration-container {
-				background: #fff;
-				padding: 30px;
-				border-radius: 15px;
-				box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-				width: 100%;
-				max-width: 600px;
-				height: auto;
-				box-sizing: border-box;
-			}
+        .container {
+            display: flex;
+            background: #fff;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            height: 85vh;
+            padding: 0;
+            margin: 0;
+            border-radius:15px;
+        }
 
-			/* Mise à jour du style des labels */
-			.form-label {
-				font-weight: 600;
-				font-size: 16px;
-				color: #5D7052;
-				margin-bottom: 10px;
-				letter-spacing: 1px;
-				text-transform: capitalize;
-			}
+        /* Image bien ajustée sans espace */
+        .image-container {
+            flex: 1;
+            background: url('https://savoirlaitier.ca/sites/dairynutrition/files/iStock-1241482623_web.jpg') center/cover no-repeat;
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
 
-			.form-control,
-			.form-select {
-				border-radius: 10px;
-				padding: 12px 15px;
-				font-size: 14px;
-				transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
-			}
+        .registration-container {
+            flex: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            max-height: 85vh; 
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            text-align: center;
+            min-height: 500px;
+        }
 
-			.form-control:focus,
-			.form-select:focus {
-				box-shadow: 0 0 5px rgba(93, 112, 82, 0.4);
-				border-color: #5D7052;
-			}
+        .registration-container a {
+            text-decoration: none;
+            color: #5D7052;
+            font-weight: 600;
+        }
+        .registration-container::-webkit-scrollbar {
+            display: none;
+        }
 
-			.form-select {
-				position: relative;
-				background-color: rgba(112, 134, 99, 0.4);
-				border: 1px solid #5D7052;
-				padding-right: 40px;
-				appearance: none;
-				-webkit-appearance: none;
-				-moz-appearance: none;
-				background-image: url("data:image/svg+xml, %3Csvg width='24' height='24' fill='%235D7052' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.41 8.29L12 12.88l4.59-4.59L18 9.71l-6 6-6-6z'/%3E%3C/svg%3E");
-				background-repeat: no-repeat;
-				background-position: right 10px center;
-				background-size: 16px;
-			}
-			/* Modifier la couleur au survol des options dans le select */
-			.form-select option:hover {
-				background-color: #D1E2D3; /* couleur de survol personnalisée */
-				color: #333; /* couleur du texte lors du survol */
-			}
+        /* Champs réduits et centrés */
+        .form-control, .form-select {
+            width: 90%;
+            max-width: 280px;
+            padding: 6px 10px;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
 
-			.btn-custom {
-				background: #5D7052;
-				color: white;
-				padding: 10px;
-				border-radius: 10px;
-				width: 100%;
-				border: none;
-				font-size: 14px;
-				font-weight: bold;
-				text-transform: uppercase;
-				transition: 0.3s ease-in-out;
-			}
+        /* Ajouter le changement de couleur au focus (vert utilisé dans le bouton) */
+        .form-control:focus, .form-select:focus {
+            border-color: #5D7052; /* Vert du bouton */
+            box-shadow: 0 0 0 0.2rem rgba(93, 112, 82, 0.25); /* Ombre verte */
+        }
 
-			.btn-custom:hover {
-				background: #4C5B3A;
-				transform: translateY(-2px);
-			}
+        .btn-custom {
+            background: #5D7052;
+            color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 280px;
+            padding: 12px; /* Augmenté pour rendre le bouton plus grand */
+            font-size: 1rem; /* Augmenté pour rendre le texte plus lisible */
+            margin-top: 15px; /* Ajustement de l'espacement pour centrer parfaitement */
+        }
 
-			.btn-custom:active {
-				transform: translateY(0);
-			}
+        .btn-custom:hover {
+            background: #4C5B3A;
+        }
 
-			/* Styled error messages */
-			.error-feedback {
-				display: flex;
-				align-items: center;
-				background-color: #f8d7da;
-				color: #721c24;
-				border-radius: 5px;
-				padding: 2px;
-				margin-top: 3px;
-				font-size: 12px;
-				font-weight: 500;
-				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-				animation: fadeInError 0.5s ease-out;
-			}
+        /* Style des erreurs ultra compact */
+        .error-feedback {
+            background: rgba(255, 0, 0, 0.05);
+            color: #d9534f;
+            font-size: 0.75rem;
+            border-radius: 5px;
+            padding: 2px 5px;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in-out;
+            max-width: 280px;
+        }
 
-			.error-feedback i {
-				margin-right: 8px;
-			}
+        .error-feedback i {
+            margin-right: 5px;
+            font-size: 0.85rem;
+        }
 
-			@keyframes fadeInError {
-				0% {
-					opacity: 0;
-					transform: translateY(10px);
-				}
-				100% {
-					opacity: 1;
-					transform: translateY(0);
-				}
-			}
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-3px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-			.alert {
-				font-size: 14px;
-				margin-bottom: 10px;
-				font-weight: 500;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="registration-container">
-			<h2 class="text-center mb-4" style="color: #5D7052;">Créer un compte</h2>
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
 
-			{% for flash_error in app.flashes('verify_email_error') %}
-				<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-			{% endfor %}
+            .image-container {
+                height: 250px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="image-container"></div>
 
-			{{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="registration-container">
+            <h2 class="text-center mb-3" style="color: #5D7052;">Créer un compte</h2>
 
-			<div class="mb-3">
-				{{ form_label(registrationForm.firstName, "Prénom", {'label_attr': {'class': 'form-label'}}) }}
-				{{ form_widget(registrationForm.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre prénom'}}) }}
-				{% if registrationForm.firstName.vars.errors|length > 0 %}
-					<div class="error-feedback">
-						<i class="bi bi-exclamation-triangle-fill"></i>
-						{{ form_errors(registrationForm.firstName) }}
-					</div>
-				{% endif %}
-			</div>
+            {% for flash_error in app.flashes('verify_email_error') %}
+                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+            {% endfor %}
 
-			<div class="mb-3">
-				{{ form_label(registrationForm.lastName, "Nom", {'label_attr': {'class': 'form-label'}}) }}
-				{{ form_widget(registrationForm.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre nom'}}) }}
-				{% if registrationForm.lastName.vars.errors|length > 0 %}
-					<div class="error-feedback">
-						<i class="bi bi-exclamation-triangle-fill"></i>
-						{{ form_errors(registrationForm.lastName) }}
-					</div>
-				{% endif %}
-			</div>
+            {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
 
-			<div class="mb-3">
-				{{ form_label(registrationForm.number, "Numéro de téléphone", {'label_attr': {'class': 'form-label'}}) }}
-				{{ form_widget(registrationForm.number, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre numéro'}}) }}
-				{% if registrationForm.number.vars.errors|length > 0 %}
-					<div class="error-feedback">
-						<i class="bi bi-exclamation-triangle-fill"></i>
-						{{ form_errors(registrationForm.number) }}
-					</div>
-				{% endif %}
-			</div>
+            <div class="mb-2">
+                {{ form_label(registrationForm.firstName, "Prénom", {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.firstName, {'attr': {'class': 'form-control'}}) }}
+                {% if registrationForm.firstName.vars.errors|length > 0 %}
+                    <div class="error-feedback">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        {{ form_errors(registrationForm.firstName) }}
+                    </div>
+                {% endif %}
+            </div>
 
-			<div class="mb-3">
-				{{ form_label(registrationForm.email, "Adresse Email", {'label_attr': {'class': 'form-label'}}) }}
-				{{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre email'}}) }}
-				{% if registrationForm.email.vars.errors|length > 0 %}
-					<div class="error-feedback">
-						<i class="bi bi-exclamation-triangle-fill"></i>
-						{{ form_errors(registrationForm.email) }}
-					</div>
-				{% endif %}
-			</div>
+            <div class="mb-2">
+                {{ form_label(registrationForm.lastName, "Nom", {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.lastName, {'attr': {'class': 'form-control'}}) }}
+                {% if registrationForm.lastName.vars.errors|length > 0 %}
+                    <div class="error-feedback">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        {{ form_errors(registrationForm.lastName) }}
+                    </div>
+                {% endif %}
+            </div>
 
-			<div class="mb-3">
-				{{ form_label(registrationForm.password, "Mot de passe", {'label_attr': {'class': 'form-label'}}) }}
-				{{ form_widget(registrationForm.password, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre mot de passe'}}) }}
-				{% if registrationForm.password.vars.errors|length > 0 %}
-					<div class="error-feedback">
-						<i class="bi bi-exclamation-triangle-fill"></i>
-						{{ form_errors(registrationForm.password) }}
-					</div>
-				{% endif %}
-			</div>
+            <div class="mb-2">
+                {{ form_label(registrationForm.number, "Numéro de téléphone", {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.number, {'attr': {'class': 'form-control'}}) }}
+                {% if registrationForm.number.vars.errors|length > 0 %}
+                    <div class="error-feedback">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        {{ form_errors(registrationForm.number) }}
+                    </div>
+                {% endif %}
+            </div>
 
-			<div class="mb-3">
-				{{ form_label(registrationForm.roles, "Sélectionnez votre rôle", {'label_attr': {'class': 'form-label'}}) }}
-				{{ form_widget(registrationForm.roles, {
-                'attr': {
-                    'class': 'form-select'
-                }
-            }) }}
-				{% if registrationForm.roles.vars.errors|length > 0 %}
-					<div class="error-feedback">
-						<i class="bi bi-exclamation-triangle-fill"></i>
-						{{ form_errors(registrationForm.roles) }}
-					</div>
-				{% endif %}
-			</div>
+            <div class="mb-2">
+                {{ form_label(registrationForm.email, "Adresse Email", {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+                {% if registrationForm.email.vars.errors|length > 0 %}
+                    <div class="error-feedback">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
+                {% endif %}
+            </div>
 
-			<button class="btn btn-custom">{{ button_label|default('Enregistrer') }}</button>
+            <div class="mb-2">
+                {{ form_label(registrationForm.password, "Mot de passe", {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.password, {'attr': {'class': 'form-control'}}) }}
+                {% if registrationForm.password.vars.errors|length > 0 %}
+                    <div class="error-feedback">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        {{ form_errors(registrationForm.password) }}
+                    </div>
+                {% endif %}
+            </div>
 
-			{{ form_end(registrationForm) }}
-		</div>
+            <div class="mb-2">
+                {{ form_label(registrationForm.roles, "Sélectionnez votre rôle", {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.roles, {'attr': {'class': 'form-select'}}) }}
+                {% if registrationForm.roles.vars.errors|length > 0 %}
+                    <div class="error-feedback">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        {{ form_errors(registrationForm.roles) }}
+                    </div>
+                {% endif %}
+            </div>
 
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-	</body>
+            <button class="btn btn-custom">{{ button_label|default('Enregistrer') }}</button>
+
+            <div class="mt-2">
+                <p>J'ai déjà un compte <a href="{{ path('app_login') }}">login</a></p>
+            </div>
+
+            {{ form_end(registrationForm) }}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
