@@ -17,64 +17,70 @@
 		<body>
 			{% block body %}
 
-							<div class="content-wrapper pb-0">
-								<div style="display: flex; justify-content: space-between; align-items: center; padding-left: 50px;">
-                                    <h1>Gestion Réclamations</h1>
-                                    <div class="col-sm-6 col-md-4 col-lg-3" style="padding: 10px; size:20px">
-                                        <i class="fa fa-plus-square"></i>
-                                        <a href="{{  path('app_reclamation_new') }}" style="text-decoration: none; color: black;">Create new</a>
-                                    </div>
-                                </div>
+				<div class="content-wrapper pb-0">
+					<div style="display: flex; justify-content: space-between; align-items: center; padding-left: 50px;">
+						<h1>Gestion Réclamations</h1>
+						<div class="col-sm-6 col-md-4 col-lg-3" style="padding: 10px; size:20px">
+							<i class="fa fa-plus-square"></i>
+							<a href="{{ path('app_reclamation_new') }}" style="text-decoration: none; color: black;">Create new</a>
+						</div>
+					</div>
 
-								<table class="table">
-									<thead>
-										<tr>
-											<th>Id</th>
-											<th>Titre</th>
-											<th>Description</th>
-											<th>Statut</th>
-											<th>DateSoumission</th>
-											<th>actions</th>
-										</tr>
-									</thead>
-									<tbody>
-										{% for reclamation in reclamations %}
-											<tr>
-												<td>{{ reclamation.id }}</td>
-												<td>{{ reclamation.titre }}</td>
-												<td>{{ reclamation.description }}</td>
-												<td>{{ reclamation.status }}</td>
-												<td>{{ reclamation.dateSoumission ? reclamation.dateSoumission|date('Y-m-d H:i:s') : '' }}</td>
-												<td>
+					<table class="table">
+						<thead>
+							<tr>
+							
+								<th>Titre</th>
+								<th>Description</th>
+								<th>Statut</th>
+								<th>DateSoumission</th>
+								<th>actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for reclamation in reclamations %}
+								<tr>
+									
+									<td>{{ reclamation.titre }}</td>
+									<td>{{ reclamation.description }}</td>
+									<td>
+										{% if reclamation.status == 'pending' %}
+											<label class="badge badge-danger" style="padding:13px ; width:44% ; font-size:13px" >Pending</label>
+											
+										{% elseif reclamation.status == 'confirmed' %}
+											<label class="badge badge-success" style="padding:13px ; font-size:13px">Completed</label>
+										{% elseif reclamation.status == 'canceled' %}
+											<label class="badge badge-warning" style="padding:13px ; font-size:13px">In progress</label>
+										{% endif %}
+									</td>
+									<td>{{ reclamation.dateSoumission ? reclamation.dateSoumission|date('Y-m-d H:i:s') : '' }}</td>
+									<td>
 
 
-														<a href="{{ path('app_reclamation_edit', {'id': reclamation.id}) }}" class="btn btn-success" style="text-decoration: none; color: #F2F2F2;">Edit</a>
-													
+										<a href="{{ path('app_reclamation_edit', {'id': reclamation.id}) }}" class="btn btn-success" style="text-decoration: none; color: #F2F2F2;">Edit</a>
 
-												
-														<a href="{{ path('app_reclamation_delete', {'id': reclamation.id}) }}" class="btn btn-danger" style="text-decoration: none; color: #F2F2F2;">Delete</a>
-													
-												</td>
-											</tr>
-										{% else %}
-											<tr>
-												<td colspan="6">no records found</td>
-											</tr>
-										{% endfor %}
-									</tbody>
-								</table>
 
-								
+										<a href="{{ path('app_reclamation_delete', {'id': reclamation.id}) }}" class="btn btn-danger" style="text-decoration: none; color: #F2F2F2;">Delete</a>
 
-							</div>
-						
+									</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="6">no records found</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
 
-					{% block javascripts %}
-						{{ parent() }}
-					{% endblock %}
 
+				</div>
+
+
+				{% block javascripts %}
+					{{ parent() }}
 				{% endblock %}
-			</body>
+
+			{% endblock %}
 		</body>
 	</html>
-{% endblock %}
+</body></html>{% endblock %}
