@@ -3,6 +3,7 @@
 	<!DOCTYPE html>
 	<html>
 		<head>
+		
 			<meta charset="UTF-8">
 			<title>
 				{% block title %}Welcome!
@@ -17,45 +18,51 @@
 		<body>
 			{% block body %}
 
-								<h1> Delete Reclamation</h1>
+				<h1>
+					Delete Reclamation</h1>
 
-								<table class="table">
-									<tbody>
-										<tr>
-											<th>Id</th>
-											<td>{{ reclamation.id }}</td>
-										</tr>
-										<tr>
-											<th>Titre</th>
-											<td>{{ reclamation.titre }}</td>
-										</tr>
-										<tr>
-											<th>Description</th>
-											<td>{{ reclamation.description }}</td>
-										</tr>
-										<tr>
-											<th>Statut</th>
-											<td>{{ reclamation.status }}</td>
-										</tr>
-										<tr>
-											<th>DateSoumission</th>
-											<td>{{ reclamation.dateSoumission ? reclamation.dateSoumission|date('Y-m-d H:i:s') : '' }}</td>
-										</tr>
-									</tbody>
-								</table>
-
-								{{ include('Back/reclamation/_delete_form.html.twig') }}
-								<a href="{{ path('app_reclamation_index') }}" style="text-decoration: none; color: black; padding-left:950px">back to list</a>
-
-
+				<table class="table">
+					<tbody>
+						<tr>
 							
+						</tr>
+						<tr>
+							<th>Titre</th>
+							<td>{{ reclamation.titre }}</td>
+						</tr>
+						<tr>
+							<th>Description</th>
+							<td>{{ reclamation.description }}</td>
+						</tr>
+						<tr>
+							<th>Statut</th>
+							<td>
+										{% if reclamation.status == 'pending' %}
+											<label class="badge badge-danger" style="padding:20px ; font-size:13px" >Pending</label>
+											
+										{% elseif reclamation.status == 'confirmed' %}
+											<label class="badge badge-success" style="padding:20px ; font-size:13px">Completed</label>
+										{% elseif reclamation.status == 'canceled' %}
+											<label class="badge badge-warning" style="padding:20px ; font-size:13px">In progress</label>
+										{% endif %}
+									</td>
+						</tr>
+						<tr>
+							<th>DateSoumission</th>
+							<td>{{ reclamation.dateSoumission ? reclamation.dateSoumission|date('Y-m-d H:i:s') : '' }}</td>
+						</tr>
+					</tbody>
+				</table>
 
-					{% block javascripts %}
-						{{ parent() }}
-					{% endblock %}
+				{{ include('Back/reclamation/_delete_form.html.twig') }}
+				<a href="{{ path('app_reclamation_index') }}" style="text-decoration: none; color: black; padding-left:950px">back to list</a>
 
+
+				{% block javascripts %}
+					{{ parent() }}
 				{% endblock %}
-			</body>
+
+			{% endblock %}
 		</body>
 	</html>
-{% endblock %}
+</body></html>{% endblock %}
