@@ -70,8 +70,7 @@ class RapportMedical
 
 
 
-    #[ORM\OneToOne(inversedBy: "rapportmedical", cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: true, onDelete: "CASCADE")]
+    #[ORM\OneToOne(mappedBy: "rapportmedical", cascade: ['persist', 'remove'])]
     private ?Consultation $consultation = null;
 
     public function getConsultation(): ?Consultation
