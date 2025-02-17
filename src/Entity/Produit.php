@@ -7,8 +7,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
-
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
 {
@@ -17,8 +15,6 @@ class Produit
     #[ORM\Column]
     private ?int $id = null;
 
-
-    
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(message: "Le nom du produit est obligatoire.")]
     #[Assert\Length(
@@ -32,7 +28,7 @@ class Produit
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     #[Assert\NotBlank(message: "Le prix est obligatoire.")]
     #[Assert\Positive(message: "Le prix doit être un nombre positif.")]
-     private ?string $Prix = null;
+    private ?string $Prix = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(message: "L'état du produit est obligatoire.")]
@@ -58,13 +54,29 @@ class Produit
         choices: ["Lait", "Fromage", "Yaourt", "Beurre", "Crème-fraiche"],
         message: "La catégorie doit être parmi : 'Lait', 'Fromage', 'Yaourt', 'Beurre', 'Crème-fraiche'."
     )]
-    private ?string $categorie=null;
+    private ?string $categorie = null;
 
     #[ORM\ManyToOne(inversedBy: 'prodcommande')]
     #[Assert\NotNull(message: "Une commande doit être associée au produit.")]
-
     private ?Commande $commande = null;
 
+    // Ajout de la propriété 'image'
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
+    // Getter et Setter pour l'image
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    // Autres méthodes (getter et setter)...
     public function getId(): ?int
     {
         return $this->id;
@@ -73,7 +85,6 @@ class Produit
     public function setId(?int $Id): static
     {
         $this->Id = $Id;
-
         return $this;
     }
 
@@ -85,7 +96,6 @@ class Produit
     public function setNom(?string $Nom): static
     {
         $this->Nom = $Nom;
-
         return $this;
     }
 
@@ -97,7 +107,6 @@ class Produit
     public function setPrix(?string $Prix): static
     {
         $this->Prix = $Prix;
-
         return $this;
     }
 
@@ -109,7 +118,6 @@ class Produit
     public function setEtat(?string $Etat): static
     {
         $this->Etat = $Etat;
-
         return $this;
     }
 
@@ -121,7 +129,6 @@ class Produit
     public function setDescription(?string $Description): static
     {
         $this->Description = $Description;
-
         return $this;
     }
 
@@ -144,8 +151,6 @@ class Produit
     public function setCommande(?Commande $commande): static
     {
         $this->commande = $commande;
-
         return $this;
     }
-
 }
