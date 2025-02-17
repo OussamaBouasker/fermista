@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,27 +22,34 @@ class Workshop
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(message: "Le titre est obligatoire.")]
     #[Assert\Length(
-        min: 6,
-        minMessage: "Le titre doit comporter au moins 6 caractères."
+        min: 3,
+        minMessage: "Le titre doit comporter au moins 3 caractères."
     )]
     private ?string $titre = null;
-    
+
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "La Description est obligatoire.")]
     #[Assert\Length(
         min: 10,
         minMessage: "La description doit comporter au moins 10 caractères."
     )]
     private ?string $description = null;
-    
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Assert\NotBlank(message: "time .")]
+    #[Assert\NotBlank(message: "La date est obligatoire.")]
     #[Assert\GreaterThan("now", message: "L'heure doit être supérieure à l'heure actuelle.")]
-    private ?\DateTimeInterface $date = null;    
+    private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le prix est obligatoire.")]
+    #[Assert\Regex(
+        pattern: "/^\d+$/",
+        message: "Le prix doit être composé de chiffres uniquement."
+    )]
     private ?string $prix = null;
-    
+
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le thème est obligatoire.")]
     #[Assert\Length(
         max: 10,
         maxMessage: "Le thème ne doit pas dépasser 10 caractères."
@@ -49,29 +57,36 @@ class Workshop
     private ?string $theme = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    #[Assert\NotBlank(message: "Le durée est obligatoire.")]
+
     private ?\DateTimeInterface $duration = null;
 
     /**
      * @var Collection<int, Reservation>
      */
-    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'workshop',orphanRemoval:true)]
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'workshop', orphanRemoval: true)]
     private Collection $reservation;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank(message: "Le nombre maximum de places est requis.")]
+    #[Assert\Positive(message: "Le nombre maximum de places doit être un nombre positif.")]
+    #[Assert\LessThan(value: 1000, message: "Le nombre maximum de places doit être inférieur à 1000.")]
     private ?int $nbr_places_max_ = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $nbr_places_restantes = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Vous devez sélectionner un type.")]
     private ?string $type = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+
     public const TYPE_LIVE_WORKSHOP = 'Atelier Live';
     public const TYPE_SELF_PACED_WORKSHOP = 'Formation Autonome';
-    
+
     public static function getAvailableWorkshopTypes(): array
     {
         return [

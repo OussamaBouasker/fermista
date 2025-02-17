@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #DCDFDA, #e0f7f1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .container {
+            display: flex;
+            background: #fff;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            height: 85vh;
+            padding: 0;
+            margin: 0;
+            border-radius:15px;
+        }
+
+        /* Image bien ajustée sans espace */
+        .image-container {
+            flex: 1;
+            background: url('https://savoirlaitier.ca/sites/dairynutrition/files/iStock-1241482623_web.jpg') center/cover no-repeat;
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .registration-container {
+            flex: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            max-height: 85vh; 
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            text-align: center;
+            min-height: 500px;
+        }
+
+        .registration-container a {
+            text-decoration: none;
+            color: #5D7052;
+            font-weight: 600;
+        }
+        .registration-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Champs réduits et centrés */
+        .form-control, .form-select {
+            width: 90%;
+            max-width: 280px;
+            padding: 6px 10px;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Ajouter le changement de couleur au focus (vert utilisé dans le bouton) */
+        .form-control:focus, .form-select:focus {
+            border-color: #5D7052; /* Vert du bouton */
+            box-shadow: 0 0 0 0.2rem rgba(93, 112, 82, 0.25); /* Ombre verte */
+        }
+
+        .btn-custom {
+            background: #5D7052;
+            color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 280px;
+            padding: 12px; /* Augmenté pour rendre le bouton plus grand */
+            font-size: 1rem; /* Augmenté pour rendre le texte plus lisible */
+            margin-top: 15px; /* Ajustement de l'espacement pour centrer parfaitement */
+        }
+
+        .btn-custom:hover {
+            background: #4C5B3A;
+        }
+
+        /* Style des erreurs ultra compact */
+        .error-feedback {
+            background: rgba(255, 0, 0, 0.05);
+            color: #d9534f;
+            font-size: 0.75rem;
+            border-radius: 5px;
+            padding: 2px 5px;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in-out;
+            max-width: 280px;
+        }
+
+        .error-feedback i {
+            margin-right: 5px;
+            font-size: 0.85rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-3px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .image-container {
+                height: 250px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="image-container"></div>
+
+        <div class="registration-container">
+            <h2 class="text-center mb-3" style="color: #5D7052;">Créer un compte</h2>
+
+            {% for flash_error in app.flashes('verify_email_error') %}
+                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+            {% endfor %}
+
+            {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            <div class="mb-2">
+                {{ form_label(registrationForm.firstName, "Prénom", {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.firstName, {'attr': {'class': 'form-control'}}) }}
+                {% if registrationForm.firstName.vars.errors|length > 0 %}
+                    <div class="error-feedback">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        {{ form_errors(registrationForm.firstName) }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-2">
+                {{ form_label(registrationForm.lastName, "Nom", {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.lastName, {'attr': {'class': 'form-control'}}) }}
+                {% if registrationForm.lastName.vars.errors|length > 0 %}
+                    <div class="error-feedback">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        {{ form_errors(registrationForm.lastName) }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-2">
+                {{ form_label(registrationForm.number, "Numéro de téléphone", {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.number, {'attr': {'class': 'form-control'}}) }}
+                {% if registrationForm.number.vars.errors|length > 0 %}
+                    <div class="error-feedback">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        {{ form_errors(registrationForm.number) }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-2">
+                {{ form_label(registrationForm.email, "Adresse Email", {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+                {% if registrationForm.email.vars.errors|length > 0 %}
+                    <div class="error-feedback">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-2">
+                {{ form_label(registrationForm.password, "Mot de passe", {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.password, {'attr': {'class': 'form-control'}}) }}
+                {% if registrationForm.password.vars.errors|length > 0 %}
+                    <div class="error-feedback">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        {{ form_errors(registrationForm.password) }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-2">
+                {{ form_label(registrationForm.roles, "Sélectionnez votre rôle", {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.roles, {'attr': {'class': 'form-select'}}) }}
+                {% if registrationForm.roles.vars.errors|length > 0 %}
+                    <div class="error-feedback">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        {{ form_errors(registrationForm.roles) }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <button class="btn btn-custom">{{ button_label|default('Enregistrer') }}</button>
+
+            <div class="mt-2">
+                <p>J'ai déjà un compte <a href="{{ path('app_login') }}">login</a></p>
+            </div>
+
+            {{ form_end(registrationForm) }}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
