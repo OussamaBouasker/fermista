@@ -89,7 +89,7 @@
 		.form-popup,
 		#edit-modal {
 			position: fixed;
-			top: 0;
+			top: 80px;
 			left: 0;
 			width: 100%;
 			height: 100%;
@@ -168,11 +168,28 @@
 			margin-bottom: 15px;
 			box-sizing: border-box;
 		}
+
+		.form-error {
+			color: #d9534f;
+			background-color: #f9e2e2;
+			border: 1px solid #d9534f;
+			padding: 6px 10px;
+			border-radius: 4px;
+			font-size: 0.9em;
+			margin-top: 5px;
+		}
+		input.error,
+		select.error,
+		textarea.error {
+			border: 1px solid #d9534f;
+			background-color: #f9e2e2;
+		}
 	</style>
 	{{ parent() }}
 {% endblock %}
 
 {% block body %}
+	{# Définition d'une date minimale (demain) pour le champ date #}
 	{% set tomorrow = "now"|date("Y-m-d", "+1 day") %}
 	{% set consultationToken = csrf_token('consultation') %}
 
@@ -183,32 +200,82 @@
 	</div>
 
 	{# --- Popup création Consultation --- #}
-	<div id="consultation-form-popup" class="form-popup" style="display:none;">
+	<div id="consultation-form-popup" class="form-popup">
 		<div class="popup-content">
 			<span class="popup-close" onclick="toggleFormPopup('consultation-form-popup')">✖</span>
 			<h2>Ajouter une Consultation</h2>
 			{{ form_start(consultationForm, {'attr': {'class': 'form-group', 'novalidate': 'novalidate'}}) }}
-			{{ form_row(consultationForm.nom) }}
-			{{ form_row(consultationForm.date) }}
-			{{ form_row(consultationForm.heure) }}
-			{{ form_row(consultationForm.lieu) }}
-			{{ form_row(consultationForm.rapportmedical) }}
+			<div class="form-group">
+				{{ form_label(consultationForm.nom) }}
+				{{ form_widget(consultationForm.nom, {
+          'attr': {
+            'placeholder': 'Entrez le nom',
+            'pattern': '^[A-Za-z0-9À-ÿ\\s]+$'
+          }
+        }) }}
+				{# <div class="form-error">{{ form_errors(consultationForm.nom) }}</div> #}
+			</div>
+			<div class="form-group">
+				{{ form_label(consultationForm.date) }}
+				{{ form_widget(consultationForm.date, {'attr': {'min': tomorrow}}) }}
+				{# <div class="form-error">{{ form_errors(consultationForm.date) }}</div> #}
+			</div>
+			<div class="form-group">
+				{{ form_label(consultationForm.heure) }}
+				{{ form_widget(consultationForm.heure, {'attr': {'min': '09:00', 'max': '18:00'}}) }}
+				{# <div class="form-error">{{ form_errors(consultationForm.heure) }}</div> #}
+			</div>
+			<div class="form-group">
+				{{ form_label(consultationForm.lieu) }}
+				{{ form_widget(consultationForm.lieu, {
+          'attr': {
+            'placeholder': 'Entrez le lieu',
+            'pattern': '^[A-Za-z0-9À-ÿ\\s]+$'
+          }
+        }) }}
+				{# <div class="form-error">{{ form_errors(consultationForm.lieu) }}</div> #}
+			</div>
+			<div class="form-group">
+				{{ form_label(consultationForm.rapportmedical) }}
+				{{ form_widget(consultationForm.rapportmedical) }}
+				{# <div class="form-error">{{ form_errors(consultationForm.rapportmedical) }}</div> #}
+			</div>
 			<button type="submit">Enregistrer la consultation</button>
 			{{ form_end(consultationForm) }}
 		</div>
 	</div>
 
 	{# --- Popup création Rapport Médical --- #}
-	<div id="rapport-medical-form-popup" class="form-popup" style="display:none;">
+	<div id="rapport-medical-form-popup" class="form-popup">
 		<div class="popup-content">
 			<span class="popup-close" onclick="toggleFormPopup('rapport-medical-form-popup')">✖</span>
 			<h2>Ajouter un Rapport Médical</h2>
 			{{ form_start(rapportMedicalForm, {'attr': {'class': 'form-group', 'novalidate': 'novalidate'}}) }}
-			{{ form_row(rapportMedicalForm.num) }}
-			{{ form_row(rapportMedicalForm.race) }}
-			{{ form_row(rapportMedicalForm.historique_de_maladie) }}
-			{{ form_row(rapportMedicalForm.cas_medical) }}
-			{{ form_row(rapportMedicalForm.solution) }}
+			<div class="form-group">
+				{{ form_label(rapportMedicalForm.num) }}
+				{{ form_widget(rapportMedicalForm.num, { 'attr': {'placeholder': 'Entrez le numéro'} }) }}
+				{# <div class="form-error">{{ form_errors(rapportMedicalForm.num) }}</div> #}
+			</div>
+			<div class="form-group">
+				{{ form_label(rapportMedicalForm.race) }}
+				{{ form_widget(rapportMedicalForm.race, { 'attr': {'placeholder': 'Entrez la race'} }) }}
+				{# <div class="form-error">{{ form_errors(rapportMedicalForm.race) }}</div> #}
+			</div>
+			<div class="form-group">
+				{{ form_label(rapportMedicalForm.historique_de_maladie) }}
+				{{ form_widget(rapportMedicalForm.historique_de_maladie, { 'attr': {'placeholder': "Entrez l'historique de maladie"} }) }}
+				{# <div class="form-error">{{ form_errors(rapportMedicalForm.historique_de_maladie) }}</div> #}
+			</div>
+			<div class="form-group">
+				{{ form_label(rapportMedicalForm.cas_medical) }}
+				{{ form_widget(rapportMedicalForm.cas_medical, { 'attr': {'placeholder': 'Entrez le cas médical'} }) }}
+				{# <div class="form-error">{{ form_errors(rapportMedicalForm.cas_medical) }}</div> #}
+			</div>
+			<div class="form-group">
+				{{ form_label(rapportMedicalForm.solution) }}
+				{{ form_widget(rapportMedicalForm.solution, { 'attr': {'placeholder': 'Entrez la solution'} }) }}
+				{# <div class="form-error">{{ form_errors(rapportMedicalForm.solution) }}</div> #}
+			</div>
 			<button type="submit">Enregistrer le rapport médical</button>
 			{{ form_end(rapportMedicalForm) }}
 		</div>
@@ -220,7 +287,7 @@
 	</div>
 
 	{# --- Popup d'affichage des détails d'une consultation --- #}
-	<div id="consultation-popup" class="popup" style="display:none;">
+	<div id="consultation-popup" class="popup">
 		<div class="popup-content">
 			<span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
 			{# Le contenu sera injecté via JavaScript #}
@@ -228,7 +295,7 @@
 	</div>
 
 	{# --- Modal pour l'édition AJAX --- #}
-	<div id="edit-modal" class="modal" style="display:none;">
+	<div id="edit-modal" class="modal">
 		<div id="edit-modal-content">
 			<span class="modal-close" onclick="closeModal('edit-modal')">✖</span>
 			{# Le formulaire d'édition sera chargé ici via AJAX #}
@@ -239,7 +306,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<script>
-			// Fonctions utilitaires
+			// Fonctions utilitaires pour l'affichage/fermeture des popups et modals
 function toggleFormPopup(popupId) {
 var popup = document.getElementById(popupId);
 popup.style.display = (popup.style.display === 'none' || popup.style.display === '') ? 'flex' : 'none';
@@ -251,7 +318,16 @@ function closeModal(modalId) {
 document.getElementById(modalId).style.display = "none";
 }
 
-document.addEventListener("DOMContentLoaded", function () { // --- Ajout d'une consultation en AJAX ---
+// Fonction utilitaire pour afficher les erreurs sous forme de chaîne (pour SweetAlert par exemple)
+function formatErrors(errors) {
+let errorsText = "";
+for (let field in errors) {
+errorsText += field + ": " + errors[field].join(", ") + "\n";
+}
+return errorsText;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
 const consultationForm = document.querySelector("#consultation-form-popup form");
 consultationForm.addEventListener("submit", function (e) {
 e.preventDefault();
@@ -268,7 +344,8 @@ Swal.fire("Succès", data.message, "success");
 closePopup("consultation-form-popup");
 // Actualiser le calendrier si nécessaire
 } else {
-Swal.fire("Erreur", data.message, "error");
+let message = data.errors ? formatErrors(data.errors) : data.message;
+Swal.fire("Erreur", message, "error");
 }
 }).catch(err => {
 console.error(err);
@@ -291,9 +368,9 @@ headers: {
 if (data.success) {
 Swal.fire("Succès", data.message, "success");
 closePopup("rapport-medical-form-popup");
-// Actualiser la liste si nécessaire
 } else {
-Swal.fire("Erreur", data.message, "error");
+let message = data.errors ? formatErrors(data.errors) : data.message;
+Swal.fire("Erreur", message, "error");
 }
 }).catch(err => {
 console.error(err);
@@ -308,36 +385,37 @@ if (! consultation)
 return;
 
 
+
 // On récupère l'id du rapport médical si existant
 var rapportMedicalId = consultation.rapportmedical ? consultation.rapportmedical.id : "";
 
 var formHtml = `
-                        <span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
-                        <h3>Modifier la consultation</h3>
-                        <form id="consultation-edit-form">
-                            <input type="hidden" id="consultation-id" value="${
+            <span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
+            <h3>Modifier la consultation</h3>
+            <form id="consultation-edit-form">
+              <input type="hidden" id="consultation-id" value="${
 consultation.id
 }" />
-                            <label for="consultation-nom">Nom :</label>
-                            <input type="text" id="consultation-nom" name="consultation[nom]" value="${
+              <label for="consultation-nom">Nom :</label>
+              <input type="text" id="consultation-nom" name="consultation[nom]" value="${
 consultation.nom
 }" required pattern="^[A-Za-z0-9À-ÿ\\s]+$" /><br/>
-                            <label for="consultation-date">Date :</label>
-                            <input type="date" id="consultation-date" name="consultation[date]" value="${dateStr}" required min="{{ tomorrow }}" /><br/>
-                            <label for="consultation-heure">Heure :</label>
-                            <input type="time" id="consultation-heure" name="consultation[heure]" value="${
+              <label for="consultation-date">Date :</label>
+              <input type="date" id="consultation-date" name="consultation[date]" value="${dateStr}" required min="{{ tomorrow }}" /><br/>
+              <label for="consultation-heure">Heure :</label>
+              <input type="time" id="consultation-heure" name="consultation[heure]" value="${
 consultation.time
 }" required min="09:00" max="18:00" /><br/>
-                            <label for="consultation-lieu">Lieu :</label>
-                            <input type="text" id="consultation-lieu" name="consultation[lieu]" value="${
+              <label for="consultation-lieu">Lieu :</label>
+              <input type="text" id="consultation-lieu" name="consultation[lieu]" value="${
 consultation.location
 }" required pattern="^[A-Za-z0-9À-ÿ\\s]+$" /><br/>
-                            <input type="hidden" id="consultation-token" name="consultation[_token]" value="{{ consultationToken }}" />
-                            <!-- Champ pour préserver la relation avec le rapport médical -->
-                            <input type="hidden" id="consultation-rapportmedical" name="consultation[rapportmedical]" value="${rapportMedicalId}" />
-                            <button type="button" onclick="confirmEditConsultation('${dateStr}', ${index})">Enregistrer</button>
-                        </form>
-                    `;
+              <input type="hidden" id="consultation-token" name="consultation[_token]" value="{{ consultationToken }}" />
+              <!-- Champ pour préserver la relation avec le rapport médical -->
+              <input type="hidden" id="consultation-rapportmedical" name="consultation[rapportmedical]" value="${rapportMedicalId}" />
+              <button type="button" onclick="confirmEditConsultation('${dateStr}', ${index})">Enregistrer</button>
+            </form>
+          `;
 document.querySelector("#consultation-popup .popup-content").innerHTML = formHtml;
 document.getElementById("consultation-popup").style.display = "flex";
 };
@@ -372,14 +450,16 @@ consultation.id
 }/edit`, {
 method: 'POST',
 headers: {
-'Content-Type': 'application/x-www-form-urlencoded'
+'Content-Type': 'application/x-www-form-urlencoded',
+'X-Requested-With': 'XMLHttpRequest'
 },
 body: editData.toString()
-}).then(response => {
-if (response.ok) {
-Swal.fire("Modifiée!", "La consultation a été modifiée.", "success").then(() => location.reload());
+}).then(response => response.json()).then(data => {
+if (data.success) {
+Swal.fire("Modifiée!", data.message, "success").then(() => location.reload());
 } else {
-Swal.fire("Erreur", "Erreur lors de la modification", "error");
+let message = data.errors ? formatErrors(data.errors) : data.message;
+Swal.fire("Erreur", message || "Erreur lors de la modification", "error");
 }
 });
 };
@@ -391,37 +471,38 @@ if (! consultation || ! consultation.rapportmedical)
 return;
 
 
+
 var formHtml = `
-                        <span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
-                        <h3>Modifier le rapport médical</h3>
-                        <form id="rapportmedical-edit-form">
-                            <input type="hidden" id="rapportmedical-id" value="${
+            <span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
+            <h3>Modifier le rapport médical</h3>
+            <form id="rapportmedical-edit-form">
+              <input type="hidden" id="rapportmedical-id" value="${
 consultation.rapportmedical.id
 }" />
-                            <label for="rapportmedical-num">Numéro :</label>
-                            <input type="text" id="rapportmedical-num" name="rapport_medical[num]" value="${
+              <label for="rapportmedical-num">Numéro :</label>
+              <input type="text" id="rapportmedical-num" name="rapport_medical[num]" value="${
 consultation.rapportmedical.num
 }" required /><br/>
-                            <label for="rapportmedical-race">Race :</label>
-                            <input type="text" id="rapportmedical-race" name="rapport_medical[race]" value="${
+              <label for="rapportmedical-race">Race :</label>
+              <input type="text" id="rapportmedical-race" name="rapport_medical[race]" value="${
 consultation.rapportmedical.race
 }" required /><br/>
-                            <label for="rapportmedical-historique">Historique de maladie :</label>
-                            <textarea id="rapportmedical-historique" name="rapport_medical[historique_de_maladie]" required>${
+              <label for="rapportmedical-historique">Historique de maladie :</label>
+              <textarea id="rapportmedical-historique" name="rapport_medical[historique_de_maladie]" required>${
 consultation.rapportmedical.historiqueDeMaladie
 }</textarea><br/>
-                            <label for="rapportmedical-cas">Cas médical :</label>
-                            <textarea id="rapportmedical-cas" name="rapport_medical[cas_medical]" required>${
+              <label for="rapportmedical-cas">Cas médical :</label>
+              <textarea id="rapportmedical-cas" name="rapport_medical[cas_medical]" required>${
 consultation.rapportmedical.casMedical
 }</textarea><br/>
-                            <label for="rapportmedical-solution">Solution :</label>
-                            <textarea id="rapportmedical-solution" name="rapport_medical[solution]" required>${
+              <label for="rapportmedical-solution">Solution :</label>
+              <textarea id="rapportmedical-solution" name="rapport_medical[solution]" required>${
 consultation.rapportmedical.solution
 }</textarea><br/>
-                            <input type="hidden" id="rapportmedical-token" name="rapport_medical[_token]" value="{{ csrf_token('rapport_medical') }}" />
-                            <button type="button" onclick="confirmEditRapportMedical('${dateStr}', ${index})">Enregistrer</button>
-                        </form>
-                    `;
+              <input type="hidden" id="rapportmedical-token" name="rapport_medical[_token]" value="{{ csrf_token('rapport_medical') }}" />
+              <button type="button" onclick="confirmEditRapportMedical('${dateStr}', ${index})">Enregistrer</button>
+            </form>
+          `;
 document.querySelector("#consultation-popup .popup-content").innerHTML = formHtml;
 document.getElementById("consultation-popup").style.display = "flex";
 };
@@ -447,6 +528,7 @@ if (! consultation || ! consultation.rapportmedical)
 return;
 
 
+
 var editData = new URLSearchParams();
 editData.append('rapport_medical[num]', document.getElementById('rapportmedical-num').value);
 editData.append('rapport_medical[race]', document.getElementById('rapportmedical-race').value);
@@ -468,7 +550,8 @@ body: editData.toString()
 if (data.success) {
 Swal.fire("Modifié!", data.message, "success").then(() => location.reload());
 } else {
-Swal.fire("Erreur", data.message || "Erreur lors de la modification du rapport médical", "error");
+let message = data.errors ? formatErrors(data.errors) : data.message;
+Swal.fire("Erreur", message || "Erreur lors de la modification du rapport médical", "error");
 }
 }).catch(error => {
 console.error(error);
@@ -483,6 +566,7 @@ if (! consultation)
 return;
 
 
+
 Swal.fire({
 title: "Supprimer la consultation ?",
 text: "Cette action est irréversible.",
@@ -494,7 +578,6 @@ cancelButtonText: "Annuler"
 if (result.isConfirmed) {
 const params = new URLSearchParams();
 params.append('_token', consultation.csrfToken);
-
 fetch (`/consultation/${
 consultation.id
 }/delete`, {
@@ -508,7 +591,8 @@ body: params.toString()
 if (data.success) {
 Swal.fire("Supprimée!", "La consultation a été supprimée.", "success").then(() => location.reload());
 } else {
-Swal.fire("Erreur", data.message || "Erreur lors de la suppression", "error");
+let message = data.errors ? formatErrors(data.errors) : data.message;
+Swal.fire("Erreur", message || "Erreur lors de la suppression", "error");
 }
 }).catch(error => {
 console.error(error);
@@ -522,6 +606,7 @@ window.deleteMedicalReport = function (dateStr, index) {
 var consultation = consultationsByDate[dateStr][index];
 if (! consultation.rapportmedical) 
 return;
+
 
 
 var reportId = consultation.rapportmedical.id;
@@ -560,9 +645,7 @@ closePopup('consultation-popup');
 });
 
 // --- Calendrier ---
-var consultationsByDate = {};{% for consultation in consultations %}
-{% set dateStr = consultation.date|date('Y-m-d') %}
-if (! consultationsByDate["{{ dateStr }}"]) {
+var consultationsByDate = {};{% for consultation in consultations %}{% set dateStr = consultation.date|date('Y-m-d') %}if (! consultationsByDate["{{ dateStr }}"]) {
 consultationsByDate["{{ dateStr }}"] = [];
 }
 consultationsByDate["{{ dateStr }}"].push({
@@ -570,8 +653,7 @@ id: "{{ consultation.id }}",
 time: "{{ consultation.heure|date('H:i') }}",
 nom: "{{ consultation.nom }}",
 location: "{{ consultation.lieu }}",
-csrfToken: "{{ csrf_token('delete' ~ consultation.id) }}",{% if consultation.rapportmedical is defined and consultation.rapportmedical %}
-rapportmedical : {
+csrfToken: "{{ csrf_token('delete' ~ consultation.id) }}",{% if consultation.rapportmedical is defined and consultation.rapportmedical %}rapportmedical : {
 id: "{{ consultation.rapportmedical.id }}",
 num: "{{ consultation.rapportmedical.num }}",
 race: "{{ consultation.rapportmedical.race }}",
@@ -583,8 +665,7 @@ csrfToken: "{{ csrf_token('deleteRapportMedical' ~ consultation.rapportmedical.i
 {% else %}
 rapportmedical : null
 {% endif %}
-});{% endfor %}
-console.log("ConsultationsByDate:", consultationsByDate);
+});{% endfor %}console.log("ConsultationsByDate:", consultationsByDate);
 
 function formatDate(dateObj) {
 var year = dateObj.getFullYear();
@@ -618,14 +699,14 @@ var consultations = consultationsByDate[dateStr] || [];
 var listHtml = `<h3>Consultations du ${dateStr}</h3><ul>`;
 consultations.forEach((c, index) => {
 listHtml += `<li>
-                        <button onclick="showDetails('${dateStr}', ${index})">
-                            ${
+            <button onclick="showDetails('${dateStr}', ${index})">
+              ${
 c.time
 } - ${
 c.nom
 }
-                        </button>
-                    </li>`;
+            </button>
+          </li>`;
 });
 listHtml += `</ul>`;
 document.querySelector("#consultation-popup .popup-content").innerHTML = listHtml;
@@ -638,51 +719,52 @@ if (! consultation)
 return;
 
 
+
 var detailsHtml = `
-                    <span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
-                    <h3>Détails de la consultation</h3>
-                    <p><strong>Nom :</strong> ${
+          <span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
+          <h3>Détails de la consultation</h3>
+          <p><strong>Nom :</strong> ${
 consultation.nom
 }</p>
-                    <p>📍 Lieu : ${
+          <p>📍 Lieu : ${
 consultation.location
 }</p>
-                    <p>⏰ Heure : ${
+          <p>⏰ Heure : ${
 consultation.time
 }</p>
-                `;
+        `;
 if (consultation.rapportmedical) {
 detailsHtml += `
-                        <h3>📋 Rapport Médical</h3>
-                        <p><strong>Numéro :</strong> ${
+            <h3>📋 Rapport Médical</h3>
+            <p><strong>Numéro :</strong> ${
 consultation.rapportmedical.num || 'N/A'
 }</p>
-                        <p><strong>Race :</strong> ${
+            <p><strong>Race :</strong> ${
 consultation.rapportmedical.race || 'N/A'
 }</p>
-                        <p><strong>Historique :</strong> ${
+            <p><strong>Historique :</strong> ${
 consultation.rapportmedical.historiqueDeMaladie || 'N/A'
 }</p>
-                        <p><strong>Cas Médical :</strong> ${
+            <p><strong>Cas Médical :</strong> ${
 consultation.rapportmedical.casMedical || 'N/A'
 }</p>
-                        <p><strong>Solution :</strong> ${
+            <p><strong>Solution :</strong> ${
 consultation.rapportmedical.solution || 'N/A'
 }</p>
-                        <div class="buttons">
-                            <button onclick="editRapportMedical('${dateStr}', ${index})">Modifier rapport médical</button>
-                            <button onclick="deleteMedicalReport('${dateStr}', ${index})">Supprimer rapport médical</button>
-                        </div>
-                    `;
+            <div class="buttons">
+              <button onclick="editRapportMedical('${dateStr}', ${index})">Modifier rapport médical</button>
+              <button onclick="deleteMedicalReport('${dateStr}', ${index})">Supprimer rapport médical</button>
+            </div>
+          `;
 } else {
 detailsHtml += `<p><em>Aucun rapport médical disponible.</em></p>`;
 } detailsHtml += `
-                    <div class="buttons">
-                        <br/><button onclick="showConsultations('${dateStr}')">⬅ Retour</button>
-                        <button onclick="editConsultation('${dateStr}', ${index})">Modifier consultation</button>
-                        <button onclick="deleteConsultation('${dateStr}', ${index})">Supprimer consultation</button>
-                    </div>
-                `;
+          <div class="buttons">
+            <br/><button onclick="showConsultations('${dateStr}')">⬅ Retour</button>
+            <button onclick="editConsultation('${dateStr}', ${index})">Modifier consultation</button>
+            <button onclick="deleteConsultation('${dateStr}', ${index})">Supprimer consultation</button>
+          </div>
+        `;
 document.querySelector("#consultation-popup .popup-content").innerHTML = detailsHtml;
 document.getElementById("consultation-popup").style.display = "flex";
 };
