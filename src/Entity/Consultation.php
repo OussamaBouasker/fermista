@@ -43,7 +43,8 @@ class Consultation
     )]
     private ?string $lieu = null;
 
-    #[ORM\OneToOne(mappedBy: "consultation", cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToOne(targetEntity: RapportMedical::class, inversedBy: "consultation", cascade: ['persist'])]
+    #[ORM\JoinColumn(name: "rapportmedical_id", referencedColumnName: "id", nullable: true)]
     private ?RapportMedical $rapportmedical = null;
 
     public function getRapportmedical(): ?RapportMedical
