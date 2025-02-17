@@ -30,26 +30,21 @@ class Reclamation
     #[Assert\NotBlank(message: "La description ne peut pas être vide.")]
     #[Assert\Length(
         min: 8,
-        minMessage: "Le titre doit contenir au moins 8 caractères.",
+        minMessage: "La description doit contenir au moins 8 caractères.",
         max: 50,
-        maxMessage: "Le titre ne doit pas dépasser 50 caractères."
+        maxMessage: "La description ne doit pas dépasser 50 caractères."
     )]
     #[Assert\Regex(pattern: '/^[a-zA-ZÀ-ÿ\s-]+$/', message: 'La déscription ne doit contenir que des lettres et des espaces.')]
 
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
-    #[Assert\Choice(
-        choices: self::AVAILABLE_STATUSES,
-        message: "Le statut doit être l'un des suivants : pending, confirmed, canceled."
-    )]
+    
     private ?string $status = self::STATUS_PENDING;
 
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Assert\Type(\DateTimeInterface::class, message: "La date de soumission doit être une date valide.")]
-    #[Assert\NotNull(message: "La date de soumission est obligatoire.")]
-    #[Assert\LessThanOrEqual("today", message: "La date de soumission ne peut pas être dans le fututr.")]
+   
     private ?\DateTimeInterface $dateSoumission = null;
 
 
