@@ -5,38 +5,67 @@ namespace App\Entity;
 use App\Repository\CollierRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\DBAL\Types\Types;
+
 #[ORM\Entity(repositoryClass: CollierRepository::class)]
 class Collier
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer',nullable: true)]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: false)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(message: "La référence est obligatoire.")]
-    #[Assert\Length(min: 8, max: 255, minMessage: "La référence doit comporter au moins 8 caractères.")]
-    #[Assert\Regex(pattern: "/^[a-zA-Z0-9]+$/", message: "La référence doit contenir uniquement des lettres et des chiffres.")]
+    #[Assert\Length(
+        min: 8,
+        max: 8,
+        minMessage: "La référence doit comporter exactement 8 caractères.",
+        maxMessage: "La référence doit comporter exactement 8 caractères."
+    )]
+
+    #[Assert\Regex(
+        pattern: "/^(?=.*[a-zA-Z])(?=.*\d).+$/",
+        message: "La référence doit contenir au moins une lettre et un chiffre."
+    )]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-Z0-9]+$/",
+        message: "La référence doit contenir uniquement des lettres et des chiffres."
+    )]
     private ?string $reference = null;
 
-    #[ORM\Column(length: 255, nullable: false)]
+    #[ORM\Column(length: 255,nullable: true)]
     #[Assert\NotBlank(message: "La taille est obligatoire.")]
-    #[Assert\Regex(pattern: "/^[a-zA-Z0-9]+$/", message: "La taille peut contenir des lettres et des chiffres.")]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-Z0-9]+$/",
+        message: "La taille peut contenir uniquement des lettres et des chiffres."
+    )]
     private ?string $taille = null;
 
-    #[ORM\Column(type: 'float', nullable: false)]
-    #[Assert\NotBlank(message: "La valeur de la température est obligatoire.")]
-    #[Assert\Range(min: 37, max: 40.5, notInRangeMessage: "La température doit être comprise entre {{ min }} et {{ max }}.")]
+    #[ORM\Column(type: 'float',nullable: true)]
+    #[Assert\NotNull(message: "La valeur de la température est obligatoire.")]
+    #[Assert\Range(
+        min: 36,
+        max: 40.5,
+        notInRangeMessage: "La température doit être comprise entre {{ min }} et {{ max }}."
+    )]
     private ?float $valeurTemperature = null;
 
-    #[ORM\Column(type: 'float', nullable: false)]
-    #[Assert\NotBlank(message: "La valeur de l'agitation est obligatoire.")]
-    #[Assert\Range(min: 0, max: 20, notInRangeMessage: "L'agitation doit être comprise entre {{ min }} et {{ max }}.")]
+    #[ORM\Column(type: 'float', nullable: true)]
+    #[Assert\NotNull(message: "La valeur de l'agitation est obligatoire.")]
+    #[Assert\Range(
+        min: 0,
+        max: 20,
+        notInRangeMessage: "L'agitation doit être comprise entre {{ min }} et {{ max }}."
+    )]
     private ?float $valeurAgitation = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'], orphanRemoval: false)]
-    #[Assert\NotNull(message: "L'id de vache est obligatoire.")]
+    #[ORM\OneToOne(targetEntity: Vache::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Assert\NotNull(message: "L'identifiant de la vache est obligatoire.")]
     private ?Vache $vache = null;
+
+    // Getters et Setters
 
     public function getId(): ?int
     {
@@ -48,7 +77,7 @@ class Collier
         return $this->reference;
     }
 
-    public function setReference(?string $reference): static
+    public function setReference(?string $reference): self
     {
         $this->reference = $reference;
         return $this;
@@ -59,7 +88,7 @@ class Collier
         return $this->taille;
     }
 
-    public function setTaille(?string $taille): static
+    public function setTaille(?string $taille): self
     {
         $this->taille = $taille;
         return $this;
@@ -70,7 +99,7 @@ class Collier
         return $this->valeurTemperature;
     }
 
-    public function setValeurTemperature(?float $valeurTemperature): static
+    public function setValeurTemperature(?float $valeurTemperature): self
     {
         $this->valeurTemperature = $valeurTemperature;
         return $this;
@@ -81,7 +110,7 @@ class Collier
         return $this->valeurAgitation;
     }
 
-    public function setValeurAgitation(?float $valeurAgitation): static
+    public function setValeurAgitation(?float $valeurAgitation): self
     {
         $this->valeurAgitation = $valeurAgitation;
         return $this;
@@ -92,7 +121,7 @@ class Collier
         return $this->vache;
     }
 
-    public function setVache(?Vache $vache): static
+    public function setVache(?Vache $vache): self
     {
         $this->vache = $vache;
         return $this;

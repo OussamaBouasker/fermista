@@ -32,6 +32,7 @@
     <thead>
       <tr>
         <th>Id</th>
+        <th>Nom</th>
         <th>Age</th>
         <th>Race</th>
         <th>EtatMedical</th>
@@ -42,6 +43,7 @@
       {% for vache in vaches %}
       <tr>
         <td>{{ vache.id }}</td>
+        <td>{{ vache.name }}</td>
         <td>{{ vache.age }}</td>
         <td>{{ vache.race }}</td>
         <td>{{ vache.EtatMedical }}</td>
