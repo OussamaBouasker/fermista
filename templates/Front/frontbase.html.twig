@@ -97,6 +97,8 @@
 							<a href="/home" class="nav-item nav-link active">Home</a>
                             <a href="shop.html" class="nav-item nav-link">Shop</a>
 							<a href="shop-detail.html" class="nav-item nav-link">Shop Detail</a>
+                            <a href="/calendrier" class="nav-item nav-link">Suivie_Medical</a>
+
 							<div class="nav-item dropdown">
 								<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
 								<div class="dropdown-menu m-0 bg-secondary rounded-0">
@@ -127,37 +129,7 @@
 
 
 						</div>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle my-auto" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-user fa-2x"></i>
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                                    {% if app.user %}
-                                    {% if "Client" not in app.user.roles %}
-                                        <li>
-                                            <a class="dropdown-item" href="{{ path('app_home_admin') }}" style="color: gray; transition: color 0.3s, background-color 0.3s;">Page admin </a>
-                                        </li>
-                                    
-                                {% endif %}
-                                        <!-- Si l'utilisateur est connecté, afficher l'option Logout -->
-                                        <li>
-                                            <a class="dropdown-item" href="#" style="color: gray; transition: color 0.3s, background-color 0.3s;">reclamations</a>
-                                        </li>
 
-                                        <li>
-                                            <a class="dropdown-item" href="{{ path('app_logout') }}" style="color: gray; transition: color 0.3s, background-color 0.3s;">Logout</a>
-                                        </li>
-                                    {% else %}
-                                        <!-- Si l'utilisateur n'est pas connecté, afficher Sign Up et Login -->
-                                        <li>
-                                            <a class="dropdown-item" href="/register" style="color: gray; transition: color 0.3s, background-color 0.3s;">Sign Up</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="/login" style="color: gray; transition: color 0.3s, background-color 0.3s;">Login</a>
-                                        </li>
-                                    {% endif %}
-                                </ul>
-                            </div>
 						<div class="nav-item dropdown">
 							<a href="#" class="nav-link dropdown-toggle my-auto" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 								<i class="fas fa-user fa-2x"></i>
