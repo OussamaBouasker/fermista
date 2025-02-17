@@ -22,17 +22,19 @@ class VeterinaireController extends AbstractController
     {
         $em = $doctrine->getManager();
 
-        // Traitement du formulaire de création d'une Consultation
+        // --- Traitement du formulaire de création d'une Consultation ---
         $consultation = new Consultation();
         $consultationForm = $this->createForm(ConsultationType::class, $consultation);
         $consultationForm->handleRequest($request);
+
         if ($consultationForm->isSubmitted() && $consultationForm->isValid()) {
-            // Si un rapport médical est associé, synchroniser la relation
+            // Synchroniser la relation si un rapport médical est associé
             if ($consultation->getRapportmedical()) {
                 $consultation->getRapportmedical()->setConsultation($consultation);
             }
             $em->persist($consultation);
             $em->flush();
+
             if ($request->isXmlHttpRequest()) {
                 return $this->json([
                     'success' => true,
@@ -42,14 +44,30 @@ class VeterinaireController extends AbstractController
             $this->addFlash('success', 'La consultation a été enregistrée.');
             return $this->redirectToRoute('app_calendrier');
         }
+        if ($consultationForm->isSubmitted() && !$consultationForm->isValid() && $request->isXmlHttpRequest()) {
+            $errors = [];
+            foreach ($consultationForm->getErrors(true) as $error) {
+                $field = $error->getOrigin()->getName();
+                if (!isset($errors[$field])) {
+                    $errors[$field] = [];
+                }
+                $errors[$field][] = $error->getMessage();
+            }
+            return $this->json([
+                'success' => false,
+                'errors'  => $errors,
+            ], 400);
+        }
 
-        // Traitement du formulaire de création d'un Rapport Médical
+        // --- Traitement du formulaire de création d'un Rapport Médical ---
         $rapportMedical = new RapportMedical();
         $rapportMedicalForm = $this->createForm(RapportMedicalType::class, $rapportMedical);
         $rapportMedicalForm->handleRequest($request);
+
         if ($rapportMedicalForm->isSubmitted() && $rapportMedicalForm->isValid()) {
             $em->persist($rapportMedical);
             $em->flush();
+
             if ($request->isXmlHttpRequest()) {
                 return $this->json([
                     'success' => true,
@@ -58,6 +76,20 @@ class VeterinaireController extends AbstractController
             }
             $this->addFlash('success', 'Le rapport médical a été enregistré.');
             return $this->redirectToRoute('app_calendrier');
+        }
+        if ($rapportMedicalForm->isSubmitted() && !$rapportMedicalForm->isValid() && $request->isXmlHttpRequest()) {
+            $errors = [];
+            foreach ($rapportMedicalForm->getErrors(true) as $error) {
+                $field = $error->getOrigin()->getName();
+                if (!isset($errors[$field])) {
+                    $errors[$field] = [];
+                }
+                $errors[$field][] = $error->getMessage();
+            }
+            return $this->json([
+                'success' => false,
+                'errors'  => $errors,
+            ], 400);
         }
 
         // Récupérer toutes les consultations pour affichage dans le calendrier
@@ -81,13 +113,34 @@ class VeterinaireController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Mettre à jour la relation avec le Rapport Médical si nécessaire
+            // Synchroniser la relation si nécessaire
             if ($consultation->getRapportmedical()) {
                 $consultation->getRapportmedical()->setConsultation($consultation);
             }
             $doctrine->getManager()->flush();
+
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'success' => true,
+                    'message' => 'La consultation a été mise à jour.'
+                ]);
+            }
             $this->addFlash('success', 'La consultation a été mise à jour.');
             return $this->redirectToRoute('app_calendrier');
+        }
+        if ($form->isSubmitted() && !$form->isValid() && $request->isXmlHttpRequest()) {
+            $errors = [];
+            foreach ($form->getErrors(true) as $error) {
+                $field = $error->getOrigin()->getName();
+                if (!isset($errors[$field])) {
+                    $errors[$field] = [];
+                }
+                $errors[$field][] = $error->getMessage();
+            }
+            return $this->json([
+                'success' => false,
+                'errors'  => $errors,
+            ], 400);
         }
 
         return $this->render('Front/veterinaire/edit_consultation.html.twig', [
@@ -128,7 +181,6 @@ class VeterinaireController extends AbstractController
         return $this->redirectToRoute('app_calendrier');
     }
 
-
     /**
      * Permet d'éditer un rapport médical existant.
      */
@@ -138,7 +190,6 @@ class VeterinaireController extends AbstractController
         $form = $this->createForm(RapportMedicalType::class, $rapportMedical);
         $form->handleRequest($request);
 
-        // Traitement spécifique pour les requêtes AJAX
         if ($request->isXmlHttpRequest()) {
             if ($form->isSubmitted()) {
                 if ($form->isValid()) {
@@ -148,25 +199,26 @@ class VeterinaireController extends AbstractController
                         'message' => 'Le rapport médical a été modifié.'
                     ]);
                 } else {
-                    // Récupérer toutes les erreurs de validation
                     $errors = [];
                     foreach ($form->getErrors(true) as $error) {
-                        $errors[] = $error->getMessage();
+                        $field = $error->getOrigin()->getName();
+                        if (!isset($errors[$field])) {
+                            $errors[$field] = [];
+                        }
+                        $errors[$field][] = $error->getMessage();
                     }
                     return $this->json([
                         'success' => false,
-                        'message' => implode(' ', $errors)
+                        'errors'  => $errors,
                     ], 400);
                 }
             }
-            // En GET AJAX, vous pouvez renvoyer le formulaire HTML partiel (optionnel)
             return $this->render('Front/veterinaire/edit_rapportmedical.html.twig', [
                 'rapportMedicalForm' => $form->createView(),
                 'rapportMedical'     => $rapportMedical,
             ]);
         }
 
-        // Traitement classique (non-AJAX)
         if ($form->isSubmitted() && $form->isValid()) {
             $doctrine->getManager()->flush();
             $this->addFlash('success', 'Le rapport médical a été mis à jour.');
@@ -182,13 +234,9 @@ class VeterinaireController extends AbstractController
     /**
      * Permet de supprimer un rapport médical.
      */
-    /**
-     * Permet de supprimer un rapport médical.
-     */
     #[Route('/rapportmedical/{id}/delete', name: 'app_rapportmedical_delete', methods: ['POST'])]
     public function deleteRapportMedical(Request $request, RapportMedical $rapportMedical, ManagerRegistry $doctrine): Response
     {
-        // Utiliser 'deleteRapportMedical' au lieu de 'delete'
         if ($this->isCsrfTokenValid('deleteRapportMedical' . $rapportMedical->getId(), $request->request->get('_token'))) {
             $em = $doctrine->getManager();
             $em->remove($rapportMedical);
@@ -200,7 +248,6 @@ class VeterinaireController extends AbstractController
                     'message' => 'Le rapport médical a été supprimé.'
                 ]);
             }
-
             $this->addFlash('success', 'Le rapport médical a été supprimé.');
         } else {
             if ($request->isXmlHttpRequest()) {
