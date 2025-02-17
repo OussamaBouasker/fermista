@@ -1,67 +1,41 @@
 {% extends 'base.html.twig' %}
-{% block content %}
-<!DOCTYPE html>
-<html>
 
-<head>
-  <meta charset="UTF-8">
-  <title>{% block title %}Welcome!{% endblock %}</title>
-  <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-  {% block stylesheets %}
-  {{ parent() }}
+{% block title %}Produit{% endblock %}
 
-  {% endblock %}
-</head>
+{% block body %}
+<h1>Produit</h1>
 
-<body>
-  {% block body %}
-  <h1>Collier</h1>
+<table class="table">
+  <tbody>
+    <tr>
+      <th>Id</th>
+      <td>{{ collier.id }}</td>
+    </tr>
+    <tr>
+      <th>Reference</th>
+      <td>{{ collier.reference }}</td>
+    </tr>
+    <tr>
+      <th>Taille</th>
+      <td>{{ collier.taille }}</td>
+    </tr>
+    <tr>
+      <th>ValeurTemperature</th>
+      <td>{{ collier.valeurTemperature }}</td>
+    </tr>
+    <tr>
+      <th>ValeurAgitation</th>
+      <td>{{ collier.valeurAgitation }}</td>
+    </tr>
 
-  <table class="table">
-    <tbody>
-      <tr>
-        <th>Id</th>
-        <td>{{ collier.id }}</td>
-      </tr>
-      <tr>
-        <th>Reference</th>
-        <td>{{ collier.reference }}</td>
-      </tr>
-      <tr>
-        <th>Taille</th>
-        <td>{{ collier.taille }}</td>
-      </tr>
-      <tr>
-        <th>ValeurTemperature</th>
-        <td>{{ collier.valeurTemperature }}</td>
-      </tr>
-      <tr>
-        <th>ValeurAgitation</th>
-        <td>{{ collier.valeurAgitation }}</td>
-      </tr>
-    </tbody>
-  </table>
+  </tbody>
+</table>
 
-  <a href="{{ path('app_collier_index') }}">back to list</a>
-
-  <a href="{{ path('app_collier_edit', {'id': collier.id}) }}">edit</a>
-
-  {{ include('Back/collier/_delete_form.html.twig') }}
+<div class="text-center mt-3">
+  <a href="{{ path('app_collier_index')  }}" class="btn btn-secondary btn-lg">Back to List</a>
+</div>
 
 
 
-
-
-
-
-
-  {% block javascripts %}
-  {{ parent() }}
-  {% endblock %}
-
-  {% endblock %}
-</body>
-
-</html>
+{{ include('Back/collier/_delete_form.html.twig') }}
 {% endblock %}

@@ -14,6 +14,7 @@ class VacheType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('name', TextType::class)
             ->add('age', IntegerType::class, [
                 'required' => false,
                 'attr' => ['placeholder' => 'Entrez l\'âge de la vache'],
