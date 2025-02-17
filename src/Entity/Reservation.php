@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ReservationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
@@ -24,13 +25,53 @@ class Reservation
     private ?string $prix = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Le commentaire ne doit pas dépasser {{ limit }} caractères."
+    )]
     private ?string $commentaire = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank(message: "Vous devez accepter le reglement des workshops.")]
     private ?bool $confirmation = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservation')]
     private ?Workshop $workshop = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le email est obligatoire.")]
+
+    #[Assert\Email(
+        message: "L'adresse email '{{ value }}' n'est pas valide. Expl : utilisateur@domaine.extension"
+
+    )]
+    private ?string $email = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank(message: "Le numéro de télephone est obligatoire.")]
+    #[Assert\Length(
+        exactMessage: "Le numéro de téléphone doit comporter exactement 8 chiffres.",
+        min: 8,
+        max: 8
+    )]
+    #[Assert\Regex(
+        pattern: "/^\d{8}$/",
+        message: "Le numéro de téléphone doit comporter uniquement des chiffres."
+    )]
+    private ?int $num_tel = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le numéro de carte bancaire est obligatoire.")]
+    #[Assert\Length(
+        min: 16,
+        max: 16,
+        exactMessage: "Le numéro de carte bancaire doit comporter exactement 16 chiffres."
+    )]
+    #[Assert\Regex(
+        pattern: "/^\d{16}$/",
+        message: "Le numéro de carte bancaire doit contenir uniquement des chiffres."
+    )]
+    private ?string $num_carte_bancaire = null;
 
     // Enum-like constants for status
     public const STATUS_PENDING = 'pending';
@@ -120,6 +161,42 @@ class Reservation
     public function setWorkshop(?Workshop $workshop): static
     {
         $this->workshop = $workshop;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getNumTel(): ?int
+    {
+        return $this->num_tel;
+    }
+
+    public function setNumTel(?int $num_tel): static
+    {
+        $this->num_tel = $num_tel;
+
+        return $this;
+    }
+
+    public function getNumCarteBancaire(): ?string
+    {
+        return $this->num_carte_bancaire;
+    }
+
+    public function setNumCarteBancaire(?string $num_carte_bancaire): static
+    {
+        $this->num_carte_bancaire = $num_carte_bancaire;
 
         return $this;
     }
