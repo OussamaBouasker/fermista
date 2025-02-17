@@ -1,14 +1,49 @@
+{{ form_start(form,{'attr': {'novalidate': 'novalidate'}}) }}
 {{ form_start(form, {'attr': {'class': 'form-group'}}) }}
 
-{% for field in form %}
-	<div class="mb-3" style="gap: 20px; width:600px">
-		{{ form_label(field, null, {'label_attr': {'class': 'form-label'}}) }}
-		{{ form_widget(field, {'attr': {'class': 'form-control', 'placeholder': field.vars.label}}) }}
 
-		{{ form_errors(field) }}
-	</div>
-{% endfor %}
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.num, "Numéro de la vache", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.num, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le numéro'}}) }}
+	{% if form_errors(form.num) %}
+		<div class="alert alert-danger mt-2 p-1">{{ form_errors(form.num) }}</div>
+	{% endif %}
+</div>
 
-<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Save') }}</button>
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.race, "Race de la vache", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.race, {'attr': {'class': 'form-control', 'placeholder': 'Entrez la race'}}) }}
+	{% if form_errors(form.race) %}
+		<div class="alert alert-danger mt-2 p-1">{{ form_errors(form.race) }}</div>
+	{% endif %}
+</div>
+
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.historique_de_maladie, "Historique de Maladie", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.historique_de_maladie, {'attr': {'class': 'form-control', 'placeholder': 'Entrez l\'historique médical'}}) }}
+    {% if form_errors(form.historique_de_maladie) %}
+        <div class="alert alert-danger mt-2 p-1">{{ form_errors(form.historique_de_maladie) }}</div>
+    {% endif %}
+</div>
+
+<div class="mb-3" style="gap: 20px; width:600px">
+    {{ form_label(form.cas_medical, "Cas Médical", {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.cas_medical, {'attr': {'class': 'form-control', 'placeholder': 'Décrivez le cas médical'}}) }}
+    {% if form_errors(form.cas_medical) %}
+        <div class="alert alert-danger mt-2 p-1">{{ form_errors(form.cas_medical) }}</div>
+    {% endif %}
+</div>
+
+<div class="mb-3" style="gap: 20px; width:600px">
+    {{ form_label(form.solution, "Solution", {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.solution, {'attr': {'class': 'form-control', 'placeholder': 'Proposez une solution'}}) }}
+    {% if form_errors(form.solution) %}
+        <div class="alert alert-danger mt-2 p-1">{{ form_errors(form.solution) }}</div>
+    {% endif %}
+</div>
+
+
+
+<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>
 
 {{ form_end(form) }}
