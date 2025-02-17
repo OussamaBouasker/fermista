@@ -190,7 +190,7 @@
 
 {% block body %}
 	{# Définition d'une date minimale (demain) pour le champ date #}
-	{% set tomorrow = "now"|date("Y-m-d", "+1 day") %}
+{% set tomorrow = "now"|date_modify("+1 day")|date("Y-m-d") %}
 	{% set consultationToken = csrf_token('consultation') %}
 
 	<h1>📆 Consultations</h1>
