@@ -10,30 +10,61 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+
+
 
 class ReservationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('reservation_date', null, [
-                'widget' => 'single_text',
+            ->add('reservation_date',HiddenType::class, [
+                'disabled' => true, // Make it read-only
+                'mapped' => false, // We handle this manually
             ])
-            ->add('status', ChoiceType::class, [
-                'choices' => [
-                    'Pending' => 'pending',
-                    'Confirmed' => 'confirmed',
-                    'Canceled' => 'canceled',
-                ],
-                'expanded' => false,  // Set to true for radio buttons instead of a dropdown
-                'multiple' => false,  // Ensure only one option can be selected
+            // ->add('status', ChoiceType::class, [
+            //     'choices' => [
+            //         'Pending' => 'pending',
+            //         'Confirmed' => 'confirmed',
+            //         'Canceled' => 'canceled',
+            //     ],
+            //     'expanded' => false,  // Set to true for radio buttons instead of a dropdown
+            //     'multiple' => false,  // Ensure only one option can be selected
+            //     'mapped' => false,
+            // ])
+            ->add('prix',HiddenType::class, [
+                'disabled' => true, // Make it read-only
+                'mapped' => false, // We handle this manually
             ])
-            ->add('prix')
+            
+            ->add('email', EmailType::class, [
+                'required' => true,
+                'label' => 'Adresse Email',
+                'attr' => ['placeholder' => 'exemple@email.com'],
+            ])
+            ->add('num_tel', IntegerType::class, [
+                'required' => true,
+                'label' => 'Numéro de Téléphone',
+                'attr' => ['placeholder' => 'Entrez votre numéro'],
+            ])
+
+            ->add('num_carte_bancaire', TextType::class, [
+                'label' => 'Numéro de carte bancaire',
+                'required' => false,
+                'attr' => ['class' => 'form-control'],
+            ])
             ->add('commentaire')
-            ->add('workshop', EntityType::class, [
-                'class' => Workshop::class,
-                'choice_label' => 'titre',
+            ->add('workshop', HiddenType::class, [
+                'disabled' => true, // Make it read-only
+                'mapped' => false, // We handle this manually
             ])
+
+
+
             ->add('confirmation', CheckboxType::class, [
                 'required' => true, // Allow the checkbox to be unchecked
                 'label' => 'Accepter le reglement des workshops',
