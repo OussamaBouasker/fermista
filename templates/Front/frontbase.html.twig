@@ -94,7 +94,7 @@
 					<div class="collapse navbar-collapse bg-white" id="navbarCollapse">
 						<div class="navbar-nav mx-auto">
 
-							<a href="index.html" class="nav-item nav-link active">Home</a>
+							<a href="/home" class="nav-item nav-link active">Home</a>
                             <a href="shop.html" class="nav-item nav-link">Shop</a>
 							<a href="shop-detail.html" class="nav-item nav-link">Shop Detail</a>
 							<div class="nav-item dropdown">
@@ -126,37 +126,37 @@
 
 
 						</div>
-						<div class="nav-item dropdown">
-							<a href="#" class="nav-link dropdown-toggle my-auto" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-								<i class="fas fa-user fa-2x"></i>
-							</a>
-							<ul class="dropdown-menu" aria-labelledby="userDropdown">
-								{% if app.user %}
-								{% if "Client" not in app.user.roles %}
-									<li>
-										<a class="dropdown-item" href="{{ path('app_home_admin') }}" style="color: gray; transition: color 0.3s, background-color 0.3s;">Page admin </a>
-									</li>
-								
-							{% endif %}
-									<!-- Si l'utilisateur est connecté, afficher l'option Logout -->
-                                    <li>
-										<a class="dropdown-item" href="#" style="color: gray; transition: color 0.3s, background-color 0.3s;">reclamations</a>
-									</li>
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle my-auto" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user fa-2x"></i>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                    {% if app.user %}
+                                    {% if "Client" not in app.user.roles %}
+                                        <li>
+                                            <a class="dropdown-item" href="{{ path('app_home_admin') }}" style="color: gray; transition: color 0.3s, background-color 0.3s;">Page admin </a>
+                                        </li>
+                                    
+                                {% endif %}
+                                        <!-- Si l'utilisateur est connecté, afficher l'option Logout -->
+                                        <li>
+                                            <a class="dropdown-item" href="#" style="color: gray; transition: color 0.3s, background-color 0.3s;">reclamations</a>
+                                        </li>
 
-									<li>
-										<a class="dropdown-item" href="{{ path('app_logout') }}" style="color: gray; transition: color 0.3s, background-color 0.3s;">Logout</a>
-									</li>
-								{% else %}
-									<!-- Si l'utilisateur n'est pas connecté, afficher Sign Up et Login -->
-									<li>
-										<a class="dropdown-item" href="/register" style="color: gray; transition: color 0.3s, background-color 0.3s;">Sign Up</a>
-									</li>
-									<li>
-										<a class="dropdown-item" href="/login" style="color: gray; transition: color 0.3s, background-color 0.3s;">Login</a>
-									</li>
-								{% endif %}
-							</ul>
-						</div>
+                                        <li>
+                                            <a class="dropdown-item" href="{{ path('app_logout') }}" style="color: gray; transition: color 0.3s, background-color 0.3s;">Logout</a>
+                                        </li>
+                                    {% else %}
+                                        <!-- Si l'utilisateur n'est pas connecté, afficher Sign Up et Login -->
+                                        <li>
+                                            <a class="dropdown-item" href="/register" style="color: gray; transition: color 0.3s, background-color 0.3s;">Sign Up</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="/login" style="color: gray; transition: color 0.3s, background-color 0.3s;">Login</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
 					</nav>
 				</div>
 			</div>
