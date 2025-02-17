@@ -1,0 +1,87 @@
+{{ form_start(form, {'attr': {'class': 'form-group','novalidate': 'novalidate'}}) }}
+
+<!-- Email -->
+<div class="mb-3">
+	{{ form_label(form.email, "Adresse Email", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.email, {'attr': {'class': 'form-control' ~ (form.email.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'exemple@email.com'}}) }}
+	{% if form.email.vars.errors|length > 0 %}
+		<div class="text-danger">
+			{% for error in form.email.vars.errors %}
+				<small>{{ error.message }}</small>
+			{% endfor %}
+		</div>
+	{% endif %}
+</div>
+
+<!-- Numéro de téléphone -->
+<div class="mb-3">
+	{{ form_label(form.num_tel, "Numéro de Téléphone", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.num_tel, {'attr': {'class': 'form-control' ~ (form.num_tel.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Entrez votre numéro'}}) }}
+	{% if form.num_tel.vars.errors|length > 0 %}
+		<div class="text-danger mt-1">
+			{% for error in form.num_tel.vars.errors %}
+				<small>{{ error.message }}</small>
+			{% endfor %}
+		</div>
+	{% endif %}
+</div>
+
+<!-- Carte bancaire -->
+<div class="mb-3">
+	{{ form_label(form.num_carte_bancaire, "Numéro de carte bancaire", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.num_carte_bancaire, {'attr': {'class': 'form-control' ~ (form.num_carte_bancaire.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Entrez votre numéro de carte'}}) }}
+	{% if form.num_carte_bancaire.vars.errors|length > 0 %}
+		<div class="text-danger mt-1">
+			{% for error in form.num_carte_bancaire.vars.errors %}
+				<small>{{ error.message }}</small>
+			{% endfor %}
+		</div>
+	{% endif %}
+</div>
+
+<!-- Commentaire -->
+<div class="mb-3">
+	{{ form_label(form.commentaire, "Commentaire", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.commentaire, {'attr': {'class': 'form-control' ~ (form.commentaire.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Ajouter un commentaire'}}) }}
+	{% if form.commentaire.vars.errors|length > 0 %}
+		<div class="text-danger mt-1">
+			{% for error in form.commentaire.vars.errors %}
+				<small>{{ error.message }}</small>
+			{% endfor %}
+		</div>
+	{% endif %}
+</div>
+
+<div class="mb-3" style="gap: 20px; width:600px">
+    {{ form_label(form.workshop, "Workshop", {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.workshop, {'attr': {
+            'class': 'form-control' ~ (form.workshop.vars.errors|length > 0 ? ' is-invalid' : ''),
+            'disabled': 'disabled'  
+        }
+    }) }}
+    {% if form.workshop.vars.errors|length > 0 %}
+        <div class="text-danger mt-1">
+            {% for error in form.workshop.vars.errors %}
+                <small>{{ error.message }}</small>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<!-- Checkbox -->
+<div class="mb-3">
+	{{ form_label(form.confirmation, "Accepter le règlement des workshops", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.confirmation, {'attr': {'class': 'form-check-input' ~ (form.confirmation.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+	{% if form.confirmation.vars.errors|length > 0 %}
+		<div class="text-danger mt-1">
+			{% for error in form.confirmation.vars.errors %}
+				<small>{{ error.message }}</small>
+			{% endfor %}
+		</div>
+	{% endif %} 
+</div>
+
+<!-- Bouton Enregistrer -->
+<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>
+
+{{ form_end(form) }}

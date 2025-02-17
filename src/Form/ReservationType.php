@@ -58,9 +58,11 @@ class ReservationType extends AbstractType
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('commentaire')
-            ->add('workshop', HiddenType::class, [
-                'disabled' => true, // Make it read-only
-                'mapped' => false, // We handle this manually
+            ->add('workshop', EntityType::class, [
+                'class' => Workshop::class,
+                'choice_label' => 'titre', // or another property you want to display
+                // 'disabled' => true,        // remove or set to false if you want it editable
+                // Remove 'mapped' => false if the relation is already defined in your entity
             ])
 
 
