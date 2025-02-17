@@ -1,0 +1,455 @@
+{% extends 'Front/frontbase.html.twig' %}
+{% block content %}
+
+
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>
+				{% block title %}Welcome!
+				{% endblock %}
+			</title>
+			<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+			{% block stylesheets %}
+				{{ parent() }}
+				<style>
+					.page-header {
+						background: url("{{ asset('uploads/images/workshop0.png') }}") center/cover no-repeat;
+						height: 300px; /* Adjust height as needed */
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						text-align: center;
+					}
+					.fruite-img img {
+						width: 100%;
+						height: 150px; /* Ensures uniform image size */
+						object-fit: cover;
+					}
+
+					.fruite-item {
+						display: flex;
+						flex-direction: column;
+						height: 100%;
+					}
+
+					.fruite-item .p-4 {
+						flex-grow: 1;
+						display: flex;
+						flex-direction: column;
+						justify-content: space-between;
+					}
+
+					.fruite-item p {
+						display: -webkit-box;
+						-webkit-line-clamp: 3; /* Limit to 3 lines */
+						-webkit-box-orient: vertical;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						word-wrap: break-word;
+					}
+					.workshop-description {
+						font-family: 'Roboto', sans-serif; /* Choisir une police moderne et élégante */
+						font-size: 1.1rem; /* Taille de texte agréable */
+						line-height: 1.6; /* Augmenter l'interligne pour une meilleure lisibilité */
+						color: #333; /* Couleur de texte douce pour moins de contraste */
+						text-align: justify; /* Justifier le texte */
+						margin-top: 10px; /* Espacement supérieur pour séparer du titre */
+						margin-bottom: 20px; /* Espacement inférieur */
+						padding-right: 10px; /* Petit padding sur la droite pour ne pas que le texte colle au bord */
+						max-width: 100%; /* Empêcher le texte de sortir de la div */
+						word-wrap: break-word; /* Casser les mots longs pour éviter de déborder */
+						overflow-wrap: break-word; /* Assurer la gestion des mots longs */
+						letter-spacing: 0.5px; /* Espacement entre les lettres pour plus de lisibilité */
+					}
+
+					.fruite-categorie li {
+						margin-bottom: 15px; /* Espacement entre les éléments de la liste */
+					}
+
+					h4 {
+						font-size: 1.5rem; /* Augmenter la taille du titre */
+						color: #007bff; /* Couleur bleue pour le titre */
+						text-transform: uppercase; /* Mettre le titre en majuscules */
+						letter-spacing: 1px; /* Espacement entre les lettres du titre */
+						margin-bottom: 15px; /* Espacement sous le titre */
+					}
+				</style>
+
+				<style>
+					.modal-body {
+						padding: 20px;
+					}
+
+					.form-item {
+						margin-bottom: 1.5rem;
+					}
+
+					.form-check {
+						margin-top: 1rem;
+					}
+
+					.text-danger small {
+						font-size: 0.875rem;
+					}
+
+					@media(max-width: 767px) {
+						.modal-body {
+							padding: 15px;
+						}
+
+						.form-item {
+							margin-bottom: 1rem;
+						}
+
+						.form-check {
+							margin-top: 0.75rem;
+						}
+
+						.text-end {
+							text-align: center;
+						}
+					}
+				</style>
+
+				{# css du modal  #}
+				<style>
+					/* Modal Background */
+					.modal {
+						display: none;
+						position: fixed;
+						top: 0;
+						left: 0;
+						width: 100%;
+						height: 100%;
+						background-color: rgba(0, 0, 0, 0.5);
+						justify-content: center;
+						align-items: center;
+						z-index: 1100;
+					}
+
+					/* Modal Content */
+					.modal-content {
+						background-color: white;
+						padding: 30px;
+						width: 600px;
+						max-height: 90vh; /* Empêcher le débordement */
+						overflow-y: auto; /* Activer le scroll si nécessaire */
+						border-radius: 8px;
+						position: relative;
+					}
+
+					.form-label {
+						font-weight: bold;
+					}
+
+					.form-control {
+						width: 100%;
+						padding: 10px;
+						border-radius: 5px;
+						border: 1px solid #ccc;
+						margin-top: 5px;
+					}
+
+					.form-control.is-invalid {
+						border-color: red;
+					}
+
+					.text-danger {
+						color: red;
+						font-size: 12px;
+					}
+
+					.btn-outline-dark {
+						background-color: #007bff;
+						color: white;
+						padding: 10px 20px;
+						border-radius: 5px;
+						cursor: pointer;
+					}
+
+					.btn-outline-dark:hover {
+						background-color: #0056b3;
+					}
+
+					{
+						# close button #
+					}
+
+					.close-modal {
+						position: absolute;
+						top: 15px;
+						right: 15px;
+						width: 30px;
+						height: 30px;
+						background-color: #ff4d4d; /* Rouge doux */
+						color: white;
+						border: none;
+						border-radius: 50%;
+						font-size: 18px;
+						font-weight: bold;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						cursor: pointer;
+						transition: 0.3s;
+					}
+
+					/* Effet au survol */
+					.close-modal:hover {
+						background-color: #cc0000;
+						transform: scale(1.1);
+					}
+
+					/* Animation for Modal */
+					@keyframes fadeIn {
+						0% {
+							opacity: 0;
+						}
+						100% {
+							opacity: 1;
+						}
+					}
+				</style>
+
+			{% endblock %}
+		</head>
+		<body>
+
+			{% block body %}
+				<div class="container-fluid page-header py-5"></div>
+
+				<div class="container-fluid py-5 mt-5">
+					<div class="container py-5">
+						<div class="row g-4 mb-5">
+							<div class="col-lg-8 col-xl-9">
+								<div class="row g-4">
+									<div class="col-lg-6">
+										<div class="border rounded">
+											<a href="#">
+												<img src="{{ asset('uploads/images/' ~ workshop.image) }}" alt="{{ workshop.titre }}" class="img-fluid"/>
+											</a>
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<h2 class="fw-bold mb-3 text-dark">{{ workshop.titre }}</h2>
+
+										<p class="mb-3">
+											<strong class="text-secondary">
+												<i class="fa fa-tag me-1"></i>
+												Catégorie :</strong>
+											<span class="badge bg-primary px-2 py-1">{{ workshop.theme }}</span>
+										</p>
+
+										<h3 class="fw-bold text-success mb-3">
+											<i class="fa fa-money-bill me-2"></i>
+											{{ workshop.prix }}
+											DT</h3>
+
+										<p class="mb-2">
+											<strong class="text-secondary">
+												<i class="fa fa-calendar-alt me-1"></i>
+												Date :</strong>
+											<span class="text-primary fw-semibold">{{ workshop.date|date('d-m-Y H:i') }}</span>
+										</p>
+
+										<p class="mb-2">
+											<strong class="text-secondary">
+												<i class="fa fa-clock me-1"></i>
+												Durée :</strong>
+											<span class="text-secondary">{{ workshop.duration|date('H:i') }}</span>
+										</p>
+
+										<p class="mb-2">
+											<strong class="text-secondary">
+												<i class="fa fa-list me-1"></i>
+												Type :</strong>
+											<span class="text-dark">{{ workshop.type }}</span>
+										</p>
+
+										<p class="mb-3">
+											<strong class="text-secondary">
+												<i class="fa fa-users me-1"></i>
+												Places Maximum :</strong>
+											<span class="fw-bold text-danger">{{ workshop.nbrPlacesRestantes }}</span>
+											/
+											<span class="fw-semibold">{{ workshop.nbrPlacesMax }}</span>
+										</p>
+
+										<hr class="my-4">
+
+										<a class="open-modal" href="#" class="btn btn-lg btn-primary rounded-pill px-4 py-3" id="openModalBtn" type="button" class="btn btn-primary reserve-btn" data-bs-toggle="modal" data-bs-target="#reservationModal" data-workshop-id="{{ workshop.id }}">
+											<i class="fa fa-shopping-cart me-2"></i>
+											Réserver ma place
+										</a>
+									</div>
+
+
+									<div class="modal" id="myModal">
+										<div class="modal-content">
+											<button class="close-modal" id="closeModalBtn">&times;</button>
+											<h2 class="fw-bold mb-3 text-dark">{{ workshop.titre }}</h2>
+											<p class="mb-2">
+												<strong class="text-secondary">
+													<i class="fa fa-calendar-alt me-1"></i>
+													Date :</strong>
+												<span class="text-primary fw-semibold">{{ workshop.date|date('d-m-Y H:i') }}</span>
+											</p>
+											<h3 class="fw-bold text-success mb-3">
+												<i class="fa fa-money-bill me-2"></i>
+												{{ workshop.prix }}
+												DT</h3>
+
+											{{ form_start(form, {'attr': {'class': 'form-group','novalidate': 'novalidate'}}) }}
+
+											<!-- Email -->
+											<div class="mb-3">
+												{{ form_label(form.email, "Adresse Email", {'label_attr': {'class': 'form-label'}}) }}
+												{{ form_widget(form.email, {'attr': {'class': 'form-control' ~ (form.email.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'exemple@email.com'}}) }}
+												{% if form.email.vars.errors|length > 0 %}
+													<div class="text-danger">
+														{% for error in form.email.vars.errors %}
+															<small>{{ error.message }}</small>
+														{% endfor %}
+													</div>
+												{% endif %}
+											</div>
+
+											<!-- Numéro de téléphone -->
+											<div class="mb-3">
+												{{ form_label(form.num_tel, "Numéro de Téléphone", {'label_attr': {'class': 'form-label'}}) }}
+												{{ form_widget(form.num_tel, {'attr': {'class': 'form-control' ~ (form.num_tel.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Entrez votre numéro'}}) }}
+												{% if form.num_tel.vars.errors|length > 0 %}
+													<div class="text-danger mt-1">
+														{% for error in form.num_tel.vars.errors %}
+															<small>{{ error.message }}</small>
+														{% endfor %}
+													</div>
+												{% endif %}
+											</div>
+
+											<!-- Carte bancaire -->
+											<div class="mb-3">
+												{{ form_label(form.num_carte_bancaire, "Numéro de carte bancaire", {'label_attr': {'class': 'form-label'}}) }}
+												{{ form_widget(form.num_carte_bancaire, {'attr': {'class': 'form-control' ~ (form.num_carte_bancaire.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Entrez votre numéro de carte'}}) }}
+												{% if form.num_carte_bancaire.vars.errors|length > 0 %}
+													<div class="text-danger mt-1">
+														{% for error in form.num_carte_bancaire.vars.errors %}
+															<small>{{ error.message }}</small>
+														{% endfor %}
+													</div>
+												{% endif %}
+											</div>
+
+											<!-- Commentaire -->
+											<div class="mb-3">
+												{{ form_label(form.commentaire, "Commentaire", {'label_attr': {'class': 'form-label'}}) }}
+												{{ form_widget(form.commentaire, {'attr': {'class': 'form-control' ~ (form.commentaire.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Ajouter un commentaire'}}) }}
+												{% if form.commentaire.vars.errors|length > 0 %}
+													<div class="text-danger mt-1">
+														{% for error in form.commentaire.vars.errors %}
+															<small>{{ error.message }}</small>
+														{% endfor %}
+													</div>
+												{% endif %}
+											</div>
+
+											<!-- Checkbox -->
+											<div class="mb-3">
+												{{ form_label(form.confirmation, "Accepter le règlement des workshops", {'label_attr': {'class': 'form-label'}}) }}
+												{{ form_widget(form.confirmation, {'attr': {'class': 'form-check-input' ~ (form.confirmation.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+												{% if form.confirmation.vars.errors|length > 0 %}
+													<div class="text-danger mt-1">
+														{% for error in form.confirmation.vars.errors %}
+															<small>{{ error.message }}</small>
+														{% endfor %}
+													</div>
+												{% endif %}
+											</div>
+
+											<!-- Bouton Enregistrer -->
+											<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>
+
+											{{ form_end(form) }}
+										</div>
+									</div>
+
+
+									{% for message in app.flashes('success') %}
+										<div class="alert alert-success">
+											{{ message }}
+										</div>
+									{% endfor %}
+
+
+								</div>
+							</div>
+							<div class="col-lg-4 col-xl-3">
+								<div class="row g-4 fruite">
+									<div class="col-lg-12">
+										<div class="input-group w-100 mx-auto d-flex mb-4"></div>
+										<div class="mb-4">
+											<h4 class="fw-bold text-primary">Description</h4>
+											<ul class="list-unstyled fruite-categorie">
+												<li>
+													<a href="#">
+														<p class="workshop-description">{{ workshop.description }}</p>
+													</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+					{% block javascripts %}
+						{{ parent() }}
+						<script>
+							const openModalBtn = document.querySelector('.open-modal');
+const modal = document.getElementById('myModal');
+const closeModalBtn = document.getElementById('closeModal');
+
+document.addEventListener("DOMContentLoaded", function () {
+const modal = document.getElementById("myModal");
+const form = document.querySelector("form");
+const openModalBtn = document.getElementById("openModalBtn");
+const closeModalBtn = document.getElementById("closeModalBtn");
+
+// Ouvrir le modal
+openModalBtn.addEventListener("click", function () {
+modal.style.display = "flex";
+});
+
+// Empêcher la fermeture du modal si le formulaire contient des erreurs
+form.addEventListener("submit", function (event) {
+if (! form.checkValidity()) {
+event.preventDefault(); // Empêche l'envoi du formulaire
+event.stopPropagation();
+modal.style.display = "flex"; // Reste affiché
+}form.classList.add("was-validated"); // Ajoute une classe pour Bootstrap (optionnel)
+});
+
+// Fermer le modal via le bouton de fermeture
+closeModalBtn.addEventListener("click", function () {
+modal.style.display = "none";
+});
+
+// Fermer le modal si on clique en dehors (mais seulement si le formulaire est valide)
+window.addEventListener("click", function (event) {
+if (event.target === modal && form.checkValidity()) {
+modal.style.display = "none";
+}
+});
+});
+						</script>
+					{% endblock %}
+				{% endblock %}
+			</body>
+		</body>
+	</html>
+{% endblock %}
