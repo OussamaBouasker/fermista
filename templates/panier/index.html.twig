@@ -1,0 +1,51 @@
+{% extends 'Front/frontbase.html.twig' %}
+
+{% block content %}
+<h1>Votre Panier</h1>
+
+{% if panier is empty %}
+    <p>Votre panier est vide.</p>
+{% else %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>État</th>
+                <th>Description</th>
+                <th>Catégorie</th>
+                <th>Prix</th>
+                <th>Quantité</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in panier %}
+                <tr>
+                    <td><img src="{{ asset('uploads/' ~ item.image) }}" alt="{{ item.nom }}" width="80"></td>
+                    <td>{{ item.nom }}</td>
+                    <td>{{ item.etat }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.categorie }}</td>
+                    <td>{{ item.prix }} DT</td>
+                    <td>
+                        <form action="{{ path('app_panier_mettre_a_jour', {'id': item.id}) }}" method="POST">
+                            <input type="number" name="quantite" value="{{ item.quantite }}" min="1">
+                            <button type="submit">Mettre à jour</button>
+                        </form>
+                    </td>
+                    <td>{{ item.quantite * item.prix }} DT</td>
+                    <td>
+                        <a href="{{ path('app_panier_supprimer', {'id': item.id}) }}" class="btn btn-danger">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Total : {{ total }} DT</h3>
+
+    <a href="{{ path('app_panier_vider') }}" class="btn btn-warning">Vider le panier</a>
+{% endif %}
+{% endblock %}

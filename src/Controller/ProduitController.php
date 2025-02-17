@@ -9,7 +9,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 
 #[Route('/produit')]
 final class ProduitController extends AbstractController
@@ -30,6 +33,25 @@ final class ProduitController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Récupérer l'image téléchargée
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile instanceof UploadedFile) {
+                // Créer un nom unique pour l'image
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+
+                // Déplacer l'image dans le dossier public/uploads/images
+                $imageFile->move(
+                    $this->getParameter('kernel.project_dir') . '/public/uploads/images',
+                    $newFilename
+                );
+
+                // Assigner le nom du fichier à l'entité Produit
+                $produit->setImage($newFilename);
+            }
+
+            // Sauvegarder le produit dans la base de données
             $entityManager->persist($produit);
             $entityManager->flush();
 
@@ -57,6 +79,25 @@ final class ProduitController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Vérification et mise à jour de l'image si elle a été changée
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile instanceof UploadedFile) {
+                // Créer un nom unique pour l'image
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+
+                // Déplacer l'image dans le dossier public/uploads/images
+                $imageFile->move(
+                    $this->getParameter('kernel.project_dir') . '/public/uploads/images',
+                    $newFilename
+                );
+
+                // Assigner le nom du fichier à l'entité Produit
+                $produit->setImage($newFilename);
+            }
+
+            // Sauvegarder les modifications dans la base de données
             $entityManager->flush();
 
             return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
