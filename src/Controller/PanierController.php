@@ -17,8 +17,12 @@ class PanierController extends AbstractController
         $session = $request->getSession();
         $panier = $session->get('panier', []);
 
-        // Calculer le total du panier
-        $total = array_reduce($panier, fn($sum, $item) => $sum + ($item['quantite'] * $item['prix']), 0);
+        // Vérifier si le panier est vide
+        if (empty($panier)) {
+            $total = 0;
+        } else {
+            $total = array_reduce($panier, fn($sum, $item) => $sum + ($item['quantite'] * $item['prix']), 0);
+        }
 
         return $this->render('panier/index.html.twig', [
             'panier' => $panier,
@@ -32,15 +36,15 @@ class PanierController extends AbstractController
         $session = $request->getSession();
         $panier = $session->get('panier', []);
 
-        // Récupérer le produit depuis la base de données
+        // Récupérer le produit
         $produit = $entityManager->getRepository(Produit::class)->find($id);
 
         if (!$produit) {
             $this->addFlash('error', 'Produit introuvable');
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_panier');
         }
 
-        // Vérifier si le produit est déjà dans le panier
+        // Ajouter ou mettre à jour la quantité
         if (isset($panier[$id])) {
             $panier[$id]['quantite']++;
         } else {
@@ -48,15 +52,13 @@ class PanierController extends AbstractController
                 'id' => $produit->getId(),
                 'nom' => $produit->getNom(),
                 'prix' => $produit->getPrix(),
-                'etat' => $produit->getEtat(),
-                'description' => $produit->getDescription(),
-                'categorie' => $produit->getCategorie(),
-                'image' => $produit->getImage(), // Assurez-vous que l'entité Produit a bien un champ "image"
+                'image' => $produit->getImage(),
                 'quantite' => 1,
             ];
         }
 
         $session->set('panier', $panier);
+        $this->addFlash('success', 'Produit ajouté au panier.');
 
         return $this->redirectToRoute('app_panier');
     }
@@ -69,14 +71,16 @@ class PanierController extends AbstractController
 
         if (isset($panier[$id])) {
             unset($panier[$id]);
+            $session->set('panier', $panier);
+            $this->addFlash('success', 'Produit supprimé du panier.');
+        } else {
+            $this->addFlash('error', 'Produit non trouvé dans le panier.');
         }
-
-        $session->set('panier', $panier);
 
         return $this->redirectToRoute('app_panier');
     }
 
-    #[Route('/panier/metre-a-jour/{id}', name: 'app_panier_mettre_a_jour', methods: ['POST'])]
+    #[Route('/panier/mettre-a-jour/{id}', name: 'app_panier_mettre_a_jour', methods: ['POST'])]
     public function mettreAJour(Request $request, int $id): Response
     {
         $session = $request->getSession();
@@ -84,15 +88,19 @@ class PanierController extends AbstractController
 
         if (isset($panier[$id])) {
             $quantite = (int) $request->request->get('quantite');
+
             if ($quantite > 0) {
                 $panier[$id]['quantite'] = $quantite;
+                $this->addFlash('success', 'Quantité mise à jour.');
             } else {
-                unset($panier[$id]); // Supprime le produit si la quantité est mise à 0
+                unset($panier[$id]);
+                $this->addFlash('success', 'Produit retiré du panier.');
             }
+        } else {
+            $this->addFlash('error', 'Produit non trouvé dans le panier.');
         }
 
         $session->set('panier', $panier);
-
         return $this->redirectToRoute('app_panier');
     }
 
@@ -102,6 +110,7 @@ class PanierController extends AbstractController
         $session = $request->getSession();
         $session->remove('panier');
 
+        $this->addFlash('success', 'Panier vidé avec succès.');
         return $this->redirectToRoute('app_panier');
     }
 }

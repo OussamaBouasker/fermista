@@ -1,0 +1,156 @@
+{% extends 'Front/frontbase.html.twig' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Bienvenue!{% endblock %}
+
+        {% block stylesheets %}
+        {{ parent() }}
+        <style>
+            /* Style déjà existant */
+        </style>
+        {% endblock %}
+</head>
+
+<body>
+    {% block body %}
+    <div class="container-fluid page-header py-5">
+
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item active text-white">Shop</li>
+        </ol>
+    </div>
+    
+
+    <div class="container mt-5">
+        <!-- Bouton Ajouter en haut -->
+        <a href="{{ path('app_produit_index') }}" class="add-button">+ Ajouter un produit</a>
+
+        <h2 class="text-center mb-4">🧀 Collection Fromage 🧀</h2>
+        <div class="table-responsive">
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane fade show p-0 active">
+                    <div class="row g-4">
+                        {% for produit in produits %}
+                        <div class="col-md-6 col-lg-6 col-xl-4">
+                            <div class="rounded position-relative fruite-item">
+                                <div class="fruite-img">
+                                    <img src="{{ asset('uploads/images/' ~ produit.image) }}"
+                                        class="img-fluid w-100 rounded-top" alt="{{ produit.Nom }}">
+                                </div>
+
+                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
+                                    style="top: 10px; left: 10px;">
+                                    {{ produit.categorie }}
+                                </div>
+                                <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
+                                style="top: 10px; right: 10px;">{{ produit.Etat }}</div>
+
+                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                    <h4 class="product-name">{{ produit.Nom }}</h4>
+                                    <p>{{ produit.Description }}</p>
+                                    <div class="button-container">
+                                        <p class="text-dark fs-5 fw-bold mb-0">{{ produit.Prix }} DT</p>
+                                        <a href="{{ path('app_shop', {'id': produit.id}) }}"
+                                            class="btn border border-secondary rounded-pill px-3 text-primary">
+                                            <i class="fa fa-shopping-bag me-2 text-primary"></i>
+                                            Ajouter au panier
+                                        </a>
+                                        <a href="{{ path('app_shop', {'id': produit.id}) }}"
+                                            class="btn border border-secondary rounded-pill px-3 text-primary">
+                                            <i class="fa fa-eye me-2 text-primary"></i>
+                                            Découvrez notre vitrine
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <p>Aucun produit trouvé dans cette catégorie.</p>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
+        <div class="container py-5">
+            <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(226, 175, 24, 0.5);">
+                <div class="row g-4">
+                    <div class="col-lg-3">
+                        <a href="#">
+                            <h1 class="text-primary mb-0">Fermista</h1>
+                            <p class="text-secondary mb-0">Produits Laitiers</p>
+                        </a>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="position-relative mx-auto">
+                            <input class="form-control border-0 w-100 py-3 px-4 rounded-pill" type="number"
+                                placeholder="Your Email">
+                            <button type="submit"
+                                class="btn btn-primary border-0 border-secondary py-3 px-4 position-absolute rounded-pill text-white"
+                                style="top: 0; right: 0;">Subscribe Now</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="d-flex justify-content-end pt-3">
+                            <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-twitter"></i></a>
+                            <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-youtube"></i></a>
+                            <a class="btn btn-outline-secondary btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-item">
+                        <h4 class="text-light mb-3">Pourquoi les gens nous aiment !</h4>
+                        <p class="mb-4">Chez Fermista, nous offrons des produits laitiers frais de qualité
+                            supérieure, à des prix attractifs. Notre priorité est la satisfaction de nos clients, et
+                            cela se reflète dans notre service et nos produits uniques. Venez découvrir pourquoi nous
+                            sommes le choix préféré de nombreux clients !</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="d-flex flex-column text-start footer-item">
+                        <h4 class="text-light mb-3">Shop Info</h4>
+                        <a class="btn-link" href="">About Us</a>
+                        <a class="btn-link" href="">Contact Us</a>
+                        <a class="btn-link" href="">Privacy Policy</a>
+                        <a class="btn-link" href="">Terms & Condition</a>
+                        <a class="btn-link" href="">Return Policy</a>
+                        <a class="btn-link" href="">FAQs & Help</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="d-flex flex-column text-start footer-item">
+                        <h4 class="text-light mb-3">Account</h4>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-item">
+                        <h4 class="text-light mb-3">Contact</h4>
+                        <p>Address: Tunisie , Tunis</p>
+                        <p>Email: Fermista@gmail.com</p>
+                        <p>Payment Accepté</p>
+                        <img src="img/payment.png" class="img-fluid" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+
+</html>
+{% endblock %}
