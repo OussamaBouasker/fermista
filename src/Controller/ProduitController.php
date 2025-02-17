@@ -11,12 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-
 
 #[Route('/produit')]
 final class ProduitController extends AbstractController
 {
+    // Affichage de tous les produits
     #[Route(name: 'app_produit_index', methods: ['GET'])]
     public function index(ProduitRepository $produitRepository): Response
     {
@@ -25,6 +24,28 @@ final class ProduitController extends AbstractController
         ]);
     }
 
+    // Affichage des produits par catégorie
+    #[Route('/categorie/{category}', name: 'app_produit_category_index', methods: ['GET'])]
+    public function categoryIndex(ProduitRepository $produitRepository, string $category): Response
+    {
+        // Recherche des produits de la catégorie spécifiée
+        $produits = $produitRepository->findBy(['categorie' => $category]);
+
+        // Définition du chemin de la vue correspondant à la catégorie
+        $viewPath = 'categories/' . strtolower($category) . '/index.html.twig';
+
+        // Vérifier si la vue existe
+        if (!file_exists($this->getParameter('kernel.project_dir') . '/templates/' . $viewPath)) {
+            $viewPath = 'categories/default/index.html.twig';  // Vue par défaut si la catégorie n'a pas de template
+        }
+
+        return $this->render($viewPath, [
+            'produits' => $produits,
+            'category' => ucfirst($category),
+        ]);
+    }
+
+    // Création d'un nouveau produit
     #[Route('/new', name: 'app_produit_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -33,37 +54,28 @@ final class ProduitController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Récupérer l'image téléchargée
             /** @var UploadedFile $imageFile */
             $imageFile = $form->get('image')->getData();
 
             if ($imageFile instanceof UploadedFile) {
-                // Créer un nom unique pour l'image
                 $newFilename = uniqid() . '.' . $imageFile->guessExtension();
-
-                // Déplacer l'image dans le dossier public/uploads/images
-                $imageFile->move(
-                    $this->getParameter('kernel.project_dir') . '/public/uploads/images',
-                    $newFilename
-                );
-
-                // Assigner le nom du fichier à l'entité Produit
+                $imageFile->move($this->getParameter('kernel.project_dir') . '/public/uploads/images', $newFilename);
                 $produit->setImage($newFilename);
             }
 
-            // Sauvegarder le produit dans la base de données
             $entityManager->persist($produit);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_produit_category_index', ['category' => $produit->getCategorie()]);
         }
 
         return $this->render('Back/produit/new.html.twig', [
             'produit' => $produit,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
+    // Affichage d'un produit spécifique
     #[Route('/{id}', name: 'app_produit_show', methods: ['GET'])]
     public function show(Produit $produit): Response
     {
@@ -72,6 +84,7 @@ final class ProduitController extends AbstractController
         ]);
     }
 
+    // Édition d'un produit
     #[Route('/{id}/edit', name: 'app_produit_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Produit $produit, EntityManagerInterface $entityManager): Response
     {
@@ -79,44 +92,35 @@ final class ProduitController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Vérification et mise à jour de l'image si elle a été changée
             /** @var UploadedFile $imageFile */
             $imageFile = $form->get('image')->getData();
 
             if ($imageFile instanceof UploadedFile) {
-                // Créer un nom unique pour l'image
                 $newFilename = uniqid() . '.' . $imageFile->guessExtension();
-
-                // Déplacer l'image dans le dossier public/uploads/images
-                $imageFile->move(
-                    $this->getParameter('kernel.project_dir') . '/public/uploads/images',
-                    $newFilename
-                );
-
-                // Assigner le nom du fichier à l'entité Produit
+                $imageFile->move($this->getParameter('kernel.project_dir') . '/public/uploads/images', $newFilename);
                 $produit->setImage($newFilename);
             }
 
-            // Sauvegarder les modifications dans la base de données
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_produit_category_index', ['category' => $produit->getCategorie()]);
         }
 
         return $this->render('Back/produit/edit.html.twig', [
             'produit' => $produit,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
+    // Suppression d'un produit
     #[Route('/{id}', name: 'app_produit_delete', methods: ['POST'])]
     public function delete(Request $request, Produit $produit, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$produit->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$produit->getId(), $request->request->get('_token'))) {
             $entityManager->remove($produit);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_produit_index');
     }
 }
