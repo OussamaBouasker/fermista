@@ -1,14 +1,94 @@
+{{ form_start(form,{'attr': {'novalidate': 'novalidate'}}
+) }}
 {{ form_start(form, {'attr': {'class': 'form-group'}}) }}
 
-{% for field in form %}
-    <div class="mb-3" style="gap: 20px; width:600px">
-        {{ form_label(field, null, {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(field, {'attr': {'class': 'form-control', 'placeholder': field.vars.label}}) }}
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.firstName, "Prénom", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.firstName, {
+        'attr': {
+            'class': 'form-control' ~ (form.firstName.vars.errors|length > 0 ? ' is-invalid' : ''), 
+            'placeholder': 'Entrez votre prénom'
+        }
+    }) }}
+	{% if form.firstName.vars.errors|length > 0 %}
+		<div class="invalid-feedback">
+			{{ form_errors(form.firstName) }}
+		</div>
+	{% endif %}
+</div>
 
-        {{ form_errors(field) }}
-    </div>
-{% endfor %}
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.lastName, "Nom", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.lastName, {
+        'attr': {
+            'class': 'form-control' ~ (form.lastName.vars.errors|length > 0 ? ' is-invalid' : ''), 
+            'placeholder': 'Entrez votre nom'
+        }
+    }) }}
+	{% if form.lastName.vars.errors|length > 0 %}
+		<div class="invalid-feedback">
+			{{ form_errors(form.lastName) }}
+		</div>
+	{% endif %}
+</div>
 
-<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Save') }}</button>
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.number, "Numéro de téléphone", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.number, {
+        'attr': {
+            'class': 'form-control' ~ (form.number.vars.errors|length > 0 ? ' is-invalid' : ''), 
+            'placeholder': 'Entrez votre numéro de téléphone'
+        }
+    }) }}
+	{% if form.number.vars.errors|length > 0 %}
+		<div class="invalid-feedback">
+			{{ form_errors(form.number) }}
+		</div>
+	{% endif %}
+</div>
+
+
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.email, "Adresse Email", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.email, {
+        'attr': {
+            'class': 'form-control' ~ (form.email.vars.errors|length > 0 ? ' is-invalid' : ''), 
+            'placeholder': 'Entrez votre email'
+        }
+    }) }}
+	{% if form.email.vars.errors|length > 0 %}
+		<div class="invalid-feedback">
+			{{ form_errors(form.email) }}
+		</div>
+	{% endif %}
+</div>
+
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.password, "Mot de passe", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.password, {
+        'attr': {
+            'class': 'form-control' ~ (form.password.vars.errors|length > 0 ? ' is-invalid' : ''), 
+            'placeholder': 'Entrez votre  mot de passe'
+        }
+    }) }}
+	{% if form.password.vars.errors|length > 0 %}
+		<div class="invalid-feedback">
+			{{ form_errors(form.password) }}
+		</div>
+	{% endif %}
+</div>
+
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.roles, "Sélectionnez votre rôle", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.roles, {'attr': {'class': 'form-select'}}) }}
+	{% if form.roles.vars.errors|length > 0 %}
+		<div class="invalid-feedback d-block">
+			{% for error in form.roles.vars.errors %}
+				<p>{{ error.message }}</p>
+			{% endfor %}
+		</div>
+	{% endif %}
+</div>
+<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>
 
 {{ form_end(form) }}
