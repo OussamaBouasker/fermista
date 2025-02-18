@@ -1,13 +1,13 @@
-{% extends 'base.html.twig' %}
+{% extends 'Front/frontbase.html.twig' %}
 
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
-<div class="container">
-    <div class="az-dashboard-one-title">
+<div class="container" >
+    <div class="az-dashboard-one-title" style="margin-top: 150px;">
         <div>
-            <h2 class="az-dashboard-title">Hi, welcome back!</h2>
-            <p class="az-dashboard-text">Your web analytics dashboard template.</p>
+            <h2 class="az-dashboard-title">Bonjour, nous vous souhaitons à nouveau la bienvenue!</h2>
+            <p class="az-dashboard-text">Votre tableau de bord d'analytique web</p>
         </div>
 
         <!-- Graphique de la température -->
@@ -38,22 +38,11 @@
                     <div class="card-body">
                         <h5 class="card-title">Informations de la Vache</h5>
                         <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Âge</th>
-                                    <th>Race</th>
-                                    <th>État Médical</th>
-                                    <th>Température</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cowInfoTable">
-                                <tr>
-                                    <td>5 ans</td>
-                                    <td>Holstein</td>
-                                    <td>Bonne Santé</td>
-                                    <td id="realTimeTemp">0°C</td>
-                                </tr>
-                            </tbody>
+                            <tr>
+                                <th>Température</th>
+                                <td id="realTimeTemp">0°C</td>
+                            </tr>
+
                         </table>
                     </div>
                 </div>
@@ -91,18 +80,14 @@
                             <thead>
                                 <tr>
 
-                                    <th>Âge</th>
-                                    <th>Race</th>
-                                    <th>État Médical</th>
+                                    
                                     <th>Niveau d'Agitation</th>
                                     <th>Interprétation</th>
                                 </tr>
                             </thead>
                             <tbody id="agitationInfoTable">
                                 <tr>
-                                    <td>5 ans</td>
-                                    <td>Holstein</td>
-                                    <td>Bonne Santé</td>
+                                    
                                     <td id="agitationLevel">0</td>
                                     <td id="agitationState">Calme</td>
                                 </tr>
@@ -207,13 +192,13 @@
             chart.update();
             agitationChart.update();
 
-
             gaugeChart.data.datasets[0].data[0] = newTemp - 36;
             agitationGauge.data.datasets[0].data[0] = newAgitation;
 
             gaugeChart.update();
             agitationGauge.update();
 
+            gaugeValue.textContent = newTemp + "°C";
             gaugeValue.textContent = newTemp + "°C";
             realTimeTemp.textContent = newTemp + "°C";
             agitationValue.textContent = newAgitation;
