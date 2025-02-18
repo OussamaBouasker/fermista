@@ -9,12 +9,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/vache')]
 final class VacheController extends AbstractController
 {
-    #[Route(name: 'app_vache_index', methods: ['GET'])]
+    #[Route('/', name: 'app_vache_index', methods: ['GET'])]
     public function index(VacheRepository $vacheRepository): Response
     {
         return $this->render('Back/vache/index.html.twig', [
@@ -71,7 +71,8 @@ final class VacheController extends AbstractController
     #[Route('/{id}', name: 'app_vache_delete', methods: ['POST'])]
     public function delete(Request $request, Vache $vache, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$vache->getId(), $request->getPayload()->getString('_token'))) {
+        // Correct method for CSRF token validation
+        if ($this->isCsrfTokenValid('delete'.$vache->getId(), $request->get('_token'))) {
             $entityManager->remove($vache);
             $entityManager->flush();
         }

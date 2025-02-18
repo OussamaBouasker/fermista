@@ -1,0 +1,46 @@
+{% extends 'Front/frontbase.html.twig' %}
+
+{% block title %}Mes Vaches{% endblock %}
+
+{% block body %}
+<div class="container mt-5" style="margin-top: 150px; position: relative;">
+    <div class="row justify-content-center" style="margin-top: 150px;">
+        {% for vache in vaches %}
+        <div class="col-md-4 mb-4 d-flex justify-content-center">
+            <div class="card" style="width: 18rem; margin: 20px; position: relative;">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: #6B8E23; text-transform: uppercase;">{{ vache.name }}</h5>
+                    <p class="card-text">
+                        <strong>Âge:</strong> {{ vache.age }} ans<br>
+                        <strong>Race:</strong> {{ vache.race }}<br>
+                        <strong>État Médical:</strong> {{ vache.etatMedical }}
+                    </p>
+                    <div class="text-center">
+                        <a href="{{ path('app_dashboard', { 'id': vache.id }) }}" class="btn btn-primary">Analyse</a>
+                        <a href="{{ path('app_vache_edits', { 'id': vache.id }) }}" class="btn btn-warning">Modifier</a>
+                    </div>
+                </div>
+                <!-- Bouton de suppression -->
+                <form action="{{ path('app_vache_deletes', { 'id': vache.id }) }}" method="post" style="position: absolute; top: 10px; right: 10px;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ vache.id) }}">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette vache ?');">&times;</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-info text-center" role="alert">
+                Aucune vache disponible
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Bouton d'ajout de nouvelle vache -->
+    <div style="position: fixed; bottom: 20px; right: 20px;">
+        <a href="{{ path('app_vache_news') }}" class="btn" 
+           style="background-color: #6B8E23; color: white; border-radius: 50%; width: 60px; height: 60px; 
+                  display: flex; align-items: center; justify-content: center; font-size: 24px;">+</a>
+    </div>
+</div>
+{% endblock %}
