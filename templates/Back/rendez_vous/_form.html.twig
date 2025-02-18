@@ -1,14 +1,48 @@
+{{ form_start(form,{'attr': {'novalidate': 'novalidate'}}) }}
+
 {{ form_start(form, {'attr': {'class': 'form-group'}}) }}
 
-{% for field in form %}
-	<div class="mb-3" style="gap: 20px; width:600px">
-		{{ form_label(field, null, {'label_attr': {'class': 'form-label'}}) }}
-		{{ form_widget(field, {'attr': {'class': 'form-control', 'placeholder': field.vars.label}}) }}
 
-		{{ form_errors(field) }}
-	</div>
-{% endfor %}
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.date, "Date du rendez-vous", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.date, {'attr': {'class': 'form-control' ~ (form_errors(form.date) ? ' is-invalid' : '')}}) }}
+	{% if form_errors(form.date) %}
+		<div class="alert alert-danger mt-2 p-1">
+			{{ form_errors(form.date) }}
+		</div>
+	{% endif %}
+</div>
 
-<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Save') }}</button>
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.heure, "Heure du rendez-vous", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.heure, {'attr': {'class': 'form-control' ~ (form_errors(form.heure) ? ' is-invalid' : '')}}) }}
+	{% if form_errors(form.heure) %}
+		<div class="alert alert-danger mt-2 p-1">
+			{{ form_errors(form.heure) }}
+		</div>
+	{% endif %}
+</div>
+
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.sex, "Sexe de la vache", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.sex, {'attr': {'class': 'form-control' ~ (form_errors(form.sex) ? ' is-invalid' : '')}}) }}
+	{% if form_errors(form.sex) %}
+		<div class="alert alert-danger mt-2 p-1">
+			{{ form_errors(form.sex) }}
+		</div>
+	{% endif %}
+</div>
+
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.cause, "La cause du rendez-vous", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.cause, {'attr': {'class': 'form-control' ~ (form_errors(form.cause) ? ' is-invalid' : '')}}) }}
+	{% if form_errors(form.cause) %}
+		<div class="alert alert-danger mt-2 p-1">
+			{{ form_errors(form.cause) }}
+		</div>
+	{% endif %}
+</div>
+
+<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>
 
 {{ form_end(form) }}
