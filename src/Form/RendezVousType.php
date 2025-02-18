@@ -18,7 +18,7 @@ class RendezVousType extends AbstractType
             ->add('heure', null, [
                 'widget' => 'single_text',
             ])
-            ->add('jour')
+            ->add('sex')
             ->add('cause')
         ;
     }
