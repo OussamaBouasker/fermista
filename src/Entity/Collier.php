@@ -55,7 +55,7 @@ class Collier
     #[Assert\NotNull(message: "La valeur de l'agitation est obligatoire.")]
     #[Assert\Range(
         min: 0,
-        max: 20,
+        max: 10,
         notInRangeMessage: "L'agitation doit être comprise entre {{ min }} et {{ max }}."
     )]
     private ?float $valeurAgitation = null;
