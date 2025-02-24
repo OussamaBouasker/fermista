@@ -3,114 +3,106 @@
 namespace App\Controller;
 
 use App\Entity\Produit;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class PanierController extends AbstractController
 {
-    #[Route('/panier', name: 'app_panier')]
-    public function index(Request $request): Response
+    #[Route('/panier', name: 'panier_index')]
+    public function index(SessionInterface $session): Response
     {
-        $session = $request->getSession();
         $panier = $session->get('panier', []);
 
-        // Vérifier si le panier est vide
-        if (empty($panier)) {
-            $total = 0;
-        } else {
-            $total = array_reduce($panier, fn($sum, $item) => $sum + ($item['quantite'] * $item['prix']), 0);
-        }
+        // Calcul du total
+        $total = array_reduce($panier, fn($sum, $item) => $sum + ($item['price'] * $item['quantity']), 0);
+
+        // Nombre total d'articles dans le panier
+        $cartCount = array_sum(array_column($panier, 'quantity'));
 
         return $this->render('panier/index.html.twig', [
             'panier' => $panier,
             'total' => $total,
+            'cart_count' => $cartCount
         ]);
     }
 
-    #[Route('/panier/ajouter/{id}', name: 'app_panier_ajouter')]
-    public function ajouter(int $id, Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/panier/add/{id}', name: 'panier_add')]
+    public function addToPanier(int $id, SessionInterface $session, EntityManagerInterface $entityManager): RedirectResponse
     {
-        $session = $request->getSession();
-        $panier = $session->get('panier', []);
-
-        // Récupérer le produit
-        $produit = $entityManager->getRepository(Produit::class)->find($id);
+        $repository = $entityManager->getRepository(Produit::class);
+        $produit = $repository->find($id);
 
         if (!$produit) {
-            $this->addFlash('error', 'Produit introuvable');
-            return $this->redirectToRoute('app_panier');
+            $this->addFlash('error', 'Produit non trouvé.');
+            return $this->redirectToRoute('panier_index');
         }
 
-        // Ajouter ou mettre à jour la quantité
+        $panier = $session->get('panier', []);
+
         if (isset($panier[$id])) {
-            $panier[$id]['quantite']++;
+            $panier[$id]['quantity'] += 1;
         } else {
             $panier[$id] = [
                 'id' => $produit->getId(),
-                'nom' => $produit->getNom(),
-                'prix' => $produit->getPrix(),
-                'image' => $produit->getImage(),
-                'quantite' => 1,
+                'name' => $produit->getNom(),
+                'price' => $produit->getPrix(),
+                'quantity' => 1
             ];
         }
 
         $session->set('panier', $panier);
-        $this->addFlash('success', 'Produit ajouté au panier.');
 
-        return $this->redirectToRoute('app_panier');
+        return $this->redirectToRoute('panier_index');
     }
 
-    #[Route('/panier/supprimer/{id}', name: 'app_panier_supprimer')]
-    public function supprimer(Request $request, int $id): Response
+    #[Route('/panier/update/{id}/{action}', name: 'panier_update', methods: ['POST'])]
+    public function updatePanier(int $id, string $action, SessionInterface $session): RedirectResponse
     {
-        $session = $request->getSession();
         $panier = $session->get('panier', []);
 
-        if (isset($panier[$id])) {
-            unset($panier[$id]);
-            $session->set('panier', $panier);
-            $this->addFlash('success', 'Produit supprimé du panier.');
-        } else {
-            $this->addFlash('error', 'Produit non trouvé dans le panier.');
+        if (!isset($panier[$id])) {
+            $this->addFlash('error', 'Produit non trouvé dans le panier');
+            return $this->redirectToRoute('panier_index');
         }
 
-        return $this->redirectToRoute('app_panier');
-    }
-
-    #[Route('/panier/mettre-a-jour/{id}', name: 'app_panier_mettre_a_jour', methods: ['POST'])]
-    public function mettreAJour(Request $request, int $id): Response
-    {
-        $session = $request->getSession();
-        $panier = $session->get('panier', []);
-
-        if (isset($panier[$id])) {
-            $quantite = (int) $request->request->get('quantite');
-
-            if ($quantite > 0) {
-                $panier[$id]['quantite'] = $quantite;
-                $this->addFlash('success', 'Quantité mise à jour.');
-            } else {
+        if ($action === 'plus') {
+            $panier[$id]['quantity'] += 1;
+        } elseif ($action === 'minus') {
+            $panier[$id]['quantity'] -= 1;
+            if ($panier[$id]['quantity'] <= 0) {
                 unset($panier[$id]);
-                $this->addFlash('success', 'Produit retiré du panier.');
             }
-        } else {
-            $this->addFlash('error', 'Produit non trouvé dans le panier.');
         }
 
         $session->set('panier', $panier);
-        return $this->redirectToRoute('app_panier');
+        return $this->redirectToRoute('panier_index');
     }
 
-    #[Route('/panier/vider', name: 'app_panier_vider')]
-    public function vider(Request $request): Response
+    #[Route('/panier/remove/{id}', name: 'panier_remove', methods: ['POST'])]
+    public function removeItem(int $id, SessionInterface $session): RedirectResponse
     {
-        $session = $request->getSession();
-        $session->remove('panier');
+        $panier = $session->get('panier', []);
 
-        $this->addFlash('success', 'Panier vidé avec succès.');
-        return $this->redirectToRoute('app_panier');
+        if (!isset($panier[$id])) {
+            $this->addFlash('error', 'Produit non trouvé dans le panier');
+            return $this->redirectToRoute('panier_index');
+        }
+
+        unset($panier[$id]);
+
+        $session->set('panier', $panier);
+        return $this->redirectToRoute('panier_index');
+    }
+
+    #[Route('/panier/clear', name: 'panier_clear', methods: ['POST'])]
+    public function clearPanier(SessionInterface $session): RedirectResponse
+    {
+        $session->remove('panier');
+        return $this->redirectToRoute('panier_index');
     }
 }

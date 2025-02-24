@@ -2,239 +2,215 @@
 
 {% block content %}
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Bienvenue!{% endblock %}
+<html lang="fr">
 
-        {% block stylesheets %}
-            {{ parent() }}
-            <style>
-                .fruite-img img {
-                    width: 100%;
-                    height: auto;
-                    object-fit: cover;
-                }
-                .fruite-item {
-                    border-radius: 10px;
-                    overflow: hidden;
-                }
-                .product-category, .product-state {
-                    position: absolute;
-                    top: 10px;
-                    padding: 5px 10px;
-                    border-radius: 5px;
-                    color: white;
-                }
-                .product-category {
-                    background-color: #6c757d;
-                    left: 10px;
-                }
-                .product-state {
-                    background-color: #007bff;
-                    right: 10px;
-                }
-                /* Rendre le nom du produit plus attrayant et centré */
-                .product-name {
-                    font-weight: bold;
-                    font-size: 1.2rem;
-                    color: #333;
-                    text-transform: uppercase;
-                    margin-bottom: 10px;
-                    text-align: center; /* Centrer le texte */
-                }
-                /* Aligner les boutons et le prix */
-                .button-container {
-                    display: flex;
-                    justify-content: space-between;
-                    gap: 10px;
-                    align-items: center;
-                }
-                .button-container .btn {
-                    font-size: 1rem;
-                    padding: 12px 20px;
-                    text-align: center;
-                }
-                /* Ajouter un style pour le bouton Add */
-                .add-button {
-                    background-color: #28a745;
-                    color: white;
-                    padding: 10px 20px;
-                    font-size: 1rem;
-                    border-radius: 5px;
-                    text-decoration: none;
-                    display: inline-block;
-                    margin-bottom: 20px;
-                }
-                .add-button:hover {
-                    background-color: #218838;
-                }
-            </style>
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}
-        <div class="container-fluid py-5">
-            <div class="container py-5">
-                {% if panier is empty %}
-                    <p>Votre panier est vide.</p>
-                {% else %}
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Produit</th>
-                                    <th scope="col">Nom</th>
-                                    <th scope="col">Prix</th>
-                                    <th scope="col">Quantité</th>
-                                    <th scope="col">Total</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in panier %}
-                                    <tr>
-                                        <th scope="row">
-                                            <div class="d-flex align-items-center">
-                                                <img src="{{ asset('uploads/' ~ item.image) }}" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="{{ item.nom }}">
-                                            </div>
-                                        </th>
-                                        <td>
-                                            <p class="mb-0 mt-4">{{ item.nom }}</p>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0 mt-4">{{ item.prix }} DT</p>
-                                        </td>
-                                        <td>
-                                            <form action="{{ path('app_panier_mettre_a_jour', {'id': item.id}) }}" method="POST">
-                                                <div class="input-group quantity mt-4" style="width: 100px;">
-                                                    <div class="input-group-btn">
-                                                        <button type="submit" name="action" value="decrease" class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                                            <i class="fa fa-minus"></i>
-                                                        </button>
-                                                    </div>
-                                                    <input type="text" name="quantite" class="form-control form-control-sm text-center border-0" value="{{ item.quantite }}">
-                                                    <div class="input-group-btn">
-                                                        <button type="submit" name="action" value="increase" class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                                            <i class="fa fa-plus"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <p class="mb-0 mt-4">{{ item.quantite * item.prix }} DT</p>
-                                        </td>
-                                        <td>
-                                            <a href="{{ path('app_panier_supprimer', {'id': item.id}) }}" class="btn btn-md rounded-circle bg-light border mt-4">
-                                                <i class="fa fa-times text-danger"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="row g-4 justify-content-end">
-                        <div class="col-8"></div>
-                        <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
-                            <div class="bg-light rounded">
-                                <div class="p-4">
-                                    <h1 class="display-6 mb-4">Total du <span class="fw-normal">Panier</span></h1>
-                                    <div class="d-flex justify-content-between mb-4">
-                                        <h5 class="mb-0 me-4">Total:</h5>
-                                        <p class="mb-0">{{ total }} DT</p>
-                                    </div>
-                                </div>
-                                <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
-                                    <h5 class="mb-0 ps-4 me-4">Total</h5>
-                                    <p class="mb-0 pe-4">{{ total }} DT</p>
-                                </div>
-                                <a href="{{ path('app_commande') }}" class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4">Procéder au paiement</a>
-                                <a href="{{ path('app_panier_vider') }}" class="btn btn-warning rounded-pill px-4 py-3 text-uppercase mb-4 ms-4">Vider le panier</a>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bienvenue!{% endblock %}</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    {% block stylesheets %}
+    {{ parent() }}
+    {% endblock %}
+    <style>
+        .table {
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .table th {
+            background-color: #f7f7f7;
+            color: #333;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .btn-outline-secondary {
+            border-color: #ccc;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #f0f0f0;
+        }
+
+        .btn-outline-danger {
+            border-color: #dc3545;
+        }
+
+        .btn-outline-danger:hover {
+            background-color: #f8d7da;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .page-header {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .container-fluid {
+            padding: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    {% block body %}
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Fermista</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/produits">Produits</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/panier">🛒 Panier (<span id="cart-count">{{ cart_count }}</span>)</a>
+                    </li>
+                </ul>
             </div>
         </div>
-            <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
-                <div class="container py-5">
-                    <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(226, 175, 24, 0.5) ;">
-                        <div class="row g-4">
-                            <div class="col-lg-3">
-                                <a href="#">
-                                    <h1 class="text-primary mb-0">Fermista</h1>
-                                    <p class="text-secondary mb-0">Produits Laitiers</p>
-                                </a>
+    </nav>
+
+    <div class="container-fluid page-header py-5">
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a href="/shop">Retour à la boutique</a></li>
+        </ol>
+    </div>
+
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center">🛒 Mon Panier</h2>
+        {% if panier is empty %}
+        <div class="alert alert-warning text-center">Votre panier est vide.</div>
+        {% else %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Produit</th>
+                        <th>Prix</th>
+                        <th>Quantité</th>
+                        <th>Sous-total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in panier %}
+                    <tr id="item-{{ item.id }}">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <span class="ms-3">{{ item.name }}</span>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="position-relative mx-auto">
-                                    <input class="form-control border-0 w-100 py-3 px-4 rounded-pill" type="number"
-                                        placeholder="Your Email">
-                                    <button type="submit"
-                                        class="btn btn-primary border-0 border-secondary py-3 px-4 position-absolute rounded-pill text-white"
-                                        style="top: 0; right: 0;">Subscribe Now</button>
-                                </div>
+                        </td>
+                        <td>{{ item.price }} Dinar</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-outline-secondary btn-sm me-2 decrease" data-item-id="{{ item.id }}">-</button>
+                                <span id="quantity-{{ item.id }}">{{ item.quantity }}</span>
+                                <button class="btn btn-outline-secondary btn-sm ms-2 increase" data-item-id="{{ item.id }}">+</button>
                             </div>
-                            <div class="col-lg-3">
-                                <div class="d-flex justify-content-end pt-3">
-                                    <a class="btn  btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
-                                            class="fab fa-twitter"></i></a>
-                                    <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
-                                            class="fab fa-facebook-f"></i></a>
-                                    <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
-                                            class="fab fa-youtube"></i></a>
-                                    <a class="btn btn-outline-secondary btn-md-square rounded-circle" href=""><i
-                                            class="fab fa-linkedin-in"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-5">
-                        <div class="col-lg-3 col-md-6">
-                            <div class="footer-item">
-                                <h4 class="text-light mb-3">Pourquoi les gens nous aiment !</h4>
-                                <p class="mb-4">Chez Fermista, nous offrons des produits laitiers frais de qualité
-                                    supérieure, à
-                                    des prix attractifs. Notre priorité est la satisfaction de nos clients, et cela se
-                                    reflète
-                                    dans notre service et nos produits uniques. Venez découvrir pourquoi nous sommes le
-                                    choix
-                                    préféré de nombreux clients !</p>
-    
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6">
-                            <div class="d-flex flex-column text-start footer-item">
-                                <h4 class="text-light mb-3">Shop Info</h4>
-                                <a class="btn-link" href="">About Us</a>
-                                <a class="btn-link" href="">Contact Us</a>
-                                <a class="btn-link" href="">Privacy Policy</a>
-                                <a class="btn-link" href="">Terms & Condition</a>
-                                <a class="btn-link" href="">Return Policy</a>
-                                <a class="btn-link" href="">FAQs & Help</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6">
-                            <div class="d-flex flex-column text-start footer-item">
-                                <h4 class="text-light mb-3">Account</h4>
-    
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6">
-                            <div class="footer-item">
-                                <h4 class="text-light mb-3">Contact</h4>
-                                <p>Address: Tunisie , Tunis</p>
-                                <p>Email: Fermista@gmail.com</p>
-                                <p>Payment Accepté</p>
-                                <img src="img/payment.png" class="img-fluid" alt="">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endblock %}
-    </body>
+                        </td>
+                        <td id="subtotal-{{ item.id }}">{{ (item.price * item.quantity) | number_format(2) }} Dinar</td>
+                        <td>
+                            <button class="btn btn-outline-danger btn-sm remove" data-item-id="{{ item.id }}">🗑 Supprimer</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <h4 class="font-weight-bold">Total de Panier: <span id="total">{{ total }} Dinar</span></h4>
+            <a href="/commandefront/nouvelle" class="btn btn-primary">Commander</a>
+        </div>
+        {% endif %}
+    </div>
+
+    {% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Fonction pour mettre à jour le total du panier
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll('[id^="subtotal-"]').forEach(function (subtotalElement) {
+                total += parseFloat(subtotalElement.innerText.replace(' Dinar', '').trim());
+            });
+            document.getElementById('total').innerText = total.toFixed(2) + ' Dinar';
+        }
+
+        // Gestion de l'événement de suppression d'un produit
+        document.querySelectorAll('.remove').forEach(button => {
+            button.addEventListener('click', function () {
+                const itemId = this.dataset.itemId;
+                const row = document.getElementById('item-' + itemId);
+                row.remove();
+                updateTotal();  // Recalculer le total après suppression
+                // Mettre à jour le compte du panier
+                const count = document.querySelectorAll('.remove').length;
+                document.getElementById('cart-count').innerText = count;
+            });
+        });
+
+        // Gestion des boutons + et -
+        document.querySelectorAll('.decrease').forEach(button => {
+            button.addEventListener('click', function () {
+                const itemId = this.dataset.itemId;
+                const quantitySpan = document.getElementById('quantity-' + itemId);
+                let quantity = parseInt(quantitySpan.innerText);
+                if (quantity > 1) {  // Eviter la quantité négative
+                    quantity--;
+                    quantitySpan.innerText = quantity;
+                    const subtotalSpan = document.getElementById('subtotal-' + itemId);
+                    const price = parseFloat(subtotalSpan.innerText.replace(' Dinar', '').trim()) / (quantity + 1);
+                    subtotalSpan.innerText = (price * quantity).toFixed(2) + ' Dinar';
+                    updateTotal();
+                }
+            });
+        });
+
+        document.querySelectorAll('.increase').forEach(button => {
+            button.addEventListener('click', function () {
+                const itemId = this.dataset.itemId;
+                const quantitySpan = document.getElementById('quantity-' + itemId);
+                let quantity = parseInt(quantitySpan.innerText);
+                quantity++;
+                quantitySpan.innerText = quantity;
+                const subtotalSpan = document.getElementById('subtotal-' + itemId);
+                const price = parseFloat(subtotalSpan.innerText.replace(' Dinar', '').trim()) / (quantity - 1);
+                subtotalSpan.innerText = (price * quantity).toFixed(2) + ' Dinar';
+                updateTotal();
+            });
+        });
+    </script>
+    {% endblock %}
+
+    {% endblock %}
+</body>
+
 </html>
 {% endblock %}
