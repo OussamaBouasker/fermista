@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\VacheRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints as Assert ;
 
 #[ORM\Entity(repositoryClass: VacheRepository::class)]
 class Vache
