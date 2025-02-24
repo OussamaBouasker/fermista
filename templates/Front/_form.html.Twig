@@ -68,6 +68,23 @@
     {% endif %}
 </div>
 
+
+<div class="mb-3" style="gap: 20px; width:600px">
+    {{ form_label(form.status, "Status", {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.status, {'attr': {
+            'class': 'form-control' ~ (form.status.vars.errors|length > 0 ? ' is-invalid' : ''),
+            'disabled': 'disabled'  
+        }
+    }) }}
+    {% if form.status.vars.errors|length > 0 %}
+        <div class="text-danger mt-1">
+            {% for error in form.status.vars.errors %}
+                <small>{{ error.message }}</small>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
 <!-- Checkbox -->
 <div class="mb-3">
 	{{ form_label(form.confirmation, "Accepter le règlement des workshops", {'label_attr': {'class': 'form-label'}}) }}
