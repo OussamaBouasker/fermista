@@ -42,15 +42,15 @@ final class ConsultationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_consultation_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_consultations_show', methods: ['GET'])]
     public function show(Consultation $consultation): Response
     {
-        return $this->render('Back/consultation/show.html.twig', [
+        return $this->render('Back/consultation/show.ht+ml.twig', [
             'consultation' => $consultation,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_consultation_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_consultations_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Consultation $consultation, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ConsultationType::class, $consultation);
@@ -68,7 +68,7 @@ final class ConsultationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_consultation_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_consultations_delete', methods: ['POST'])]
     public function delete(Request $request, Consultation $consultation, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $consultation->getId(), $request->getPayload()->getString('_token'))) {

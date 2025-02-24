@@ -19,14 +19,14 @@ final class WorkshopFrontController extends AbstractController
     public function index(EntityManagerInterface $em, Request $request): Response
     {
         $type = $request->query->get('type'); // Get 'type' parameter from the URL query string
-    
+
         // Query workshops by type if specified
         if ($type) {
             $workshops = $em->getRepository(Workshop::class)->findBy(['type' => $type]);
         } else {
             $workshops = $em->getRepository(Workshop::class)->findAll();
         }
-    
+
         return $this->render('Front/workshops.html.twig', [
             'workshops' => $workshops,
             'type' => $type,  // Pass the current type for use in the view (optional)

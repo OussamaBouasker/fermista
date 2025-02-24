@@ -32,7 +32,7 @@ class Reservation
     private ?string $commentaire = null;
 
     #[ORM\Column(nullable: true)]
-    #[Assert\NotBlank(message: "Vous devez accepter le reglement des workshops.")]
+    #[Assert\NotBlank(message: "Vous devez accepter le reglement des workshops")]
     private ?bool $confirmation = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservation')]
