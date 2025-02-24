@@ -57,7 +57,7 @@ class Workshop
     private ?string $theme = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
-    #[Assert\NotBlank(message: "Le durée est obligatoire.")]
+    #[Assert\NotBlank(message: "L'heure ne peut pas être vide.")]
 
     private ?\DateTimeInterface $duration = null;
 
@@ -69,9 +69,8 @@ class Workshop
 
     #[ORM\Column(nullable: true)]
     #[Assert\NotBlank(message: "Le nombre maximum de places est requis.")]
-    #[Assert\Positive(message: "Le nombre maximum de places doit être un nombre positif.")]
-    #[Assert\LessThan(value: 1000, message: "Le nombre maximum de places doit être inférieur à 1000.")]
-    private ?int $nbr_places_max_ = null;
+    #[Assert\GreaterThan(value: 10, message: "Le nombre maximum de places doit être supérieur à 10.")]
+    private ?int $nbrPlacesMax = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $nbr_places_restantes = null;
@@ -81,7 +80,12 @@ class Workshop
     private ?string $type = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    // #[Assert\NotBlank(message: "L'ajout d'une image est obligatoire.")]
+
     private ?string $image = null;
+
+    #[ORM\Column(length: 255,nullable: true)]
+    private ?string $meetlink = null;
 
 
     public const TYPE_LIVE_WORKSHOP = 'Atelier Live';
@@ -207,14 +211,15 @@ class Workshop
         return $this;
     }
 
+
     public function getNbrPlacesMax(): ?int
     {
-        return $this->nbr_places_max_;
+        return $this->nbrPlacesMax;
     }
 
     public function setNbrPlacesMax(?int $nbr_places_max_): static
     {
-        $this->nbr_places_max_ = $nbr_places_max_;
+        $this->nbrPlacesMax = $nbr_places_max_;
 
         return $this;
     }
@@ -251,6 +256,18 @@ class Workshop
     public function setImage(?string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getMeetlink(): ?string
+    {
+        return $this->meetlink;
+    }
+
+    public function setMeetlink(string $meetlink): static
+    {
+        $this->meetlink = $meetlink;
 
         return $this;
     }

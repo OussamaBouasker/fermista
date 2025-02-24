@@ -108,6 +108,7 @@
 			width: 90%;
 			text-align: center;
 			position: relative;
+			top: 20px;
 			animation: fadeIn 0.3s ease-in-out;
 			z-index: 1001;
 			max-height: 90vh;
@@ -184,13 +185,19 @@
 			border: 1px solid #d9534f;
 			background-color: #f9e2e2;
 		}
+		.formeditrapport {
+            padding-top: 50px;
+            height: 500px;
+
+        }
+
 	</style>
 	{{ parent() }}
 {% endblock %}
 
 {% block body %}
 	{# Définition d'une date minimale (demain) pour le champ date #}
-	{% set tomorrow = "now"|date("Y-m-d", "+1 day") %}
+	{% set tomorrow = "now"|date_modify("+1 day")|date("Y-m-d") %}
 	{% set consultationToken = csrf_token('consultation') %}
 
 	<h1>📆 Consultations</h1>
@@ -473,6 +480,7 @@ return;
 
 
 var formHtml = `
+<div class ="formeditrapport">
             <span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
             <h3>Modifier le rapport médical</h3>
             <form id="rapportmedical-edit-form">
@@ -502,6 +510,7 @@ consultation.rapportmedical.solution
               <input type="hidden" id="rapportmedical-token" name="rapport_medical[_token]" value="{{ csrf_token('rapport_medical') }}" />
               <button type="button" onclick="confirmEditRapportMedical('${dateStr}', ${index})">Enregistrer</button>
             </form>
+			</div>
           `;
 document.querySelector("#consultation-popup .popup-content").innerHTML = formHtml;
 document.getElementById("consultation-popup").style.display = "flex";
