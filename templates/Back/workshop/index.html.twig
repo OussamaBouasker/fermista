@@ -47,7 +47,7 @@
 								<td>{{ workshop.titre }}</td>
 								<td>
 									{% if workshop.image %}
-										<img src="{{ asset('uploads/images/' ~ workshop.image) }}" alt="Image" style="max-width: 100px; height: auto;"/>
+										<img src="{{ asset('uploads/images/' ~ workshop.image) }}" alt="Image" style="max-width: 100px; height: auto;border-radius: 0;"/>
 									{% else %}
 										<span>No image</span>
 									{% endif %}
@@ -61,6 +61,7 @@
 								<td>{{ workshop.theme }}</td>
 								<td>{{ workshop.duration ? workshop.duration|date('H:i:s') : '' }}</td>
 								<td>{{ workshop.nbrPlacesMax }}</td>
+
 
 								<td>
 									<a href="{{ path('app_workshop_edit', {'id': workshop.id}) }}" class="btn btn-success" style="text-decoration: none; color: #F2F2F2;">

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 
-
 	<head>
 		<meta charset="utf-8">
 		<title>Fruitables - Vegetable Website Template</title>
@@ -87,7 +86,7 @@
 			</div>
 			<div class="container px-0">
 				<nav class="navbar navbar-light bg-white navbar-expand-xl">
-					<a href="index.html" class="navbar-brand">
+					<a href="/home" class="navbar-brand">
 						<h1 class="text-primary display-6">Fermista</h1>
 					</a>
 					<button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -102,21 +101,24 @@
                             <a href="/collection" class="nav-item nav-link">Produits</a>
 								{% if app.user %}
 									{% if "Vétérinaire" in app.user.roles or "Véterinaire" in app.user.roles %}
-                            <a  href="/calendrier" class="nav-item nav-link">Suivie_Medical</a>
+                            <a  href="/calendrier" class="nav-item nav-link">Control-médical</a>
                             		{% endif %}
 								{% endif %}
 
 							<a href="/workshops" class="nav-item nav-link">Workshops</a>
 
-							{# <div class="nav-item dropdown">
-								<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+
+								{% if app.user %}
+									{% if "Agriculteur" in app.user.roles or "Administrateur" in app.user.roles  %}
+							<div class="nav-item dropdown">
+								<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Suivis</a>
 								<div class="dropdown-menu m-0 bg-secondary rounded-0">
-									<a href="cart.html" class="dropdown-item">Cart</a>
-									<a href="chackout.html" class="dropdown-item">Chackout</a>
-									<a href="testimonial.html" class="dropdown-item">Testimonial</a>
-									<a href="404.html" class="dropdown-item">404 Page</a>
+									<a href="{{ path('app_mes_vaches') }}" class="dropdown-item">Mes Vaches</a>
+									<a href="{{ path('app_mescollier') }}" class="dropdown-item">Mes Colliers</a>
 								</div>
-							</div> #}
+							</div>
+                                {% endif %}
+								{% endif %}
 
 						</div>
 						<div class="d-flex m-3 me-0">
@@ -195,5 +197,6 @@
 
 		</body>
 	</body>
+
 </html>
 
