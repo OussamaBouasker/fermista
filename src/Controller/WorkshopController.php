@@ -28,7 +28,7 @@ final class WorkshopController extends AbstractController
     #[Route('/new', name: 'app_workshop_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
-        $workshop = new EntityWorkshop();
+        $workshop = new Workshop();
         $form = $this->createForm(WorkshopType::class, $workshop);
         $form->handleRequest($request);
 
@@ -108,10 +108,10 @@ final class WorkshopController extends AbstractController
         ]);
     }
 
-#[Route('/{id}', name: 'app_workshop_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_workshop_delete', methods: ['POST'])]
     public function delete(Request $request, Workshop $workshop, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$workshop->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $workshop->getId(), $request->getPayload()->getString('_token'))) {
             // Delete the associated image file
             if ($workshop->getImage()) {
                 $imagePath = $this->getParameter('uploads_directory') . '/' . $workshop->getImage();
