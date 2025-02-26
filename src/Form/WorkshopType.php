@@ -14,6 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Validator\Constraints\Positive;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 
 class WorkshopType extends AbstractType
 {
@@ -39,15 +40,17 @@ class WorkshopType extends AbstractType
             ])
             ->add('prix')
             ->add('theme')
-            ->add('duration', null)
-            ->add('nbrPlacesMax', IntegerType::class, [
+            ->add('duration', TimeType::class, [
+                'widget'   => 'single_text',
+                'required' => true, // pour forcer la saisie
+            ])            ->add('nbrPlacesMax', IntegerType::class, [
                 'label' => 'Nombre maximum de places',
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('image', FileType::class, [
                 'label' => 'Image (JPG, PNG, WEBP)',
                 'mapped' => false, // Important: Do not map directly to entity
-                'required' => false, // Make it optional
+                'required' => true, // Make it optional
                 'constraints' => [
                     new File([
                         'maxSize' => '2M',

@@ -31,7 +31,7 @@ final class WorkshopController extends AbstractController
         $workshop = new Workshop();
         $form = $this->createForm(WorkshopType::class, $workshop);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             // Handle file upload
             $imageFile = $form->get('image')->getData();
@@ -39,20 +39,25 @@ final class WorkshopController extends AbstractController
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
-
+    
                 // Move file to the uploads directory
                 $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
-
+    
                 // Set image filename in entity
                 $workshop->setImage($newFilename);
             }
-
+    
+            // Generate Jitsi link if the type is "Atelier Live"
+            if ($workshop->getType() === Workshop::TYPE_LIVE_WORKSHOP) {
+                $workshop->setMeetlink('https://meet.jit.si/' . uniqid('workshop-', true)); // Or implement your own logic for generating Jitsi links
+            }
+    
             $entityManager->persist($workshop);
             $entityManager->flush();
-
+    
             return $this->redirectToRoute('app_workshop_index', [], Response::HTTP_SEE_OTHER);
         }
-
+    
         return $this->render('Back/workshop/new.html.twig', [
             'workshop' => $workshop,
             'form' => $form,
@@ -72,40 +77,45 @@ final class WorkshopController extends AbstractController
     public function edit(Request $request, Workshop $workshop, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(WorkshopType::class, $workshop);
-        $form->handleRequest($request);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Handle file upload
-            $imageFile = $form->get('image')->getData();
-            if ($imageFile instanceof UploadedFile) {
-                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Handle file upload
+        $imageFile = $form->get('image')->getData();
+        if ($imageFile instanceof UploadedFile) {
+            $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $slugger->slug($originalFilename);
+            $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
 
-                // Move file to uploads directory
-                $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
+            // Move file to uploads directory
+            $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
 
-                // Delete old image if necessary
-                if ($workshop->getImage()) {
-                    $oldImagePath = $this->getParameter('uploads_directory') . '/' . $workshop->getImage();
-                    if (file_exists($oldImagePath)) {
-                        unlink($oldImagePath);
-                    }
+            // Delete old image if necessary
+            if ($workshop->getImage()) {
+                $oldImagePath = $this->getParameter('uploads_directory') . '/' . $workshop->getImage();
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
                 }
-
-                // Update image filename
-                $workshop->setImage($newFilename);
             }
 
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_workshop_index', [], Response::HTTP_SEE_OTHER);
+            // Update image filename
+            $workshop->setImage($newFilename);
         }
 
-        return $this->render('Back/workshop/edit.html.twig', [
-            'workshop' => $workshop,
-            'form' => $form,
-        ]);
+        // Generate Jitsi link if the type is "Atelier Live"
+        if ($workshop->getType() === Workshop::TYPE_LIVE_WORKSHOP && empty($workshop->getMeetlink())) {
+            $workshop->setMeetlink('https://meet.jit.si/' . uniqid('workshop-', true)); // Or implement your own logic for generating Jitsi links
+        }
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_workshop_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    return $this->render('Back/workshop/edit.html.twig', [
+        'workshop' => $workshop,
+        'form' => $form,
+    ]);
     }
 
     #[Route('/{id}', name: 'app_workshop_delete', methods: ['POST'])]

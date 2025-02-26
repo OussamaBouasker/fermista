@@ -1,0 +1,114 @@
+{% extends 'Front/frontbase.html.twig' %}
+
+{% block title %}Mes demandes de rendez-vous
+{% endblock %}
+
+{% block body %}
+	<h1 class="text-center" style="margin-top:170px">Demandes de rendez-vous</h1>
+	<div class="container mt-4">
+		{% if rendezVousList is not empty %}
+			<table class="table">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Date</th>
+						<th>Heure</th>
+						<th>Sex</th>
+						<th>Cause</th>
+						<th>Statut</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for rdv in rendezVousList %}
+						<tr>
+							<td>{{ rdv.id }}</td>
+							<td>{{ rdv.date|date('d/m/Y') }}</td>
+							<td>{{ rdv.heure|date('H:i') }}</td>
+							<td>{{ rdv.sex }}</td>
+							<td>{{ rdv.cause }}</td>
+							<td>{{ rdv.status }}</td>
+							<td>
+								{% if rdv.status == 'en attente' %}
+									<a href="{{ path('app_attente_rendez_vous_accept', {'id': rdv.id}) }}" class="btn btn-success">Accepter</a>
+									<a href="{{ path('app_attente_rendez_vous_suggere', {'id': rdv.id}) }}" class="btn btn-warning btn-suggest">Suggérer un créneau</a>
+								{% else %}
+									<span class="badge bg-info text-white">{{ rdv.status }}</span>
+								{% endif %}
+							</td>
+
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<p>Aucune demande de rendez-vous.</p>
+		{% endif %}
+	</div>
+
+
+	{% block javascripts %}
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<script>
+			$(document).ready(function () {
+$('.btn-suggest').on('click', function (e) {
+e.preventDefault();
+var url = $(this).attr('href');
+
+console.log("Ouverture du formulaire AJAX depuis : ", url);
+
+$.ajax({
+url: url,
+type: 'GET',
+dataType: 'json',
+success: function (response) {
+if (! response.html) {
+console.error("Erreur: HTML vide ou invalide");
+Swal.fire({icon: 'error', title: 'Erreur', text: 'Problème lors du chargement du formulaire.'});
+return;
+}
+
+Swal.fire({
+title: 'Suggérer un nouveau créneau',
+html: response.html,
+showCancelButton: true,
+confirmButtonText: 'Valider et Accepter',
+focusConfirm: false,
+preConfirm: () => {
+const form = Swal.getPopup().querySelector('#suggest-form');
+const formData = $(form).serialize();
+
+
+return $.ajax({url: url, type: 'POST', data: formData, dataType: 'json'}).then(function (result) {
+if (result.status === 'success') {
+return result;
+} else {
+Swal.showValidationMessage(result.error || 'Erreur lors de la soumission.');
+}
+}).catch(function (error) {
+console.error("Erreur AJAX:", error);
+Swal.showValidationMessage('Erreur lors de la soumission.');
+});
+}
+}).then((result) => {
+if (result.isConfirmed && result.value.status === 'success') {
+Swal.fire({icon: 'success', title: 'Succès', text: 'Le rendez-vous a été modifié et accepté.'}).then(function () {
+window.location.href = result.value.redirect;
+});
+}
+});
+},
+error: function (xhr, status, error) {
+console.error("Erreur AJAX:", xhr.responseText);
+Swal.fire({icon: 'error', title: 'Erreur', text: 'Impossible de charger le formulaire.'});
+}
+});
+});
+});
+		</script>
+		{{ parent() }}
+	{% endblock %}
+
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{# templates/rendez_vous_front/index.html.twig #}
+{% extends 'Front/frontbase.html.twig' %}
+
+{% block title %}Prendre un rendez-vous
+{% endblock %}
+
+{% block body %}
+	<h1 class="text-center" style="margin-top:170px">
+		Prendre un rendez-vous avec
+		{{ veterinaire.firstName }}
+		{{ veterinaire.lastName }}
+	</h1>
+	<div class="container mt-4">
+		{{ form_start(form, {'attr': {'id': 'rdv-form'}}) }}
+		{{ form_row(form.date) }}
+		{{ form_row(form.heure) }}
+		{{ form_row(form.sex) }}
+		{{ form_row(form.cause) }}
+		<button class="btn btn-primary" type="submit">Envoyer la demande</button>
+		{{ form_end(form) }}
+	</div>
+
+
+	{% block javascripts %}
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<script>
+			$(document).ready(function () {
+$('#rdv-form').on('submit', function (e) {
+e.preventDefault();
+var form = $(this);
+var url = form.attr('action');
+$.ajax({
+url: url,
+type: form.attr('method'),
+data: form.serialize(),
+dataType: 'json',
+success: function (response) {
+if (response.status === 'success') {
+Swal.fire({
+icon: 'success',
+title: 'Demande envoyée',
+text: response.message,
+confirmButtonText: 'OK',
+position: 'center',
+width: '400px'
+});
+form.trigger('reset');
+} else {
+Swal.fire({
+icon: 'error',
+title: 'Erreur',
+text: response.message || 'Une erreur est survenue, veuillez réessayer.'
+});
+}
+},
+error: function (xhr, status, error) {
+Swal.fire({icon: 'error', title: 'Erreur', text: 'Une erreur est survenue lors de la soumission du formulaire.'});
+}
+});
+});
+});
+		</script>
+		{{ parent() }}
+	{% endblock %}
+{% endblock %}

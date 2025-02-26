@@ -41,7 +41,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         message: 'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial.',
         groups: ['registration']
     )]
-    
+
     private ?string $password = null;
 
     #[ORM\Column(length: 10, nullable: true)]
@@ -101,29 +101,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     // Dans l'entité User
 
-// Dans ton entité User
-public function getRoles(): array
-{
-    // Récupérer les rôles depuis la propriété $roles de ton entité
-    $roles = $this->roles;
+    // Dans ton entité User
+    public function getRoles(): array
+    {
+        // Récupérer les rôles depuis la propriété $roles de ton entité
+        $roles = $this->roles;
 
-    // Dictionnaire des rôles lisibles
-    $roleNames = [
-        'ROLE_ADMIN' => 'Administrateur',
-        'ROLE_FORMATEUR' => 'Formateur',
-        'ROLE_AGRICULTOR' => 'Agriculteur',
-        'ROLE_VETERINAIR' => 'Vétérinaire',
-        'ROLE_CLIENT' => 'Client',
-        
-        // Ajoute d'autres rôles ici
-    ];
+        // Dictionnaire des rôles lisibles
+        $roleNames = [
+            'ROLE_ADMIN' => 'Administrateur',
+            'ROLE_FORMATEUR' => 'Formateur',
+            'ROLE_AGRICULTOR' => 'Agriculteur',
+            'ROLE_VETERINAIR' => 'Vétérinaire',
+            'ROLE_CLIENT' => 'Client',
 
-    // Transformer les rôles en noms lisibles
-    return array_map(function($role) use ($roleNames) {
-        return $roleNames[$role] ?? $role; // Si le rôle n'existe pas dans le tableau, laisse-le tel quel
-    }, $roles);
-    return $this->roles ?: ['ROLE_USER'];
-}
+            // Ajoute d'autres rôles ici
+        ];
+
+        // Transformer les rôles en noms lisibles
+        return array_map(function ($role) use ($roleNames) {
+            return $roleNames[$role] ?? $role; // Si le rôle n'existe pas dans le tableau, laisse-le tel quel
+        }, $roles);
+        return $this->roles ?: ['ROLE_USER'];
+    }
 
 
 
@@ -230,5 +230,4 @@ public function getRoles(): array
 
         return $this;
     }
-    
 }
