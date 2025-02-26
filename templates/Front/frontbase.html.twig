@@ -100,7 +100,7 @@
 							<a href="/shop/collier" class="nav-item nav-link">Collier Intelligent</a>
                             <a href="/collection" class="nav-item nav-link">Produits</a>
 								{% if app.user %}
-									{% if "Vétérinaire" in app.user.roles or "Véterinaire" in app.user.roles %}
+									{% if "ROLE_ADMIN" in app.user.roles or "ROLE_VETERINAIR" in app.user.roles %}
                             <a  href="/calendrier" class="nav-item nav-link">Control-médical</a>
                             		{% endif %}
 								{% endif %}
@@ -109,7 +109,7 @@
 
 
 								{% if app.user %}
-									{% if "Agriculteur" in app.user.roles or "Administrateur" in app.user.roles  %}
+									{% if "ROLE_ADMIN" in app.user.roles or "ROLE_AGRICULTOR" in app.user.roles  %}
 							<div class="nav-item dropdown">
 								<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Suivis</a>
 								<div class="dropdown-menu m-0 bg-secondary rounded-0">
@@ -146,7 +146,7 @@
 							</a>
 							<ul class="dropdown-menu" aria-labelledby="userDropdown">
 								{% if app.user %}
-									{% if "Administrateur" in app.user.roles or "Formateur" in app.user.roles %}
+									{% if "ROLE_ADMIN" in app.user.roles or "Formateur" in app.user.roles %}
 										<li>
 											<a class="dropdown-item" href="{{ path('app_home_admin') }}" style="color: gray; transition: color 0.3s, background-color 0.3s;">Dashboard
 											</a>

@@ -72,7 +72,7 @@
                         <span class="nav-item-head">UI Elements</span>
                     </li>
                     {% if app.user %}
-                        {% if  "Administrateur"  in app.user.roles %}
+                        {% if  "ROLE_ADMIN"  in app.user.roles %}
                             <li class="nav-item">
                                 <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
                                     <i class="mdi mdi-crosshairs-gps menu-icon"></i>
@@ -100,7 +100,7 @@
                 {% endif %}
 
                 {% if app.user %}
-                    {% if  "Administrateur"  in app.user.roles %}
+                    {% if  "ROLE_ADMIN"  in app.user.roles %}
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
                                 <i class="mdi mdi-contacts menu-icon"></i>
@@ -126,7 +126,7 @@
                 {% endif %}
 
                 {% if app.user %}
-                    {% if  "Formateur"  in app.user.roles or "Administrateur"  in app.user.roles %}
+                    {% if  "ROLE_FORMATEUR"  in app.user.roles or "ROLE_ADMIN"  in app.user.roles %}
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="collapse" href="#forms" aria-expanded="false" aria-controls="forms">
                                 <i class="mdi mdi-format-list-bulleted menu-icon"></i>
@@ -141,7 +141,7 @@
                                     </li>
 
                                     {% if app.user %}
-                                        {% if  "Administrateur"  in app.user.roles %}
+                                        {% if  "ROLE_ADMIN"  in app.user.roles %}
                                             <li class="nav-item">
                                                 <a class="nav-link" href="/reservation">Reservation</a>
                                             </li>
@@ -155,7 +155,7 @@
                     {% endif %}
                 {% endif %}
                 {% if app.user %}
-                    {% if  "Administrateur"  in app.user.roles %}
+                    {% if  "ROLE_ADMIN"  in app.user.roles %}
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
                                 <i class="mdi mdi-chart-bar menu-icon"></i>
@@ -182,7 +182,7 @@
                 {% endif %}
 
                 {% if app.user %}
-                    {% if  "Administrateur"  in app.user.roles or "Agriculteur"  in app.user.roles%}
+                    {% if  "ROLE_ADMIN"  in app.user.roles or "ROLE_AGRICULTOR"  in app.user.roles%}
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
                                 <i class="mdi mdi-table-large menu-icon"></i>

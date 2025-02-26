@@ -102,7 +102,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // Dans l'entité User
 
 // Dans ton entité User
-public function getRoles(): array
+public function getReadableRoles(): array
 {
     // Récupérer les rôles depuis la propriété $roles de ton entité
     $roles = $this->roles;
@@ -125,6 +125,16 @@ public function getRoles(): array
     return $this->roles ?: ['ROLE_USER'];
 }
 
+public function getRoles(): array
+{
+    // Récupérer les rôles depuis la propriété $roles de ton entité
+    $roles = $this->roles;
+
+    // Ajouter ROLE_USER par défaut si aucun rôle n'est défini
+    $roles[] = '';
+
+    return $roles;
+}
 
 
     public function setRoles(?array $roles): static
