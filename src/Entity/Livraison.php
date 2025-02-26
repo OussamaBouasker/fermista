@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LivraisonRepository::class)]
 class Livraison
@@ -18,13 +19,35 @@ class Livraison
 
     
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Assert\NotBlank(message: "La date de livraison est obligatoire.")]
+    #[Assert\GreaterThan("today", message: "La date de livraison doit être dans le futur.")]
     private ?\DateTimeInterface $Date = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $Heure = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le lieu est obligatoire.")]
+    #[Assert\Length(
+    max: 255,
+    maxMessage: "Le lieu ne peut pas dépasser {{ limit }} caractères."
+    )]
+    #[Assert\Regex(
+        pattern: "/^[A-Z][a-zA-Z0-9\s]*$/",
+        message: "Le lieu doit commencer par une lettre majuscule et ne contenir que des lettres, chiffres et espaces."
+    )]
+    private ?string $lieu = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le nom du livreur est obligatoire.")]
+    #[Assert\Length(
+        min: 4,
+        max: 255,
+        minMessage: "Le nom doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères."
+        )]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-Z\s]+$/",
+        message: "Le nom du livreur doit contenir uniquement des lettres et des espaces, sans chiffres."
+    )]
     private ?string $Livreur = null;
 
     /**
@@ -62,14 +85,14 @@ class Livraison
         return $this;
     }
 
-    public function getHeure(): ?\DateTimeInterface
+    public function getLieu(): ?string
     {
-        return $this->Heure;
+        return $this->lieu;
     }
 
-    public function setHeure(?\DateTimeInterface $Heure): static
+    public function setLieu(?string $lieu): self
     {
-        $this->Heure = $Heure;
+        $this->lieu = $lieu;
 
         return $this;
     }

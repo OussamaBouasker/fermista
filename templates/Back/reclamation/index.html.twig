@@ -1,89 +1,179 @@
 {% extends 'base.html.twig' %}
+
 {% block content %}
-	<!DOCTYPE html>
-	<html>
-		<head>
-			<meta charset="UTF-8">
-			<title>
-				{% block title %}Welcome!
-				{% endblock %}
-			</title>
-			<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-			{% block stylesheets %}
-				{{ parent() }}
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>
+                {% block title %}Welcome!{% endblock %}
+            </title>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+            <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+            {% block stylesheets %}
+                <style>
+                    table thead th {
+                        background-color: rgb(191, 221, 205) !important; /* Gris pastel */
+                        color: white !important; /* Texte en blanc */
+                        font-weight: bold !important; /* Texte en gras */
+                        font-size: 16px !important; /* Taille de police plus grande */
+                        font-family: 'Arial', sans-serif !important; /* Police sans-serif */
+                        text-align: center !important; /* Aligner le texte au centre */
+                        padding: 12px 15px !important; /* Espacement interne */
+                        border: 1px solid #ddd !important; /* Bordure légère */
+                        text-transform: uppercase !important; /* Rendre les titres en majuscules */
+                        letter-spacing: 1px !important; /* Espacement entre les lettres */
+                    }
 
-			{% endblock %}
-		</head>
-		<body>
-			{% block body %}
+                    /* Conteneur de la pagination */
+                    .pagination {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 15px;
+                        list-style: none;
+                        gap: 6px;
+                    }
 
-				<div class="content-wrapper pb-0">
-					<div style="display: flex; justify-content: space-between; align-items: center; padding-left: 50px;">
-						<h1>Gestion Réclamations</h1>
-						{# <div class="col-sm-6 col-md-4 col-lg-3" style="padding: 10px; size:20px">
-																			<i class="fa fa-plus-square"></i>
-																		<a href="{{ path('app_reclamation_new') }}" style="text-decoration: none; color: black;">Create new</a>
-																	</div>
-												 #}
-					</div>
-					<table class="table">
-						<thead>
-							<tr>
+                    /* Style des boutons de pagination */
+                    .pagination a, .pagination span {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 40px;
+                        height: 40px;
+                        text-decoration: none;
+                        border-radius: 50%; /* Cercle parfait */
+                        font-size: 15px;
+                        font-weight: 600;
+                        background-color: #C1E1C1; /* Vert pastel clair */
+                        border: none;
+                        color: #2F5D50; /* Vert foncé doux */
+                        transition: all 0.3s ease-in-out;
+                        box-shadow: 0 3px 6px rgba(139, 183, 158, 0.3);
+                    }
 
-								<th>Titre</th>
-								<th>Description</th>
-								<th>Statut</th>
-								<th>DateSoumission</th>
-								<th>Email de l'utilisateur</th>
-								<th>actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for reclamation in reclamations %}
-								<tr>
+                    /* Effet au survol */
+                    .pagination a:hover {
+                        background-color: #A8D5BA; /* Vert pastel plus foncé */
+                        color: white;
+                        transform: translateY(-2px);
+                        box-shadow: 0 5px 10px rgba(139, 183, 158, 0.4);
+                    }
 
-									<td>{{ reclamation.titre }}</td>
-									<td>{{ reclamation.description }}</td>
-									<td>
-										{% if reclamation.status == 'pending' %}
-											<label class="badge badge-danger" style="padding:13px ; font-size:13px">Pending</label>
+                    /* Page active */
+                    .pagination .current {
+                        background-color: #A8D5BA; /* Vert plus foncé */
+                        color: white;
+                        font-weight: bold;
+                        box-shadow: 0 4px 10px rgba(139, 183, 158, 0.5);
+                    }
 
-										{% elseif reclamation.status == 'confirmed' %}
-											<label class="badge badge-success" style="padding:13px ; font-size:13px">Confirmed</label>
-										{% elseif reclamation.status == 'canceled' %}
-											<label class="badge badge-warning" style="padding:13px ; font-size:13px">Canceled</label>
-										{% endif %}
-									</td>
-									<td>{{ reclamation.dateSoumission ? reclamation.dateSoumission|date('Y-m-d H:i:s') : '' }}</td>
-									<td>{{ reclamation.user ? reclamation.user.email : 'N/A' }}</td>
+                    /* Boutons désactivés */
+                    .pagination .disabled {
+                        color: #bbb;
+                        pointer-events: none;
+                        background-color: transparent;
+                        box-shadow: none;
+                    }
 
-									<td>
+                    /* Style des flèches */
+                    .pagination .pagination-prev a, .pagination .pagination-next a {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 18px; /* Taille de la flèche */
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        background-color: #C1E1C1; /* Vert pastel clair */
+                        color: #2F5D50;
+                        transition: all 0.3s ease-in-out;
+                        box-shadow: 0 3px 6px rgba(216, 195, 165, 0.3);
+                    }
 
+                    /* Effet au survol des flèches */
+                    .pagination .pagination-prev a:hover, .pagination .pagination-next a:hover {
+                        background-color: #A8D5BA; /* Vert pastel plus foncé */
+                        color: white;
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 10px rgba(139, 183, 158, 0.4);
+                    }
 
-										<a href="{{ path('app_reclamation_edit', {'id': reclamation.id}) }}" class="btn btn-success" style="text-decoration: none; color: #F2F2F2;">Edit</a>
+                    /* Centrer le titre comme le tableau */
+                    .title-container {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        width: 100%;
+                        padding-left: 50px; /* Ajuste si nécessaire */
+                    }
+                </style>
+                {{ parent() }}
+            {% endblock %}
+        </head>
+        <body>
+            {% block body %}
 
+                <div class="content-wrapper pb-0">
+                    <!-- Conteneur centré pour le titre -->
+                    <div class="title-container">
+                        <h1>Gestion Réclamations</h1>
+                    </div>
 
-										<a href="{{ path('app_reclamation_delete', {'id': reclamation.id}) }}" class="btn btn-danger" style="text-decoration: none; color: #F2F2F2;">Delete</a>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Description</th>
+                                <th>Statut</th>
+                                <th>DateSoumission</th>
+                                <th>Email de l'utilisateur</th>
+                                <th>actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reclamation in reclamations %}
+                                <tr>
+                                    <td>{{ reclamation.titre }}</td>
+                                    <td>{{ reclamation.description }}</td>
+                                    <td>
+                                        {% if reclamation.status == 'pending' %}
+                                            <label class="badge badge-danger" style="padding:13px ; font-size:13px">Pending</label>
+                                        {% elseif reclamation.status == 'confirmed' %}
+                                            <label class="badge badge-success" style="padding:13px ; font-size:13px">Confirmed</label>
+                                        {% elseif reclamation.status == 'canceled' %}
+                                            <label class="badge badge-warning" style="padding:13px ; font-size:13px">Canceled</label>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ reclamation.dateSoumission ? reclamation.dateSoumission|date('Y-m-d H:i:s') : '' }}</td>
+                                    <td>{{ reclamation.user ? reclamation.user.email : 'N/A' }}</td>
 
-									</td>
-								</tr>
-							{% else %}
-								<tr>
-									<td colspan="6">no records found</td>
-								</tr>
-							{% endfor %}
-						</tbody>
-					</table>
+                                    <td>
+                                        <a href="{{ path('app_reclamation_edit', {'id': reclamation.id}) }}" class="btn btn-success" style="text-decoration: none; color: #F2F2F2;">Edit</a>
+                                        <a href="{{ path('app_reclamation_delete', {'id': reclamation.id}) }}" class="btn btn-danger" style="text-decoration: none; color: #F2F2F2;">Delete</a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="6">no records found</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
 
+                </div>
+                <!-- Pagination -->
+                <div class="navigation">
+                    {{ knp_pagination_render(reclamations) }}
+                </div>
+            </body>
+        </html>
+    </div>
 
-				</div>
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}
 
-
-				{% block javascripts %}
-					{{ parent() }}
-				{% endblock %}
-
-			{% endblock %}
-		</body>
-	</html>
-</body></html>{% endblock %}
+{% endblock %}
+</body></html></body></html>{% endblock %}

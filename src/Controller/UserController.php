@@ -12,16 +12,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Knp\Component\Pager\PaginatorInterface;
 #[Route('/user')]
 final class UserController extends AbstractController
 {
     #[Route(name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    public function index(UserRepository $userRepository,Request $request, PaginatorInterface $paginator): Response
     {
+        $query = $userRepository->createQueryBuilder('u')->getQuery();
+        
+        $users = $paginator->paginate(
+            $query, // Requête à paginer
+            $request->query->getInt('page', 1), // Numéro de la page, 1 par défaut
+            5 // Nombre d'éléments par page
+        );
+    
         return $this->render('Back/user/index.html.twig', [
-            'users' => $userRepository->findAll(),
-        ]);
-    }
+            'users' => $users,
+        ]);}
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response

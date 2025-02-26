@@ -1,75 +1,143 @@
 {% extends 'base.html.twig' %}
+
 {% block content %}
-	<!DOCTYPE html>
 	<html>
 		<head>
 			<meta charset="UTF-8">
 			<title>
-				{% block title %}Welcome!
-				{% endblock %}
+				{% block title %}Welcome!{% endblock %}
 			</title>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 			<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
 			{% block stylesheets %}
-				{{ parent() }}
+				<style>
+					table thead th {
+						background-color: rgb(191, 221, 205) !important;
+						color: white !important;
+						font-weight: bold !important;
+						font-size: 16px !important;
+						font-family: 'Arial', sans-serif !important;
+						text-align: center !important;
+						padding: 12px 15px !important;
+						border: 1px solid #ddd !important;
+						text-transform: uppercase !important;
+						letter-spacing: 1px !important;
+					}
 
+					/* Centering h1 */
+					h1 {
+						text-align: center;
+						width: 100%;
+					}
+
+					/* Pagination styles */
+					.pagination {
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						padding: 15px;
+						list-style: none;
+						gap: 6px;
+					}
+					.pagination a, .pagination span {
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						width: 40px;
+						height: 40px;
+						text-decoration: none;
+						border-radius: 50%;
+						font-size: 15px;
+						font-weight: 600;
+						background-color: #C1E1C1;
+						border: none;
+						color: #2F5D50;
+						transition: all 0.3s ease-in-out;
+						box-shadow: 0 3px 6px rgba(139, 183, 158, 0.3);
+					}
+					.pagination a:hover {
+						background-color: #A8D5BA;
+						color: white;
+						transform: translateY(-2px);
+						box-shadow: 0 5px 10px rgba(139, 183, 158, 0.4);
+					}
+
+					/* Décalage de la table vers la droite */
+					.table-container {
+						margin-left: 150px; /* Décale la table de 20px vers la droite */
+					}
+				</style>
+				{{ parent() }}
 			{% endblock %}
 		</head>
 		<body>
 			{% block body %}
-
-				<div style="display: flex; justify-content: space-between; align-items: center; padding-left: 50px;">
-					<h1>Gestion User</h1>
-					<div class="col-sm-6 col-md-4 col-lg-3" style="padding: 10px; size:20px">
+				<div style="display: flex; justify-content: center; align-items: center;">
+					<h1>Gestion Utilisateurs</h1>
+					<div class="col-sm-6 col-md-4 col-lg-3" style="padding: 10px; font-size: 20px;">
 						<i class="fa fa-plus-square"></i>
 						<a href="{{ path('app_user_new') }}" style="text-decoration: none; color: black;">Create new</a>
 					</div>
 				</div>
-				<table class="table">
-					<thead>
-						<tr>
 
-							<th>Nom</th>
-							<th>Prénom</th>
-							<th>numéro de télephone</th>
-							<th>Email</th>
-
-							<th>Role</th>
-							<th>actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for user in users %}
+				<div class="table-container">
+					<table class="table">
+						<thead>
 							<tr>
-
-								<td>{{ user.firstName }}</td>
-								<td>{{ user.lastName }}</td>
-								<td>{{ user.number }}</td>
-								<td>{{ user.email }}</td>
-
-								<td>{{ user.roles|join(' ') }}
-								</td>
-
-								<td>
-
-									<a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-success" style="text-decoration: none; color: #F2F2F2;">Edit</a>
-									<a href="{{ path('app_user_delete', {'id': user.id}) }}" class="btn btn-danger" style="text-decoration: none; color: #F2F2F2;">Delete</a>
-
-								</td>
+								<th>Nom</th>
+								<th>Prénom</th>
+								<th>Numéro de téléphone</th>
+								<th>Email</th>
+								<th>Role</th>
+								<th>Actions</th>
 							</tr>
-						{% else %}
-							<tr>
-								<td colspan="5">no records found</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{% for user in users %}
+								<tr>
+									<td>{{ user.firstName }}</td>
+									<td>{{ user.lastName }}</td>
+									<td>{{ user.number }}</td>
+									<td>{{ user.email }}</td>
+									<td>{{ user.roles|join(' ') }}</td>
+									<td>
+										<a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-success">Edit</a>
+										<a href="{{ path('app_user_delete', {'id': user.id}) }}" class="btn btn-danger">Delete</a>
+									</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="5">No records found</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
 
+				<div class="navigation">
+					<ul class="pagination">
+						{% if users.previousPageNumber is defined %}
+							<li class="pagination-prev">
+								<a href="{{ path('app_user_index', {'page': users.previousPageNumber}) }}">
+									<i class="fas fa-chevron-left"></i>
+								</a>
+							</li>
+						{% endif %}
+						{{ knp_pagination_render(users) }}
+						{% if users.nextPageNumber is defined %}
+							<li class="pagination-next">
+								<a href="{{ path('app_user_index', {'page': users.nextPageNumber}) }}">
+									<i class="fas fa-chevron-right"></i>
+								</a>
+							</li>
+						{% endif %}
+					</ul>
+				</div>
 
 				{% block javascripts %}
 					{{ parent() }}
 				{% endblock %}
-
 			{% endblock %}
 		</body>
 	</html>
-</body></html>{% endblock %}
+{% endblock %}

@@ -11,18 +11,26 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/reclamation')]
 final class ReclamationController extends AbstractController
 {
     #[Route(name: 'app_reclamation_index', methods: ['GET'])]
-    public function index(ReclamationRepository $reclamationRepository): Response
+    public function index(ReclamationRepository $reclamationRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $query = $reclamationRepository->findAll();
+        $reclamations = $paginator->paginate(
+            $query, // Requête à paginer
+            $request->query->getInt('page', 1), // Numéro de page, 1 par défaut
+            5 // Nombre d'éléments par page
+        );
+    
         return $this->render('Back/reclamation/index.html.twig', [
-            'reclamations' => $reclamationRepository->findAll(),
+            'reclamations' => $reclamations,
         ]);
     }
-
+    
     #[Route('/new', name: 'app_reclamation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
