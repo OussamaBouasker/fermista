@@ -2,14 +2,15 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Vache;
 use App\Form\VacheType;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Repository\VacheRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 final class VacheFrontController extends AbstractController
 {
@@ -32,60 +33,76 @@ final class VacheFrontController extends AbstractController
         ]);
     }
 
-    #[Route('/news', name: 'app_vache_news', methods: ['GET', 'POST'])]
+
+    #[Route('/newss', name: 'app_vache_newss', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Créer une nouvelle entité Vache
-        $vache = new Vache();
+         $vache = new Vache();
         $form = $this->createForm(VacheType::class, $vache);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Sauvegarder la nouvelle vache dans la base de données
             $entityManager->persist($vache);
             $entityManager->flush();
 
-            // Rediriger vers la page d'affichage des vaches
             return $this->redirectToRoute('app_vache_front', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('Front/vache_front/news.html.twig', [
             'vache' => $vache,
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
-
+    // Utilisation explicite de l'ID pour récupérer l'entité Vache
     #[Route('/vache/{id}', name: 'app_vache_shows', methods: ['GET'])]
-    public function show(Vache $vache): Response
+    public function show(int $id): Response
     {
+        // Récupérer l'entité Vache explicitement
+        $vache = $this->doctrine->getRepository(Vache::class)->find($id);
+
+        if (!$vache) {
+            // Si la vache n'est pas trouvée, afficher une erreur
+            throw $this->createNotFoundException('La vache demandée n\'existe pas.');
+        }
+
         return $this->render('Front/vache_front/show.html.twig', [
             'vache' => $vache,
         ]);
     }
 
-    #[Route('/vache/{id}/edit', name: 'app_vache_edits', methods: ['GET', 'POST'])]
+    // Utilisation explicite de l'ID pour récupérer l'entité Vache
+    // Route pour modifier un collier existant
+    #[Route('/{id}/edits', name: 'app_vache_edits', methods: ['GET', 'POST'])]
     public function edit(Request $request, Vache $vache, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(VacheType::class, $vache);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Enregistrer les modifications
             $entityManager->flush();
 
-            // Rediriger vers la page des vaches après modification
-            return $this->redirectToRoute('app_vache_front', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_vache_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('Front/vache_front/edit.html.twig', [
+        return $this->render('Front/vache_front/news.html.twig', [
             'vache' => $vache,
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
 
+
+    // Utilisation explicite de l'ID pour récupérer l'entité Vache
     #[Route('/vache/{id}', name: 'app_vache_deletes', methods: ['POST'])]
-    public function delete(Request $request, Vache $vache, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, int $id, EntityManagerInterface $entityManager): Response
     {
+        // Récupérer l'entité Vache explicitement
+        $vache = $this->doctrine->getRepository(Vache::class)->find($id);
+
+        if (!$vache) {
+            // Si la vache n'est pas trouvée, afficher une erreur
+            throw $this->createNotFoundException('La vache demandée n\'existe pas.');
+        }
+
         // Validation du token CSRF
         if ($this->isCsrfTokenValid('delete' . $vache->getId(), $request->get('_token'))) {
             // Supprimer la vache
