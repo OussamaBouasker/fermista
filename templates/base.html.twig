@@ -126,7 +126,7 @@
                 {% endif %}
 
                 {% if app.user %}
-                    {% if  "ROLE_FORMATEUR"  in app.user.roles or "ROLE_ADMIN"  in app.user.roles %}
+                    {% if  "ROLE_ADMIN"  in app.user.roles %}
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="collapse" href="#forms" aria-expanded="false" aria-controls="forms">
                                 <i class="mdi mdi-format-list-bulleted menu-icon"></i>
@@ -182,7 +182,7 @@
                 {% endif %}
 
                 {% if app.user %}
-                    {% if  "ROLE_ADMIN"  in app.user.roles or "ROLE_AGRICULTOR"  in app.user.roles%}
+                    {% if  "ROLE_ADMIN"  in app.user.roles  %}
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
                                 <i class="mdi mdi-table-large menu-icon"></i>
