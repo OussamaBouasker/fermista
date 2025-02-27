@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Gregwar\CaptchaBundle\Type\CaptchaType;
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -56,6 +57,12 @@ class RegistrationFormType extends AbstractType
             'attr' => [
                 'class' => 'block w-full p-3 border border-gray-300 rounded-md text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'
             ]
+            ])
+            ->add('captcha', CaptchaType::class, [
+                'width' => 200,
+                'height' => 50,
+                'length' => 6,
+                'attr' => ['class' => 'common__login__input']
             ]);
         
     }
