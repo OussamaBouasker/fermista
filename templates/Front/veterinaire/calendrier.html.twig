@@ -186,134 +186,194 @@
 			background-color: #f9e2e2;
 		}
 		.formeditrapport {
-            padding-top: 50px;
-            height: 500px;
+			padding-top: 50px;
+			height: 500px;
 
-        }
-
+		}
 	</style>
 	{{ parent() }}
 {% endblock %}
 
 {% block body %}
-	{# Définition d'une date minimale (demain) pour le champ date #}
-	{% set tomorrow = "now"|date_modify("+1 day")|date("Y-m-d") %}
-	{% set consultationToken = csrf_token('consultation') %}
 
-	<h1>📆 Consultations</h1>
-	<div class="button-container">
-		<button onclick="toggleFormPopup('consultation-form-popup')">Ajouter une consultation</button>
-		<button onclick="toggleFormPopup('rapport-medical-form-popup')">Ajouter un rapport médical</button>
-	</div>
 
-	{# --- Popup création Consultation --- #}
-	<div id="consultation-form-popup" class="form-popup">
-		<div class="popup-content">
-			<span class="popup-close" onclick="toggleFormPopup('consultation-form-popup')">✖</span>
-			<h2>Ajouter une Consultation</h2>
-			{{ form_start(consultationForm, {'attr': {'class': 'form-group', 'novalidate': 'novalidate'}}) }}
-			<div class="form-group">
-				{{ form_label(consultationForm.nom) }}
-				{{ form_widget(consultationForm.nom, {
+	<div class="search-container">
+		<form method="get" action="{{ path('app_vache_search') }}" id="vache-search-form">
+			<input type="text" name="nom" id="vache-search" placeholder="Nom de la vache" list="vache-list">
+			<datalist id="vache-list">
+				{% if allVaches is defined %}
+					{% for v in allVaches %}
+						<option value="{{ v.name }}">
+						{% endfor %}
+					{% endif %}
+				</datalist>
+				<button type="submit">Rechercher</button>
+			</form>
+		</div>
+
+		{# Si une vache est trouvée, afficher ses consultations dans une popup #}
+		{% if vache is defined and vache %}
+			<script>
+				document.addEventListener("DOMContentLoaded", function () {
+let popup = document.getElementById("consultation-popup");
+let popupContent = document.querySelector("#consultation-popup .popup-content");
+let html = `<h3>Consultations pour {{ vache.name }}</h3>`;{% if consultations|length > 0 %}html += `<ul>`;{% for consultation in consultations %}html += `<li>
+                            <strong>{{ consultation.nom }}</strong> le {{ consultation.date ? consultation.date|date('d/m/Y') : 'N/A' }}
+                            à {{ consultation.heure ? consultation.heure|date('H:i') : 'N/A' }} - {{ consultation.lieu }}
+                        </li>`;{% endfor %}html += `</ul>`;
+html += `<a href="{{ path('app_vache_pdf', {'id': vache.id}) }}" target="_blank" class="button">
+                               Exporter en PDF
+                             </a>`;
+{% else %}html += `<p>Aucune consultation trouvée pour cette vache.</p>`;{% endif %}popupContent.innerHTML = html;
+popup.style.display = "flex";
+});
+			</script>
+			{% else %}
+		{# En l'absence de recherche, affichage global des consultations dans le calendrier #}
+			{# <div id="consultations-list">
+										<h2>Toutes les consultations</h2>
+										{% if consultations|length > 0 %}
+											<ul>
+												{% for consultation in consultations %}
+													<li>
+														<strong>{{ consultation.nom }}</strong>
+														le
+														{{ consultation.date ? consultation.date|date('d/m/Y') : 'N/A' }}
+														à
+														{{ consultation.heure ? consultation.heure|date('H:i') : 'N/A' }}
+														-
+														{{ consultation.lieu }}
+													</li>
+												{% endfor %}
+											</ul>
+										{% else %}
+											<p>Aucune consultation trouvée.</p>
+										{% endif %}
+									</div> #}
+		{% endif %}
+		{# Définition d'une date minimale (demain) pour le champ date #}
+		{% set tomorrow = "now"|date_modify("+1 day")|date("Y-m-d") %}
+		{% set consultationToken = csrf_token('consultation') %}
+
+		<h1>📆 Consultations</h1>
+		<div class="button-container">
+			<button onclick="toggleFormPopup('consultation-form-popup')">Ajouter une consultation</button>
+			<button onclick="toggleFormPopup('rapport-medical-form-popup')">Ajouter un rapport médical</button>
+		</div>
+
+		{# --- Popup création Consultation --- #}
+		<div id="consultation-form-popup" class="form-popup">
+			<div class="popup-content">
+				<span class="popup-close" onclick="toggleFormPopup('consultation-form-popup')">✖</span>
+				<h2>Ajouter une Consultation</h2>
+				{{ form_start(consultationForm, {'attr': {'class': 'form-group', 'novalidate': 'novalidate'}}) }}
+				<div class="form-group">
+					{{ form_label(consultationForm.nom) }}
+					{{ form_widget(consultationForm.nom, {
           'attr': {
             'placeholder': 'Entrez le nom',
             'pattern': '^[A-Za-z0-9À-ÿ\\s]+$'
           }
         }) }}
-				{# <div class="form-error">{{ form_errors(consultationForm.nom) }}</div> #}
-			</div>
-			<div class="form-group">
-				{{ form_label(consultationForm.date) }}
-				{{ form_widget(consultationForm.date, {'attr': {'min': tomorrow}}) }}
-				{# <div class="form-error">{{ form_errors(consultationForm.date) }}</div> #}
-			</div>
-			<div class="form-group">
-				{{ form_label(consultationForm.heure) }}
-				{{ form_widget(consultationForm.heure, {'attr': {'min': '09:00', 'max': '18:00'}}) }}
-				{# <div class="form-error">{{ form_errors(consultationForm.heure) }}</div> #}
-			</div>
-			<div class="form-group">
-				{{ form_label(consultationForm.lieu) }}
-				{{ form_widget(consultationForm.lieu, {
+					{# <div class="form-error">{{ form_errors(consultationForm.nom) }}</div> #}
+				</div>
+				<div class="form-group">
+					{{ form_label(consultationForm.date) }}
+					{{ form_widget(consultationForm.date, {'attr': {'min': tomorrow}}) }}
+					{# <div class="form-error">{{ form_errors(consultationForm.date) }}</div> #}
+				</div>
+				<div class="form-group">
+					{{ form_label(consultationForm.heure) }}
+					{{ form_widget(consultationForm.heure, {'attr': {'min': '09:00', 'max': '18:00'}}) }}
+					{# <div class="form-error">{{ form_errors(consultationForm.heure) }}</div> #}
+				</div>
+				<div class="form-group">
+					{{ form_label(consultationForm.lieu) }}
+					{{ form_widget(consultationForm.lieu, {
           'attr': {
             'placeholder': 'Entrez le lieu',
             'pattern': '^[A-Za-z0-9À-ÿ\\s]+$'
           }
         }) }}
-				{# <div class="form-error">{{ form_errors(consultationForm.lieu) }}</div> #}
+					{# <div class="form-error">{{ form_errors(consultationForm.lieu) }}</div> #}
+				</div>
+				<div class="form-group">
+					{{ form_label(consultationForm.rapportmedical) }}
+					{{ form_widget(consultationForm.rapportmedical) }}
+					{# <div class="form-error">{{ form_errors(consultationForm.rapportmedical) }}</div> #}
+				</div>
+				<div class="form-group">
+					{{ form_label(consultationForm.vache) }}
+					{{ form_widget(consultationForm.vache) }}
+					{# <div class="form-error">{{ form_errors(consultationForm.rapportmedical) }}</div> #}
+				</div>
+				<button type="submit">Enregistrer la consultation</button>
+				{{ form_end(consultationForm) }}
 			</div>
-			<div class="form-group">
-				{{ form_label(consultationForm.rapportmedical) }}
-				{{ form_widget(consultationForm.rapportmedical) }}
-				{# <div class="form-error">{{ form_errors(consultationForm.rapportmedical) }}</div> #}
-			</div>
-			<button type="submit">Enregistrer la consultation</button>
-			{{ form_end(consultationForm) }}
 		</div>
-	</div>
 
-	{# --- Popup création Rapport Médical --- #}
-	<div id="rapport-medical-form-popup" class="form-popup">
-		<div class="popup-content">
-			<span class="popup-close" onclick="toggleFormPopup('rapport-medical-form-popup')">✖</span>
-			<h2>Ajouter un Rapport Médical</h2>
-			{{ form_start(rapportMedicalForm, {'attr': {'class': 'form-group', 'novalidate': 'novalidate'}}) }}
-			<div class="form-group">
-				{{ form_label(rapportMedicalForm.num) }}
-				{{ form_widget(rapportMedicalForm.num, { 'attr': {'placeholder': 'Entrez le numéro'} }) }}
-				{# <div class="form-error">{{ form_errors(rapportMedicalForm.num) }}</div> #}
+		{# --- Popup création Rapport Médical --- #}
+		<div id="rapport-medical-form-popup" class="form-popup">
+			<div class="popup-content">
+				<span class="popup-close" onclick="toggleFormPopup('rapport-medical-form-popup')">✖</span>
+				<h2>Ajouter un Rapport Médical</h2>
+				{{ form_start(rapportMedicalForm, {'attr': {'class': 'form-group', 'novalidate': 'novalidate'}}) }}
+				<div class="form-group">
+					{{ form_label(rapportMedicalForm.num) }}
+					{{ form_widget(rapportMedicalForm.num, { 'attr': {'placeholder': 'Entrez le numéro'} }) }}
+					{# <div class="form-error">{{ form_errors(rapportMedicalForm.num) }}</div> #}
+				</div>
+				<div class="form-group">
+					{{ form_label(rapportMedicalForm.race) }}
+					{{ form_widget(rapportMedicalForm.race, { 'attr': {'placeholder': 'Entrez la race'} }) }}
+					{# <div class="form-error">{{ form_errors(rapportMedicalForm.race) }}</div> #}
+				</div>
+				<div class="form-group">
+					{{ form_label(rapportMedicalForm.historique_de_maladie) }}
+					{{ form_widget(rapportMedicalForm.historique_de_maladie, { 'attr': {'placeholder': "Entrez l'historique de maladie"} }) }}
+					{# <div class="form-error">{{ form_errors(rapportMedicalForm.historique_de_maladie) }}</div> #}
+				</div>
+				<div class="form-group">
+					{{ form_label(rapportMedicalForm.cas_medical) }}
+					{{ form_widget(rapportMedicalForm.cas_medical, { 'attr': {'placeholder': 'Entrez le cas médical'} }) }}
+					{# <div class="form-error">{{ form_errors(rapportMedicalForm.cas_medical) }}</div> #}
+				</div>
+				<div class="form-group">
+					{{ form_label(rapportMedicalForm.solution) }}
+					{{ form_widget(rapportMedicalForm.solution, { 'attr': {'placeholder': 'Entrez la solution'} }) }}
+					{# <div class="form-error">{{ form_errors(rapportMedicalForm.solution) }}</div> #}
+				</div>
+				<button type="submit">Enregistrer le rapport médical</button>
+				{{ form_end(rapportMedicalForm) }}
 			</div>
-			<div class="form-group">
-				{{ form_label(rapportMedicalForm.race) }}
-				{{ form_widget(rapportMedicalForm.race, { 'attr': {'placeholder': 'Entrez la race'} }) }}
-				{# <div class="form-error">{{ form_errors(rapportMedicalForm.race) }}</div> #}
-			</div>
-			<div class="form-group">
-				{{ form_label(rapportMedicalForm.historique_de_maladie) }}
-				{{ form_widget(rapportMedicalForm.historique_de_maladie, { 'attr': {'placeholder': "Entrez l'historique de maladie"} }) }}
-				{# <div class="form-error">{{ form_errors(rapportMedicalForm.historique_de_maladie) }}</div> #}
-			</div>
-			<div class="form-group">
-				{{ form_label(rapportMedicalForm.cas_medical) }}
-				{{ form_widget(rapportMedicalForm.cas_medical, { 'attr': {'placeholder': 'Entrez le cas médical'} }) }}
-				{# <div class="form-error">{{ form_errors(rapportMedicalForm.cas_medical) }}</div> #}
-			</div>
-			<div class="form-group">
-				{{ form_label(rapportMedicalForm.solution) }}
-				{{ form_widget(rapportMedicalForm.solution, { 'attr': {'placeholder': 'Entrez la solution'} }) }}
-				{# <div class="form-error">{{ form_errors(rapportMedicalForm.solution) }}</div> #}
-			</div>
-			<button type="submit">Enregistrer le rapport médical</button>
-			{{ form_end(rapportMedicalForm) }}
 		</div>
-	</div>
 
-	{# --- Calendrier --- #}
-	<div class="calendar-container">
-		<input type="text" id="calendar-input">
-	</div>
-
-	{# --- Popup d'affichage des détails d'une consultation --- #}
-	<div id="consultation-popup" class="popup">
-		<div class="popup-content">
-			<span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
-			{# Le contenu sera injecté via JavaScript #}
+		{# --- Calendrier --- #}
+		<div class="calendar-container">
+			<input type="text" id="calendar-input">
 		</div>
-	</div>
 
-	{# --- Modal pour l'édition AJAX --- #}
-	<div id="edit-modal" class="modal">
-		<div id="edit-modal-content">
-			<span class="modal-close" onclick="closeModal('edit-modal')">✖</span>
-			{# Le formulaire d'édition sera chargé ici via AJAX #}
+		{# --- Popup d'affichage des détails d'une consultation --- #}
+		<div id="consultation-popup" class="popup">
+			<div class="popup-content">
+				<span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
+				{# Le contenu sera injecté via JavaScript #}
+			</div>
 		</div>
-	</div>
 
-	{% block javascripts %}
-		<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-		<script>
-			// Fonctions utilitaires pour l'affichage/fermeture des popups et modals
+		{# --- Modal pour l'édition AJAX --- #}
+		<div id="edit-modal" class="modal">
+			<div id="edit-modal-content">
+				<span class="modal-close" onclick="closeModal('edit-modal')">✖</span>
+				{# Le formulaire d'édition sera chargé ici via AJAX #}
+			</div>
+		</div>
+
+		{% block javascripts %}
+			<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+			<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+			<script>
+				// Fonctions utilitaires pour l'affichage/fermeture des popups et modals
 function toggleFormPopup(popupId) {
 var popup = document.getElementById(popupId);
 popup.style.display = (popup.style.display === 'none' || popup.style.display === '') ? 'flex' : 'none';
@@ -777,6 +837,6 @@ detailsHtml += `<p><em>Aucun rapport médical disponible.</em></p>`;
 document.querySelector("#consultation-popup .popup-content").innerHTML = detailsHtml;
 document.getElementById("consultation-popup").style.display = "flex";
 };
-		</script>
+			</script>
+		{% endblock %}
 	{% endblock %}
-{% endblock %}

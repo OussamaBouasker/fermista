@@ -2,6 +2,7 @@
 // src/Controller/VeterinaireController.php
 namespace App\Controller;
 
+use App\Entity\Vache;
 use App\Entity\Consultation;
 use App\Form\ConsultationType;
 use App\Entity\RapportMedical;
@@ -11,6 +12,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use App\Repository\VacheRepository;
 
 class VeterinaireController extends AbstractController
 {
@@ -260,5 +264,61 @@ class VeterinaireController extends AbstractController
         }
 
         return $this->redirectToRoute('app_calendrier');
+    }
+
+    #[Route('/calendrier/search', name: 'app_vache_search', methods: ['GET'])]
+    public function search(Request $request, VacheRepository $vacheRepository): Response
+    {
+        $nom = $request->query->get('nom');
+        $allVaches = $vacheRepository->findAll();
+
+        if ($nom) {
+            $vache = $vacheRepository->findOneBy(['name' => $nom]);
+            if (!$vache) {
+                $this->addFlash('error', 'Aucune vache trouvée pour ce nom.');
+                $consultations = [];
+            } else {
+                $consultations = $vache->getConsultations();
+            }
+        } else {
+            $vache = null;
+            $consultations = [];
+            foreach ($allVaches as $v) {
+                foreach ($v->getConsultations() as $consultation) {
+                    $consultations[] = $consultation;
+                }
+            }
+        }
+
+        return $this->render('Front/veterinaire/calendrier.html.twig', [
+            'vache'              => $vache,
+            'consultations'      => $consultations,
+            'allVaches'          => $allVaches,
+            'consultationForm'   => $this->createForm(ConsultationType::class)->createView(),
+            'rapportMedicalForm' => $this->createForm(RapportMedicalType::class)->createView(),
+        ]);
+    }
+
+    #[Route('/calendrier/search/{id}/pdf', name: 'app_vache_pdf', methods: ['GET'])]
+    public function exportPdf(Vache $vache): Response
+    {
+        $consultations = $vache->getConsultations();
+
+        $html = $this->renderView('Front/veterinaire/pdf.html.twig', [
+            'vache'         => $vache,
+            'consultations' => $consultations,
+        ]);
+
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        return new Response($dompdf->output(), 200, [
+            'Content-Type'        => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="fiche_vache.pdf"',
+        ]);
     }
 }

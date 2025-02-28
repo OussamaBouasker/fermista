@@ -4,22 +4,114 @@
 {% block title %}Prendre un rendez-vous
 {% endblock %}
 
-{% block body %}
-	<h1 class="text-center" style="margin-top:170px">
-		Prendre un rendez-vous avec
-		{{ veterinaire.firstName }}
-		{{ veterinaire.lastName }}
-	</h1>
-	<div class="container mt-4">
-		{{ form_start(form, {'attr': {'id': 'rdv-form'}}) }}
-		{{ form_row(form.date) }}
-		{{ form_row(form.heure) }}
-		{{ form_row(form.sex) }}
-		{{ form_row(form.cause) }}
-		<button class="btn btn-primary" type="submit">Envoyer la demande</button>
-		{{ form_end(form) }}
-	</div>
+{% block stylesheets %}
+	<style>
+		body {
+			background: #f7f7f7;
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		}
+		.card-container {
+			background-color: #fff;
+			border-radius: 10px;
+			padding: 2rem;
+			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+		}
+		.card-title {
+			font-size: 1.75rem;
+			font-weight: bold;
+			margin-bottom: 1.5rem;
+			color: #333;
+		}
+		.form-control,
+		select,
+		textarea {
+			background-color: #f9f9f9;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			padding: 0.75rem;
+			font-size: 1rem;
+			color: #333;
+			transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+		}
+		.form-control:focus,
+		select:focus,
+		textarea:focus {
+			border-color: #81c408;
+			box-shadow: 0 0 5px rgba(129, 196, 8, 0.5);
+			background-color: #fff;
+			outline: none;
+		}
+		.btn-custom {
+			background-color: #81c408;
+			border: none;
+			color: #fff;
+			padding: 0.75rem;
+			font-size: 1rem;
+			border-radius: 5px;
+			transition: background-color 0.3s ease;
+		}
+		.btn-custom:hover {
+			background-color: #6aae2b;
+		}
+		.alert {
+			margin-bottom: 1rem;
+			padding: 0.75rem;
+			border: 1px solid transparent;
+			border-radius: 0.25rem;
+		}
+		.alert-danger {
+			color: #842029;
+			background-color: #f8d7da;
+			border-color: #f5c2c7;
+		}
+	</style>
+	{{ parent() }}
+{% endblock %}
 
+{% block body %}
+	<div class="container d-flex justify-content-center align-items-center min-vh-100">
+		<div class="card-container w-50" style="margin-top:170px">
+			<h1 class="card-title text-center mb-4">
+				Prendre un rendez-vous avec
+				{{ veterinaire.firstName }}
+				{{ veterinaire.lastName }}
+			</h1>
+
+			{# Zone pour afficher une erreur globale si nécessaire #}
+			<div id="global-errors" class="alert alert-danger" style="display:none;"></div>
+
+			{# Un seul appel à form_start avec l'attribut novalidate et un id pour le formulaire #}
+			{{ form_start(form, {'attr': {'id': 'rdv-form', 'novalidate': 'novalidate'}}) }}
+
+			<div class="mb-3" style="width:600px">
+				{{ form_label(form.date, "Date du rendez-vous", {'label_attr': {'class': 'form-label'}}) }}
+				{{ form_widget(form.date, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+				{{ form_errors(form.date) }}
+			</div>
+
+			<div class="mb-3" style="width:600px">
+				{{ form_label(form.heure, "Heure du rendez-vous", {'label_attr': {'class': 'form-label'}}) }}
+				{{ form_widget(form.heure, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+				{{ form_errors(form.heure) }}
+			</div>
+
+			<div class="mb-3" style="width:600px">
+				{{ form_label(form.sex, "Sexe de la vache", {'label_attr': {'class': 'form-label'}}) }}
+				{{ form_widget(form.sex, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+				{{ form_errors(form.sex) }}
+			</div>
+
+			<div class="mb-3" style="width:600px">
+				{{ form_label(form.cause, "La cause du rendez-vous", {'label_attr': {'class': 'form-label'}}) }}
+				{{ form_widget(form.cause, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+				{{ form_errors(form.cause) }}
+			</div>
+
+			<button class="btn btn-custom" type="submit">Demander un rendez-vous</button>
+
+			{{ form_end(form) }}
+		</div>
+	</div>
 
 	{% block javascripts %}
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -30,6 +122,12 @@ $('#rdv-form').on('submit', function (e) {
 e.preventDefault();
 var form = $(this);
 var url = form.attr('action');
+
+// Réinitialiser les erreurs précédentes
+form.find('.is-invalid').removeClass('is-invalid');
+form.find('.invalid-feedback').remove();
+$('#global-errors').hide().html('');
+
 $.ajax({
 url: url,
 type: form.attr('method'),
@@ -37,25 +135,24 @@ data: form.serialize(),
 dataType: 'json',
 success: function (response) {
 if (response.status === 'success') {
-Swal.fire({
-icon: 'success',
-title: 'Demande envoyée',
-text: response.message,
-confirmButtonText: 'OK',
-position: 'center',
-width: '400px'
-});
+Swal.fire({icon: 'success', title: 'Demande envoyée avec succès', text: 'Veuillez patienter la confirmation du vétérinaire'}).then(() => {
 form.trigger('reset');
-} else {
-Swal.fire({
-icon: 'error',
-title: 'Erreur',
-text: response.message || 'Une erreur est survenue, veuillez réessayer.'
 });
+} else if (response.status === 'error' && response.errors) { // Afficher les erreurs à côté de chaque champ concerné
+$.each(response.errors, function (field, errors) {
+const input = $ (`[name$="[${field}]"]`);
+input.addClass('is-invalid');
+input.after (`<div class="invalid-feedback">${
+errors.join('<br>')
+}</div>`);
+});
+} else {
+$('#global-errors').html('Une erreur est survenue. Veuillez réessayer.').show();
 }
 },
-error: function (xhr, status, error) {
-Swal.fire({icon: 'error', title: 'Erreur', text: 'Une erreur est survenue lors de la soumission du formulaire.'});
+error: function (jqXHR, textStatus, errorThrown) {
+console.log('Erreur AJAX :', textStatus, errorThrown);
+$('#global-errors').html('Erreur lors de la soumission du formulaire.').show();
 }
 });
 });

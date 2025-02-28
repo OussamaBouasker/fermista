@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250226124859 extends AbstractMigration
+final class Version20250227203814 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,14 +20,14 @@ final class Version20250226124859 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE rendez_vous ADD CONSTRAINT FK_65E8AA0A7EBB810E FOREIGN KEY (agriculteur_id) REFERENCES `user` (id)');
-        $this->addSql('CREATE INDEX IDX_65E8AA0A7EBB810E ON rendez_vous (agriculteur_id)');
+        $this->addSql('ALTER TABLE consultation ADD CONSTRAINT FK_964685A690065A44 FOREIGN KEY (vache_id) REFERENCES vache (id)');
+        $this->addSql('CREATE INDEX IDX_964685A690065A44 ON consultation (vache_id)');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE rendez_vous DROP FOREIGN KEY FK_65E8AA0A7EBB810E');
-        $this->addSql('DROP INDEX IDX_65E8AA0A7EBB810E ON rendez_vous');
+        $this->addSql('ALTER TABLE consultation DROP FOREIGN KEY FK_964685A690065A44');
+        $this->addSql('DROP INDEX IDX_964685A690065A44 ON consultation');
     }
 }

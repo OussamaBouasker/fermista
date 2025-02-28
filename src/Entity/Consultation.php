@@ -64,7 +64,20 @@ class Consultation
         return $this;
     }
 
+    #[ORM\ManyToOne(targetEntity: Vache::class, inversedBy: 'consultations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Vache $vache = null;
 
+    public function getVache(): ?Vache
+    {
+        return $this->vache;
+    }
+
+    public function setVache(?Vache $vache): static
+    {
+        $this->vache = $vache;
+        return $this;
+    }
 
     #[Assert\Callback]
     public function validateDateHeure(ExecutionContextInterface $context): void

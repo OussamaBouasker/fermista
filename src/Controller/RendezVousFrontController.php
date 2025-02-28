@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/rendez/vous/front')]
 final class RendezVousFrontController extends AbstractController
@@ -26,23 +25,30 @@ final class RendezVousFrontController extends AbstractController
         EntityManagerInterface $entityManager,
         MailerInterface $mailer
     ): Response {
-        // ⚠️ Récupération de l'utilisateur connecté (Agriculteur)
+        // Récupération de l'utilisateur connecté (Agriculteur)
         $agriculteur = $this->getUser();
-
-
-
-        // 🔍 Récupération du vétérinaire sélectionné
-        $veterinaire = $userRepository->find($vetId);
-        if (!$veterinaire) {
-            throw $this->createNotFoundException('Vétérinaire non trouvé.');
+        if (!$agriculteur) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Vous devez être connecté pour prendre un rendez-vous.'
+            ]);
         }
 
-        // 📅 Création du rendez-vous et association avec le vétérinaire et l'agriculteur connecté
+        // Récupération du vétérinaire sélectionné
+        $veterinaire = $userRepository->find($vetId);
+        if (!$veterinaire) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Vétérinaire non trouvé.'
+            ]);
+        }
+
+        // Création du rendez-vous et association avec le vétérinaire et l'agriculteur
         $rendezVous = new RendezVous();
         $rendezVous->setVeterinaire($veterinaire);
         $rendezVous->setAgriculteur($agriculteur);
 
-        // 📝 Création du formulaire
+        // Création du formulaire
         $form = $this->createForm(RendezVousType::class, $rendezVous);
         $form->handleRequest($request);
 
@@ -56,7 +62,7 @@ final class RendezVousFrontController extends AbstractController
                 ->to($veterinaire->getEmail())
                 ->subject('Nouvelle demande de rendez-vous')
                 ->text(sprintf(
-                    "Bonjour %s,\n\nVous avez reçu une nouvelle demande de rendez-vous de la part de l'agriculteur %s.\n\nDétails du rendez-vous :\n- Date : %s\n- Heure : %s\n- Sex : %s\n- Cause : %s\n\nVeuillez vous connecter à votre espace pour confirmer ou refuser cette demande.",
+                    "Bonjour %s,\n\nVous avez reçu une nouvelle demande de rendez-vous de la part de l'agriculteur %s.\n\nDétails du rendez-vous :\n- Date : %s\n- Heure : %s\n- Sexe : %s\n- Cause : %s\n\nVeuillez vous connecter à votre espace pour confirmer ou refuser cette demande.",
                     $veterinaire->getFirstName(),
                     $agriculteur->getUserIdentifier(),
                     $rendezVous->getDate()->format('d/m/Y'),
@@ -64,16 +70,36 @@ final class RendezVousFrontController extends AbstractController
                     $rendezVous->getSex(),
                     $rendezVous->getCause()
                 ));
-            $mailer->send($email);
 
-            // Retour de la réponse JSON en cas de succès
+            try {
+                $mailer->send($email);
+            } catch (\Exception $e) {
+                return new JsonResponse([
+                    'status' => 'error',
+                    'message' => 'Erreur lors de l\'envoi de l\'email : ' . $e->getMessage()
+                ]);
+            }
+
             return new JsonResponse([
                 'status' => 'success',
                 'message' => 'Votre demande a bien été envoyée. Veuillez attendre la confirmation du vétérinaire par email.'
             ]);
         }
 
-        // 📄 Affichage du formulaire en cas de GET ou d'erreur de validation
+        // Si le formulaire est soumis mais non valide, retourner les erreurs en JSON avec un status 200
+        if ($form->isSubmitted()) {
+            $errors = [];
+            foreach ($form->getErrors(true) as $error) {
+                $field = $error->getOrigin()?->getName() ?? 'inconnu';
+                $errors[$field][] = $error->getMessage();
+            }
+            return new JsonResponse([
+                'status' => 'error',
+                'errors' => $errors
+            ]);
+        }
+
+        // Affichage du formulaire en cas de méthode GET
         return $this->render('rendez_vous_front/index.html.twig', [
             'form' => $form->createView(),
             'veterinaire' => $veterinaire,
