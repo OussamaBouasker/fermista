@@ -2,8 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\User;
 use App\Entity\Workshop;
 use Proxies\__CG__\App\Entity\Workshop as EntityWorkshop;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -28,22 +30,13 @@ class WorkshopType extends AbstractType
                 'html5' => true,
                 'attr' => ['class' => 'datetime-picker'],
             ])
-            ->add('type', ChoiceType::class, [
-                'choices' => [
-                    'Atelier Live' => 'Atelier Live',
-                    'Formation Autonome' => 'Formation Autonome',
-                ],
-                'expanded' => false, // false = dropdown, true = boutons radio
-                'multiple' => false, // false = une seule option possible
-                'attr' => ['class' => 'form-control'], // Pour le styling Bootstrap
-                'placeholder' => 'Sélectionnez un type',
-            ])
+
             ->add('prix')
             ->add('theme')
             ->add('duration', TimeType::class, [
                 'widget'   => 'single_text',
                 'required' => true, // pour forcer la saisie
-            ])            ->add('nbrPlacesMax', IntegerType::class, [
+            ])->add('nbrPlacesMax', IntegerType::class, [
                 'label' => 'Nombre maximum de places',
                 'attr' => ['class' => 'form-control'],
             ])
@@ -59,7 +52,42 @@ class WorkshopType extends AbstractType
                     ])
                 ],
                 'attr' => ['class' => 'form-control'],
-            ]);
+            ])
+
+
+            ->add('type', ChoiceType::class, [
+                'choices' => [
+                    'Atelier Live' => 'Atelier Live',
+                    'Formation Autonome' => 'Formation Autonome',
+                ],
+                'expanded' => false,
+                'multiple' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'id' => 'type-selector' // Ajout d'un ID pour le JS
+                ],
+                'placeholder' => 'Sélectionnez un type',
+            ])
+            ->add('user', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => function (User $user) {
+                    return $user->getFirstName() . ' ' . $user->getLastName(); 
+                },
+                'label' => 'Formateur',
+                'placeholder' => 'Sélectionnez un formateur',
+                'required' => false,
+                'query_builder' => function(\App\Repository\UserRepository $userRepository) {
+                    return $userRepository->createQueryBuilder('u')
+                        ->where('u.roles LIKE :role')
+                        ->setParameter('role', '%ROLE_FORMATEUR%');
+                },
+                'attr' => [
+                    'class' => 'form-control',
+                    'id' => 'formateur-field', // Ajout d'un ID pour le JS
+                ],
+                // 'disabled' => true, // Désactivé par défaut
+            ])
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

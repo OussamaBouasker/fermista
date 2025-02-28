@@ -22,7 +22,7 @@ class Reservation
     private ?string $status = self::STATUS_PENDING;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $prix = null;
+    private ?string $prix = null;   
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Length(
@@ -72,6 +72,9 @@ class Reservation
         message: "Le numéro de carte bancaire doit contenir uniquement des chiffres."
     )]
     private ?string $num_carte_bancaire = null;
+
+    #[ORM\ManyToOne(inversedBy: 'reservation')]
+    private ?User $user = null;
 
     // Enum-like constants for status
     public const STATUS_PENDING = 'pending';
@@ -197,6 +200,18 @@ class Reservation
     public function setNumCarteBancaire(?string $num_carte_bancaire): static
     {
         $this->num_carte_bancaire = $num_carte_bancaire;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

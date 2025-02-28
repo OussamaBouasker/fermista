@@ -91,10 +91,23 @@
 	{% endif %}
 </div>
 
+
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.user, "Formateur", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.user, {'attr': {'class': 'form-control' ~ (form.user.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Entrez le nombre maximum de places'}}) }}
+	{% if form.user.vars.errors|length > 0 %}
+		<div class="text-danger mt-1">
+			{% for error in form.user.vars.errors %}
+				<small>{{ error.message }}</small>
+			{% endfor %}
+		</div>
+	{% endif %}
+</div>
+
 <div class="mb-3" style="gap: 20px; width:600px">
 	{{ form_label(form.nbrPlacesMax, "Nombre maximum de places", {'label_attr': {'class': 'form-label'}}) }}
 	{{ form_widget(form.nbrPlacesMax, {'attr': {'class': 'form-control' ~ (form.nbrPlacesMax.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Entrez le nombre maximum de places'}}) }}
-    {% if form.nbrPlacesMax.vars.errors|length > 0 %}
+	{% if form.nbrPlacesMax.vars.errors|length > 0 %}
 		<div class="text-danger mt-1">
 			{% for error in form.nbrPlacesMax.vars.errors %}
 				<small>{{ error.message }}</small>
@@ -103,17 +116,28 @@
 	{% endif %}
 </div>
 
+
+
 <div class="mb-3" style="gap: 20px; width:600px">
 	{{ form_label(form.image, "Image", {'label_attr': {'class': 'form-label'}}) }}
 	{{ form_widget(form.image, {'attr': {'class': 'form-control' ~ (form.image.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Entrez le titre'}}) }}
 	{% if form.image.vars.errors|length > 0 %}
-		<div class="text-danger mt-1">
+		<div class="text-danger mt-1">	
 			{% for error in form.image.vars.errors %}
 				<small>{{ error.message }}</small>
 			{% endfor %}
 		</div>
 	{% endif %}
-</div></div><button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>{{ form_end(form) }}<script>
+</div>
+
+
+
+</div>
+
+
+
+
+<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>{{ form_end(form) }}<script>
 document.addEventListener("DOMContentLoaded", function () {
 const inputs = document.querySelectorAll(".form-control");
 
@@ -127,4 +151,25 @@ input.classList.add("is-valid"); // Add green border
 }
 });
 });
+});</script><script>
+document.addEventListener("DOMContentLoaded", function () {
+let typeField = document.getElementById('{{ form.type.vars.id }}');
+let formateurField = document.getElementById('{{ form.user.vars.id }}');
+
+if (! typeField || ! formateurField) {
+console.error("Impossible de trouver les champs nécessaires");
+return;
+}
+
+function toggleFormateurField() {
+if (typeField.value === 'Atelier Live') {
+formateurField.disabled = false;
+} else {
+formateurField.disabled = true;
+formateurField.value = '';
+}
+}
+
+toggleFormateurField();
+typeField.addEventListener('change', toggleFormateurField);
 });</script>

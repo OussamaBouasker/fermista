@@ -1,131 +1,272 @@
 {% extends 'Front/frontbase.html.twig' %}
 {% block content %}
-
-
 	<!DOCTYPE html>
 	<html>
 		<head>
 			<meta charset="UTF-8">
 			<title>
-				{% block title %}Welcome!
+				{% block title %}Workshops
 				{% endblock %}
 			</title>
-			<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
 			{% block stylesheets %}
 				{{ parent() }}
 				<style>
-
+					/* Page Header */
 					.page-header {
-						background: url("{{ asset('uploads/images/workshop0	.png') }}") center/cover no-repeat;
-						height: 300px; /* Adjust height as needed */
+						background: url("{{ asset('uploads/images/workshop0.png') }}") center/cover no-repeat;
+						height: 350px;
 						display: flex;
 						align-items: center;
 						justify-content: center;
 						text-align: center;
+						position: relative;
+						overflow: hidden;
 					}
-					.fruite-img img {
+					.page-header::before {
+						content: '';
+						position: absolute;
+						top: 0;
+						left: 0;
 						width: 100%;
-						height: 150px; /* Ensures uniform image size */
-						object-fit: cover;
+						height: 100%;
+						background: rgba(0, 0, 0, 0.4);
+						z-index: 1;
+					}
+					.page-header h1 {
+						color: white;
+						font-size: 3rem;
+						position: relative;
+						z-index: 2;
+						text-transform: uppercase;
+						letter-spacing: 2px;
+						text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 					}
 
+					/* Workshop Section */
+					.fruite {
+						background: #f8f9fa;
+						padding: 60px 0;
+					}
 					.fruite-item {
 						display: flex;
 						flex-direction: column;
 						height: 100%;
+						transition: transform 0.3s ease, box-shadow 0.3s ease;
+						border-radius: 15px;
+						overflow: hidden;
+						background: white;
+						box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 					}
-
+					.fruite-item:hover {
+						transform: translateY(-10px);
+						box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+					}
+					.fruite-img img {
+						width: 100%;
+						height: 200px;
+						object-fit: cover;
+						transition: transform 0.3s ease;
+					}
+					.fruite-item:hover .fruite-img img {
+						transform: scale(1.05);
+					}
 					.fruite-item .p-4 {
 						flex-grow: 1;
 						display: flex;
 						flex-direction: column;
 						justify-content: space-between;
+						padding: 20px;
+					}
+					.fruite-item h4 {
+						font-size: 1.5rem;
+						color: #333;
+						margin-bottom: 10px;
+						font-weight: 600;
+					}
+					.fruite-item p.text-muted {
+						font-size: 0.95rem;
+						line-height: 1.6;
+					}
+					.fruite-item .text-white {
+						background: #81c408;
+						font-weight: bold;
+						padding: 5px 15px;
+						border-radius: 20px;
+						box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 					}
 
-					.fruite-item p {
-						display: -webkit-box;
-						-webkit-line-clamp: 3; /* Limit to 3 lines */
-						-webkit-box-orient: vertical;
-						overflow: hidden;
-						text-overflow: ellipsis;
-						word-wrap: break-word;
+					/* Buttons */
+					.fruite-item .btn {
+						background: #81c408;
+						color: white;
+						border: none;
+						padding: 8px 20px;
+						border-radius: 25px;
+						font-weight: 500;
+						transition: background 0.3s ease, transform 0.2s ease;
+					}
+					.fruite-item .btn:hover {
+						background: #6ba406;
+						transform: scale(1.05);
+					}
+
+					/* Navigation Pills */
+					.nav-pills .nav-link {
+						background: #f1f1f1;
+						color: #333;
+						border-radius: 25px;
+						padding: 10px 25px;
+						margin: 0 10px;
+						transition: all 0.3s ease;
+					}
+					.nav-pills .nav-link:hover {
+						background: #81c408;
+						color: white;
+					}
+					.nav-pills .nav-link.active {
+						background: #81c408;
+						color: white;
+						box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+					}
+
+					/* Search Bar */
+					#searchInput {
+						border-radius: 25px;
+						padding: 12px 20px;
+						border: 2px solid #81c408;
+						box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+						transition: all 0.3s ease;
+					}
+					#searchInput:focus {
+						border-color: #6ba406;
+						box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+						outline: none;
+					}
+
+					/* Pagination */
+					.pagination {
+						display: flex;
+						justify-content: center;
+						list-style: none;
+						padding: 20px 0;
+					}
+					.pagination li {
+						margin: 0 8px;
+					}
+					.pagination a,
+					.pagination span {
+						padding: 10px 15px;
+						border-radius: 50px;
+						font-weight: 600;
+						text-decoration: none;
+						color: #333;
+						background: #f1f1f1;
+						transition: all 0.3s ease;
+					}
+					.pagination a:hover {
+						background: #81c408;
+						color: white;
+					}
+					.pagination .current {
+						background: #81c408;
+						color: white;
+					}
+
+					/* Mes Réservations Button */
+					.btn-reservations {
+						background: #81c408;
+						color: white;
+						border-radius: 25px;
+						padding: 10px 20px;
+						font-weight: 600;
+						text-transform: uppercase;
+						letter-spacing: 1px;
+						transition: all 0.3s ease;
+						display: inline-flex;
+						align-items: center;
+						box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+					}
+					.btn-reservations:hover {
+						background: #6ba406;
+						transform: scale(1.05);
+						color: white;
+						text-decoration: none;
+					}
+					.btn-reservations i {
+						font-size: 1.2rem;
 					}
 				</style>
 			{% endblock %}
 		</head>
 		<body>
-
 			{% block body %}
-				<div
-					class="container-fluid page-header py-5">{# <h1 class="text-center text-white display-6">Shop</h1>
-																	<ol class="breadcrumb justify-content-center mb-0">
-																		<li class="breadcrumb-item">
-																			<a href="#">Home</a>
-																		</li>
-																		<li class="breadcrumb-item">
-																			<a href="#">Pages</a>
-																		</li>
-																		<li class="breadcrumb-item active text-white">Shop</li>
-																	</ol> #}
+				<div class="container-fluid page-header py-5">
+					<h1>Explore Our Workshops</h1>
 				</div>
 
-				<!-- Fruits Shop Start-->
+				<!-- Mes Réservations Button in Navigation -->
+				<ul class="nav justify-content-end mb-4 container">
+					<li class="nav-item">
+						<a class="nav-link btn-reservations" href="{{ path('user_reservations') }}">
+							<i class="fa fa-calendar-check me-2"></i> Mes Réservations
+						</a>
+					</li>
+				</ul>
+
+				<!-- Workshop Section -->
 				<div class="container-fluid fruite py-5">
 					<div class="container py-5">
 						<div class="tab-class text-center">
-							<div class="row g-4">
-								<div class="col-lg-4 text-start">
-									<h1>Liste des workshops</h1>
+							<div class="row mb-5 align-items-center">
+								<div class="col-lg-6">
+									<h1 class="display-4 fw-bold">Liste des Workshops</h1>
 								</div>
-								<div class="col-lg-8 text-end">
+								<div class="col-lg-6 text-end">
+									<input type="text" id="searchInput" class="form-control" placeholder="Rechercher un workshop..." value="{{ search|default('') }}">
+								</div>
+							</div>
+
+							<div class="row g-4">
+								<div class="col-lg-12 text-center">
 									<ul class="nav nav-pills d-inline-flex text-center mb-5">
 										<li class="nav-item">
-											<a class="d-flex m-2 py-2 bg-light rounded-pill active" data-bs-toggle="pill" href="#tab-1">
-												<span class="text-dark" style="width: 130px;">All Workshops</span>
+											<a class="nav-link {% if type is not defined or type == '' %}active{% endif %}" href="{{ path('workshops_index', {'search': search}) }}">
+												<span style="width: 130px;">All Workshops</span>
 											</a>
 										</li>
 										<li class="nav-item">
-											<a  class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2">
-												<span class="text-dark" style="width: 130px;">En ligne</span>
+											<a class="nav-link {% if type == 'Atelier Live' %}active{% endif %}" href="{{ path('workshops_index', {'type': 'Atelier Live', 'search': search}) }}">
+												<span style="width: 130px;">Atelier Live</span>
 											</a>
 										</li>
 										<li class="nav-item">
-											<a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-3">
-												<span class="text-dark" style="width: 130px;">Formation</span>
+											<a class="nav-link {% if type == 'Formation autonome' %}active{% endif %}" href="{{ path('workshops_index', {'type': 'Formation autonome', 'search': search}) }}">
+												<span style="width: 130px;">Autoformation</span>
 											</a>
 										</li>
-										{# <li class="nav-item">
-																															<a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-4">
-																																<span class="text-dark" style="width: 130px;">Bread</span>
-																															</a>
-																														</li>
-																														<li class="nav-item">
-																															<a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-5">
-																																<span class="text-dark" style="width: 130px;">Meat</span>
-																															</a>
-																														</li> #}
 									</ul>
 								</div>
 							</div>
+
 							<div class="tab-content">
 								<div id="tab-1" class="tab-pane fade show p-0 active">
-									<div class="row g-4">
+									<div class="row g-4" id="workshops-container">
 										{% for workshop in workshops %}
-											<div class="col-md-6 col-lg-4 col-xl-3">
+											<div class="col-md-6 col-lg-4 col-xl-3 workshop-item">
 												<div class="rounded position-relative fruite-item border border-secondary">
 													<div class="fruite-img">
-														<img src="{{ asset('uploads/images/' ~ workshop.image) }}" alt="Image"/>
+														<img src="{{ asset('uploads/images/' ~ workshop.image) }}" alt="Workshop Image"/>
 													</div>
-													<div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">{{ workshop.type }}</div>
+													<div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 15px; left: 15px;">{{ workshop.type }}</div>
 													<div class="p-4 border-top-0 rounded-bottom">
-														<h4 class="text-center" style="word-wrap: break-word; overflow-wrap: break-word;">{{ workshop.titre }}</h4>
+														<h4 class="text-center">{{ workshop.titre }}</h4>
 														<p class="text-muted">{{ workshop.description }}</p>
-														<div class="d-flex justify-content-between">
+														<div class="d-flex justify-content-between align-items-center">
 															<p class="text-dark fs-5 fw-bold mb-0">{{ workshop.prix }}
 																DT</p>
-															<a href="{{path('app_workshop_detail', {'id': workshop.id})}}" class="btn border border-secondary rounded-pill px-3 text-primary">
-																<i class="fa fa-shopping-bag me-2 text-primary"></i>
-																Afficher details
+															<a href="{{ path('app_workshop_detail', {'id': workshop.id}) }}" class="btn border border-secondary rounded-pill px-3">
+																<i class="fa fa-shopping-bag me-2"></i>
+																Afficher détails
 															</a>
 														</div>
 													</div>
@@ -136,19 +277,33 @@
 								</div>
 							</div>
 
+							<!-- Pagination -->
+							<div class="pagination-container">
+								{{ knp_pagination_render(workshops) }}
+							</div>
 						</div>
 					</div>
 				</div>
-				<!-- Fruits Shop End-->
-
 
 				{% block javascripts %}
 					{{ parent() }}
+					<script>
+						document.getElementById('searchInput').addEventListener('input', function () {
+							let searchValue = this.value;
+							let url = new URL(window.location.href);
+							url.searchParams.set('search', searchValue);
+							window.history.pushState({}, '', url);
 
-
+							fetch(url).then(response => response.text()).then(html => {
+								let parser = new DOMParser();
+								let doc = parser.parseFromString(html, 'text/html');
+								document.getElementById('workshops-container').innerHTML = doc.getElementById('workshops-container').innerHTML;
+								document.querySelector('.pagination-container').innerHTML = doc.querySelector('.pagination-container').innerHTML;
+							});
+						});
+					</script>
 				{% endblock %}
 			{% endblock %}
-
 		</body>
 	</html>
 {% endblock %}

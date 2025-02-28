@@ -1,7 +1,6 @@
 {% extends 'Front/frontbase.html.twig' %}
 {% block content %}
 
-
 	<!DOCTYPE html>
 	<html>
 		<head>
@@ -14,244 +13,314 @@
 			{% block stylesheets %}
 				{{ parent() }}
 				<style>
+					/* Enhanced Page Header */
 					.page-header {
 						background: url("{{ asset('uploads/images/workshop0.png') }}") center/cover no-repeat;
-						height: 300px; /* Adjust height as needed */
+						height: 400px;
+						position: relative;
 						display: flex;
 						align-items: center;
 						justify-content: center;
 						text-align: center;
+						overflow: hidden;
+					}
+					.page-header::before {
+						content: '';
+						position: absolute;
+						top: 0;
+						left: 0;
+						width: 100%;
+						height: 100%;
+						background: rgba(0, 0, 0, 0.3);
+						z-index: 1;
+					}
+
+					/* Card Style for Main Content */
+					.workshop-card {
+						background: white;
+						border-radius: 15px;
+						box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+						padding: 2rem;
+						transition: transform 0.3s ease;
+					}
+					.workshop-card:hover {
+						transform: translateY(-5px);
+					}
+
+					/* Image Enhancement */
+					.fruite-img {
+						overflow: hidden;
+						border-radius: 10px;
+						margin-bottom: 1.5rem;
 					}
 					.fruite-img img {
 						width: 100%;
-						height: 150px; /* Ensures uniform image size */
+						height: 250px;
 						object-fit: cover;
+						transition: transform 0.3s ease;
+					}
+					.fruite-img img:hover {
+						transform: scale(1.05);
 					}
 
-					.fruite-item {
-						display: flex;
-						flex-direction: column;
-						height: 100%;
+					/* Typography */
+					h2.fw-bold {
+						font-size: 2.5rem;
+						color: #333;
+						margin-bottom: 1.5rem;
+						position: relative;
+					}
+					h2.fw-bold::after {
+						content: '';
+						position: absolute;
+						bottom: -10px;
+						left: 0;
+						width: 50px;
+						height: 3px;
+						background: #28a745;
 					}
 
-					.fruite-item .p-4 {
-						flex-grow: 1;
-						display: flex;
-						flex-direction: column;
-						justify-content: space-between;
+					h3.fw-bold.text-success {
+						font-size: 1.8rem;
+						background: linear-gradient(45deg, #28a745, #34d058);
+						-webkit-background-clip: text;
+						-webkit-text-fill-color: transparent;
 					}
 
-					.fruite-item p {
-						display: -webkit-box;
-						-webkit-line-clamp: 3; /* Limit to 3 lines */
-						-webkit-box-orient: vertical;
-						overflow: hidden;
-						text-overflow: ellipsis;
-						word-wrap: break-word;
-					}
+					/* Workshop Description */
 					.workshop-description {
-						font-family: 'Roboto', sans-serif; /* Choisir une police moderne et élégante */
-						font-size: 1.1rem; /* Taille de texte agréable */
-						line-height: 1.6; /* Augmenter l'interligne pour une meilleure lisibilité */
-						color: #333; /* Couleur de texte douce pour moins de contraste */
-						text-align: justify; /* Justifier le texte */
-						margin-top: 10px; /* Espacement supérieur pour séparer du titre */
-						margin-bottom: 20px; /* Espacement inférieur */
-						padding-right: 10px; /* Petit padding sur la droite pour ne pas que le texte colle au bord */
-						max-width: 100%; /* Empêcher le texte de sortir de la div */
-						word-wrap: break-word; /* Casser les mots longs pour éviter de déborder */
-						overflow-wrap: break-word; /* Assurer la gestion des mots longs */
-						letter-spacing: 0.5px; /* Espacement entre les lettres pour plus de lisibilité */
+						font-family: 'Roboto', sans-serif;
+						font-size: 1.2rem;
+						line-height: 1.8;
+						color: #444;
+						text-align: justify;
+						background: #f8f9fa;
+						padding: 1.5rem;
+						border-radius: 10px;
+						box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
 					}
 
-					.fruite-categorie li {
-						margin-bottom: 15px; /* Espacement entre les éléments de la liste */
+					/* Buttons */
+					.btn-reserve {
+						background: linear-gradient(45deg, #dc3545, #ff4562);
+						border: none;
+						padding: 1rem 2.5rem;
+						font-size: 1.2rem;
+						font-weight: 600;
+						color: white;
+						border-radius: 50px;
+						transition: all 0.3s ease;
+						text-transform: uppercase;
+						letter-spacing: 1px;
+					}
+					.btn-reserve:hover {
+						transform: translateY(-3px);
+						box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+						color: white;
 					}
 
-					h4 {
-						font-size: 1.5rem; /* Augmenter la taille du titre */
-						color: #007bff; /* Couleur bleue pour le titre */
-						text-transform: uppercase; /* Mettre le titre en majuscules */
-						letter-spacing: 1px; /* Espacement entre les lettres du titre */
-						margin-bottom: 15px; /* Espacement sous le titre */
+					/* Info Items */
+					.info-item {
+						background: #f8f9fa;
+						padding: 0.75rem 1.25rem;
+						border-radius: 8px;
+						margin-bottom: 1rem;
+						transition: background 0.3s ease;
+					}
+					.info-item:hover {
+						background: #e9ecef;
 					}
 
+					/* Reservation Section */
+					#reservation-section {
+						background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+						border-radius: 15px;
+						box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+						padding: 2rem;
+					}
+
+					/* Toast Enhancement */
 					.toast-container {
-						z-index: 1050; /* Pour s'assurer qu'il est visible */
+						z-index: 1050;
+					}
+					.toast {
+						border-radius: 10px;
+						box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+						animation: slideIn 0.5s ease;
+					}
+					@keyframes slideIn {
+						from {
+							transform: translateX(100%);
+						}
+						to {
+							transform: translateX(0);
+						}
+					}
+
+					/* Modal Enhancement */
+					.modal-content {
+						border-radius: 15px;
+						padding: 2rem;
+						box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+						border: none;
+					}
+					.close-modal {
+						background: #dc3545;
+						color: white;
+						border-radius: 50%;
+						width: 30px;
+						height: 30px;
+						border: none;
+						font-size: 1.2rem;
+						position: absolute;
+						right: 1rem;
+						top: 1rem;
 					}
 				</style>
 			{% endblock %}
 		</head>
 		<body>
-
 			{% block body %}
-				<div class="container-fluid page-header py-5"></div>
+				<div class="container-fluid page-header py-5">
+					<h1 class="text-white position-relative z-index-2">{{ workshop.titre }}</h1>
+				</div>
 
-				<div class="container-fluid py-5 mt-5 ">
-					<div class="container py-5 ">
-						<div class="row g-4 mb-5 ">
+{% if workshop.type == 'Atelier Live' and hasReservation %}
+    {% if existingReservation.status == 'pending' %}
+        <div class="container mt-4">
+            <div class="alert alert-warning" role="alert">
+                <i class="fa fa-hourglass-half me-2"></i>
+                Votre réservation est en cours de traitement. Le lien sera disponible après confirmation.
+            </div>
+        </div>
+    {% elseif existingReservation.status == 'confirmed' %}
+        <div class="container mt-4">
+            <div class="alert alert-success" role="alert">
+                <i class="fa fa-video me-2"></i>
+                <strong>Jitsi Meeting Link:</strong>
+                <a href="{{ workshop.meetlink }}" target="_blank" class="text-success">{{ workshop.meetlink }}</a>
+            </div>
+        </div>
+    {% endif %}
+{% endif %}
+
+
+
+				<div class="container-fluid py-5 mt-5">
+					<div class="container py-5">
+						<div class="row g-4 mb-5">
 							<div class="col-lg-8 col-xl-9">
-								<div class="row g-4">
-									<div class="col-lg-6">
-										<div class="border rounded">
-											<a href="#">
+								<div class="workshop-card">
+									<div class="row g-4">
+										<div class="col-lg-6">
+											<div class="fruite-img">
 												<img src="{{ asset('uploads/images/' ~ workshop.image) }}" alt="{{ workshop.titre }}" class="img-fluid"/>
-											</a>
+											</div>
 										</div>
-									</div>
-									<div class="col-lg-6">
-										<h2 class="fw-bold mb-3 text-dark">{{ workshop.titre }}</h2>
-
-										<p class="mb-3">
-											<strong class="text-secondary">
-												<i class="fa fa-tag me-1"></i>
-												Catégorie :</strong>
-											<span class="badge bg-primary px-2 py-1">{{ workshop.theme }}</span>
-										</p>
-
-										<h3 class="fw-bold text-success mb-3">
-											<i class="fa fa-money-bill me-2"></i>
-											{{ workshop.prix }}
-											DT</h3>
-
-										<p class="mb-2">
-											<strong class="text-secondary">
-												<i class="fa fa-calendar-alt me-1"></i>
-												Date :</strong>
-											<span class="text-primary fw-semibold">{{ workshop.date|date('d-m-Y H:i') }}</span>
-										</p>
-
-										<p class="mb-2">
-											<strong class="text-secondary">
-												<i class="fa fa-clock me-1"></i>
-												Durée :</strong>
-											<span class="text-secondary">{{ workshop.duration|date('H:i') }}</span>
-										</p>
-
-										<p class="mb-2">
-											<strong class="text-secondary">
-												<i class="fa fa-list me-1"></i>
-												Type :</strong>
-											<span class="text-dark">{{ workshop.type }}</span>
-										</p>
-
-										<p class="mb-3">
-											<strong class="text-secondary">
-												<i class="fa fa-users me-1"></i>
-												Places Maximum :</strong>
-											<span class="fw-bold text-danger">{{ workshop.nbrPlacesRestantes }}</span>
-											/
-											<span class="fw-semibold">{{ workshop.nbrPlacesMax }}</span>
-										</p>
-
-										<hr
-										class="my-4">
-
-										{# <a href="#reservation-section">
-																															<i class="fa fa-shopping-cart me-2"></i>
-																															Réserver ma place
-																														</a> #}
-
-										<a href="#reservation-section" class="btn btn-lg btn-primary rounded-pill px-4 py-3">
-											<i class="fa fa-shopping-cart me-2"></i>
-											Réserver ma place
-										</a>
-									</div>
-
-
-									<div class="modal" id="myModal">
-										<div class="modal-content">
-											<button class="close-modal" id="closeModalBtn">&times;</button>
+										<div class="col-lg-6">
 											<h2 class="fw-bold mb-3 text-dark">{{ workshop.titre }}</h2>
-											<p class="mb-2">
+
+											<div class="info-item">
+												<strong class="text-secondary">
+													<i class="fa fa-tag me-1"></i>
+													Catégorie :</strong>
+												<span class="badge bg-primary px-2 py-1">{{ workshop.theme }}</span>
+											</div>
+
+											<h3 class="fw-bold text-success mb-3">
+												<i class="fa fa-money-bill me-2"></i>
+												{{ workshop.prix }}
+												DT
+											</h3>
+
+											<div class="info-item">
 												<strong class="text-secondary">
 													<i class="fa fa-calendar-alt me-1"></i>
 													Date :</strong>
 												<span class="text-primary fw-semibold">{{ workshop.date|date('d-m-Y H:i') }}</span>
-											</p>
-											<h3 class="fw-bold text-success mb-3">
-												<i class="fa fa-money-bill me-2"></i>
-												{{ workshop.prix }}
-												DT</h3>
+											</div>
 
+											<div class="info-item">
+												<strong class="text-secondary">
+													<i class="fa fa-clock me-1"></i>
+													Durée :</strong>
+												<span class="text-secondary">{{ workshop.duration|date('H:i') }}</span>
+											</div>
+
+											<div class="info-item">
+												<strong class="text-secondary">
+													<i class="fa fa-list me-1"></i>
+													Type :</strong>
+												<span class="text-dark">{{ workshop.type }}</span>
+											</div>
+
+											<div class="info-item">
+												<strong class="text-secondary">
+													<i class="fa fa-users me-1"></i>
+													Places :</strong>
+												<span class="fw-bold text-danger">{{ workshop.nbrPlacesRestantes }}</span>
+												/
+												<span class="fw-semibold">{{ workshop.nbrPlacesMax }}</span>
+											</div>
+
+											<a href="#reservation-section" class="btn btn-reserve mt-4">
+												<i class="fa fa-shopping-cart me-2"></i>
+												Réserver ma place
+											</a>
 										</div>
 									</div>
+								</div>
 
+								<div id="reservation-section" class="container-fluid py-5 mt-5">
+									<h1 class="mb-4 text-dark position-relative">Réserver Maintenant</h1>
+									{{ include('Front/_form.html.twig') }}
+								</div>
 
-									<div id="reservation-section" class="container-fluid py-5">
-										<div class="container py-5 border">
-											<h1 class="mb-4">Ajouter une réservation</h1>
-											{{ include('Front/_form.html.twig') }}
-										</div>
-									</div>
-
-
-									<div aria-live="polite" aria-atomic="true" class="position-relative">
-										<div class="toast-container position-fixed top-0 end-0 p-3">
-											{% for message in app.flashes('success') %}
-												<div class="toast align-items-center text-white bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
-													<div class="d-flex">
-														<div class="toast-body">
-															{{ message }}
-														</div>
-														<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-													</div>
+								<div aria-live="polite" aria-atomic="true" class="position-relative">
+									<div class="toast-container position-fixed top-0 end-0 p-3">
+										{% for message in app.flashes('success') %}
+											<div class="toast align-items-center text-white bg-success border-0 show">
+												<div class="d-flex">
+													<div class="toast-body">{{ message }}</div>
+													<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
 												</div>
-											{% endfor %}
-											{% for message in app.flashes('error') %}
-												<div class="toast align-items-center text-white bg-danger border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
-													<div class="d-flex">
-														<div class="toast-body">
-															{{ message }}
-														</div>
-														<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-													</div>
+											</div>
+										{% endfor %}
+										{% for message in app.flashes('error') %}
+											<div class="toast align-items-center text-white bg-danger border-0 show">
+												<div class="d-flex">
+													<div class="toast-body">{{ message }}</div>
+													<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
 												</div>
-											{% endfor %}
-
-										</div>
+											</div>
+										{% endfor %}
 									</div>
-
-
 								</div>
 							</div>
-							<div class="col-lg-4 col-xl-3">
-								<div class="row g-4 fruite">
-									<div class="col-lg-12">
-										<div class="input-group w-100 mx-auto d-flex mb-4"></div>
-										<div class="mb-4">
-											<h4 class="fw-bold text-primary">Description</h4>
-											<ul class="list-unstyled fruite-categorie">
-												<li>
-													<a href="#">
-														<p class="workshop-description">{{ workshop.description }}</p>
-													</a>
-												</li>
-											</ul>
-										</div>
-									</div>
 
+							<div class="col-lg-4 col-xl-3">
+								<div class="workshop-card">
+									<h4 class="fw-bold text-primary mb-4">Description</h4>
+									<p class="workshop-description">{{ workshop.description }}</p>
 								</div>
 							</div>
 						</div>
 					</div>
-					
+				</div>
 
-
-					{% block javascripts %}
-						{{ parent() }}
-						<script>
-							document.addEventListener("DOMContentLoaded", function () {
+				{% block javascripts %}
+					{{ parent() }}
+					<script>
+						document.addEventListener("DOMContentLoaded", function () {
 let toastElements = document.querySelectorAll('.toast');
 toastElements.forEach(toastEl => {
 let toast = new bootstrap.Toast(toastEl, {delay: 5000});
 toast.show();
 });
 });
-						</script>
-					{% endblock %}
+					</script>
 				{% endblock %}
-			</body>
+			{% endblock %}
 		</body>
 	</html>
 {% endblock %}

@@ -1,0 +1,271 @@
+{% extends 'Front/frontbase.html.twig' %}
+{% block content %}
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>
+				{% block title %}My Workshop Reservations
+				{% endblock %}
+			</title>
+			{% block stylesheets %}
+				{{ parent() }}
+				<style>
+					/* Header Styling */
+					.page-header {
+						background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("{{ asset('uploads/images/workshop0.png') }}") center/cover no-repeat;
+						height: 350px;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						position: relative;
+						overflow: hidden;
+					}
+
+					.header-overlay {
+						color: white;
+						text-align: center;
+						padding: 20px;
+						z-index: 1;
+						animation: fadeInDown 1s ease-in;
+					}
+
+					/* Container Styling */
+					.container.my-5 {
+						max-width: 1200px;
+						padding: 0 15px;
+					}
+
+					h2.text-center {
+						font-size: 2.5rem;
+						color: #2c3e50;
+						margin-bottom: 40px;
+						position: relative;
+					}
+
+					h2.text-center:after {
+						content: '';
+						width: 60px;
+						height: 4px;
+						background: #81c408;
+						position: absolute;
+						bottom: -15px;
+						left: 50%;
+						transform: translateX(-50%);
+					}
+
+					/* Table Styling */
+					.table-wrapper {
+						background: white;
+						border-radius: 15px;
+						box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+						overflow: hidden;
+						animation: fadeInUp 0.8s ease-out;
+					}
+
+					.table {
+						margin-bottom: 0;
+						border-collapse: separate;
+						border-spacing: 0;
+					}
+
+					.table thead th {
+						background: #81c408;
+						color: white;
+						padding: 15px;
+						border: none;
+						font-weight: 600;
+						text-transform: uppercase;
+						letter-spacing: 1px;
+					}
+
+					.table tbody tr {
+						transition: all 0.3s ease;
+					}
+
+					.table tbody tr:hover {
+						background: #f8f9fa;
+						transform: translateY(-2px);
+					}
+
+					.table td {
+						padding: 20px;
+						vertical-align: middle;
+						border: none;
+						border-bottom: 1px solid #eee;
+					}
+
+					/* Badge Styling */
+					.badge {
+						padding: 6px 12px;
+						border-radius: 20px;
+						font-weight: 500;
+						transition: transform 0.2s;
+					}
+
+					.badge:hover {
+						transform: scale(1.1);
+					}
+
+					/* Button Styling */
+					.btn {
+						padding: 8px 20px;
+						border-radius: 25px;
+						font-weight: 600;
+						text-transform: uppercase;
+						letter-spacing: 1px;
+						transition: all 0.3s ease;
+					}
+
+					.btn-primary {
+						background: #81c408;
+						border: none;
+					}
+
+					.btn-danger {
+						background: #dc3545;
+						border: none;
+					}
+
+					.btn:hover {
+						transform: translateY(-2px);
+						box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+					}
+
+					/* Empty State */
+					.empty-state {
+						padding: 60px;
+						text-align: center;
+						background: #f8f9fa;
+						border-radius: 15px;
+						margin: 20px 0;
+						animation: fadeIn 1s ease-in;
+					}
+
+					/* Animations */
+					@keyframes fadeInDown {
+						from {
+							opacity: 0;
+							transform: translateY(-20px);
+						}
+						to {
+							opacity: 1;
+							transform: translateY(0);
+						}
+					}
+
+					@keyframes fadeInUp {
+						from {
+							opacity: 0;
+							transform: translateY(20px);
+						}
+						to {
+							opacity: 1;
+							transform: translateY(0);
+						}
+					}
+
+					@keyframes fadeIn {
+						from {
+							opacity: 0;
+						}
+						to {
+							opacity: 1;
+						}
+					}
+				</style>
+			{% endblock %}
+		</head>
+		<body>
+			{% block body %}
+				<div class="container-fluid page-header py-5">
+					<div class="header-overlay">
+						<h1 class="display-4" style="color: #81c408">My Reservations</h1>
+						<p class="lead">Manage your workshop bookings with ease</p>
+					</div>
+				</div>
+
+				<div class="container my-5">
+					<h2 class="text-center">My Workshop Reservations</h2>
+
+					{% if reservations is empty %}
+						<div class="empty-state">
+							<i class="fas fa-calendar-times fa-3x mb-3" style="color: #81c408;"></i>
+							<p class="text-muted lead">You haven't made any reservations yet.</p>
+							<a href="{{ path('workshops_index') }}" class="btn btn-primary mt-3">
+								Explore Workshops
+							</a>
+						</div>
+					{% else %}
+						<div class="table-wrapper">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>Workshop</th>
+										<th>Date</th>
+										<th>Price</th>
+										<th>Status</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for reservation in reservations %}
+										<tr>
+											<td>
+												<strong>{{ reservation.workshop.titre }}</strong>
+											</td>
+											<td>
+												{{ reservation.reservationDate ? 
+                                            reservation.reservationDate|date('M d, Y H:i') : 
+                                            'Pending' }}
+											</td>
+											<td>{{ reservation.prix }}
+												DT</td>
+											<td>
+												{% if reservation.status == 'confirmed' %}
+													<span class="badge bg-success">Confirmed</span>
+												{% elseif reservation.status == 'canceled' %}
+													<span class="badge bg-danger">Canceled</span>
+												{% else %}
+													<span class="badge bg-warning text-dark">Pending</span>
+												{% endif %}
+											</td>
+											<td>
+												<div class="btn-group">
+													<a href="{{ path('app_workshop_detail', {'id': reservation.workshop.id}) }}" class="btn btn-sm btn-primary">
+														View
+													</a>
+													{% if reservation.status == 'pending' %}
+														<a href="{{ path('app_reservation_supprimer', {'id': reservation.id}) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to cancel this reservation?')">
+															Cancel
+														</a>
+													{% endif %}
+													<a href="{{ path('app_reservation_pdf', {'id': reservation.id}) }}" class="btn btn-sm btn-success">
+														Télécharger PDF
+													</a>
+												</div>
+											</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					{% endif %}
+				</div>
+
+				{% block javascripts %}
+					{{ parent() }}
+					<script>
+						// Add smooth scrolling for better UX
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+anchor.addEventListener('click', function (e) {
+e.preventDefault();
+document.querySelector(this.getAttribute('href')).scrollIntoView({behavior: 'smooth'});
+});
+});
+					</script>
+				{% endblock %}
+			{% endblock %}
+		</body>
+	</html>
+{% endblock %}

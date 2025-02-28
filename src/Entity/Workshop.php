@@ -10,7 +10,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Doctrine\ORM\Mapping as ORM;
-
+#[Assert\Expression(
+    "this.getType() !== 'Atelier Live' or this.getUser() !== null",
+    message: "Le formateur est obligatoire pour un atelier Live."
+)]
 #[ORM\Entity(repositoryClass: WorkshopRepository::class)]
 class Workshop
 {
@@ -86,6 +89,9 @@ class Workshop
 
     #[ORM\Column(length: 255,nullable: true)]
     private ?string $meetlink = null;
+
+    #[ORM\ManyToOne(inversedBy: 'workshop')]
+    private ?User $user = null;
 
 
     public const TYPE_LIVE_WORKSHOP = 'Atelier Live';
@@ -268,6 +274,18 @@ class Workshop
     public function setMeetlink(string $meetlink): static
     {
         $this->meetlink = $meetlink;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

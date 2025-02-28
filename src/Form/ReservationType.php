@@ -32,20 +32,12 @@ class ReservationType extends AbstractType
                     'Confirmed' => 'confirmed',
                     'Pending'   => 'pending',
                 ],
-                'choice_attr' => function ($choice, $key, $value) {
-                    // Vous pouvez utiliser des classes CSS ou des styles en ligne
-                    switch ($value) {
-                        case 'canceled':
-                            return ['class' => 'text-orange'];
-                        case 'confirmed':
-                            return ['class' => 'text-success'];
-                        case 'pending':
-                            return ['class' => 'text-warning'];
-                        default:
-                            return [];
-                    }
-                },
+                'data' => 'pending', // Set default value
+                'expanded' => false,  // Show as a dropdown
+                'required' => true,
+                'label' => 'Statut de la réservation',
             ])
+
             ->add('prix', HiddenType::class, [
                 'disabled' => true, // Make it read-only
                 'mapped' => false, // We handle this manually
@@ -68,9 +60,9 @@ class ReservationType extends AbstractType
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('commentaire')
-            ->add('workshop', EntityType::class, [
-                'class' => Workshop::class,
-                'choice_label' => 'titre', // or another property you want to display
+            ->add('workshop', HiddenType::class, [
+                'mapped' => false, // We will set this manually in the controller
+                // or another property you want to display
                 // 'disabled' => true,        // remove or set to false if you want it editable
                 // Remove 'mapped' => false if the relation is already defined in your entity
             ])

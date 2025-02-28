@@ -100,7 +100,7 @@
 							<a href="/shop/collier" class="nav-item nav-link">Collier Intelligent</a>
                             <a href="/collection" class="nav-item nav-link">Produits</a>
 								{% if app.user %}
-									{% if "Vétérinaire" in app.user.roles or "Véterinaire" in app.user.roles %}
+									{% if "Vétérinaire" in app.user.roles %}
                             <a  href="/calendrier" class="nav-item nav-link">Control-médical</a>
                             		{% endif %}
 								{% endif %}
