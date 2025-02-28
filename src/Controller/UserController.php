@@ -39,6 +39,29 @@ final class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $mimeType = $imageFile->getMimeType();
+                if (!in_array($mimeType, ['image/jpeg', 'image/png'])) {
+                    $this->addFlash('error', 'Seules les images JPEG et PNG sont autorisées.');
+                    return $this->redirectToRoute('app_register');
+                }
+
+                if ($imageFile->getSize() > 2 * 1024 * 1024) { // Limite de 2 Mo
+                    $this->addFlash('error', 'L\'image ne doit pas dépasser 2 Mo.');
+                    return $this->redirectToRoute('app_register');
+                }
+
+                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/images';
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+
+                // Déplacer l'image
+                $imageFile->move($destination, $newFilename);
+
+                // Enregistrer le chemin de l'image dans l'entité User
+                $user->setImage('uploads/images/' . $newFilename);
+            }
+
             // Get password from form
             $plainPassword = $form->get('password')->getData();
 
@@ -83,6 +106,20 @@ final class UserController extends AbstractController
            
             $selectedRole = $form->get('roles')->getData(); // Get the selected role
             $user->setRoles([$selectedRole]); // Store it as an array
+                    // Gestion de l'image
+        /** @var UploadedFile $imageFile */
+        $imageFile = $form->get('image')->getData();
+        if ($imageFile) {
+            $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/images';
+            $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+
+            // Déplacer l'image dans le dossier public/uploads/images
+            $imageFile->move($destination, $newFilename);
+
+            // Mettre à jour le chemin de l'image dans l'entité User
+            $user->setImage('uploads/images/' . $newFilename);
+        }
+
     
             $entityManager->flush();
     

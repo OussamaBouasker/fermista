@@ -5,15 +5,16 @@
 		<head>
 			<meta charset="UTF-8">
 			<title>
-				{% block title %}Welcome!{% endblock %}
+				{% block title %}Welcome!
+				{% endblock %}
 			</title>
 			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 			<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
 			{% block stylesheets %}
 				<style>
 					table thead th {
-						background-color: rgb(191, 221, 205) !important;
-						color: white !important;
+						background-color: rgb(211, 211, 211) !important; /* Gris pastel */
+						color: white !important; /* Texte en blanc */
 						font-weight: bold !important;
 						font-size: 16px !important;
 						font-family: 'Arial', sans-serif !important;
@@ -39,7 +40,8 @@
 						list-style: none;
 						gap: 6px;
 					}
-					.pagination a, .pagination span {
+					.pagination a,
+					.pagination span {
 						display: inline-flex;
 						align-items: center;
 						justify-content: center;
@@ -49,22 +51,32 @@
 						border-radius: 50%;
 						font-size: 15px;
 						font-weight: 600;
-						background-color: #C1E1C1;
+						background-color: #D3D3D3; /* Gris pastel simple */
 						border: none;
-						color: #2F5D50;
+						color: #4F4F4F; /* Gris foncé */
 						transition: all 0.3s ease-in-out;
-						box-shadow: 0 3px 6px rgba(139, 183, 158, 0.3);
+						box-shadow: 0 3px 6px rgba(169, 169, 169, 0.3);
 					}
 					.pagination a:hover {
-						background-color: #A8D5BA;
+						background-color: #C0C0C0; /* Gris clair */
 						color: white;
 						transform: translateY(-2px);
-						box-shadow: 0 5px 10px rgba(139, 183, 158, 0.4);
+						box-shadow: 0 5px 10px rgba(169, 169, 169, 0.4);
+
+
 					}
 
 					/* Décalage de la table vers la droite */
 					.table-container {
-						margin-left: 150px; /* Décale la table de 20px vers la droite */
+						margin-left: 90px; /* Décale la table de 20px vers la droite */
+					}
+
+					/* Styles d'image */
+					.user-image {
+						width: 50px;
+						height: 50px;
+						border-radius: 50%;
+						object-fit: cover;
 					}
 				</style>
 				{{ parent() }}
@@ -84,6 +96,8 @@
 					<table class="table">
 						<thead>
 							<tr>
+								<th>Image</th>
+								<!-- Nouvelle colonne pour l'image -->
 								<th>Nom</th>
 								<th>Prénom</th>
 								<th>Numéro de téléphone</th>
@@ -95,6 +109,13 @@
 						<tbody>
 							{% for user in users %}
 								<tr>
+									<td>
+										{% if user.image %}
+											<img src="{{ asset(user.image) }}" alt="Image de {{ user.firstName }}" class="user-image">
+										{% else %}
+											<img src="{{ asset('uploads/images/default-avatar.png') }}" alt="default" class="user-image">
+										{% endif %}
+									</td>
 									<td>{{ user.firstName }}</td>
 									<td>{{ user.lastName }}</td>
 									<td>{{ user.number }}</td>
@@ -107,7 +128,7 @@
 								</tr>
 							{% else %}
 								<tr>
-									<td colspan="5">No records found</td>
+									<td colspan="7">No records found</td>
 								</tr>
 							{% endfor %}
 						</tbody>

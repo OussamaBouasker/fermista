@@ -24,6 +24,8 @@ final class HomeAdminController extends AbstractController
         $numberOfAgricultors = $userRepository->countUsersByRole('ROLE_AGRICULTOR');
         $numberOfFormateurs = $userRepository->countUsersByRole('ROLE_FORMATEUR');
         $numberOfVeterinaires = $userRepository->countUsersByRole('ROLE_VETERINAIR');
+        $numberOfAdmins = $userRepository->countUsersByRole('ROLE_ADMIN');
+
         $totalReclamations = $reclamationRepository->count([]);
         $totalUsers = $userRepository->count([]);
         $totalWorkshops = $workshopRepository->count([]);
@@ -49,6 +51,8 @@ final class HomeAdminController extends AbstractController
             'numberOfAgricultors' => $numberOfAgricultors, // Passez cette variable au template
             'numberOfFormateurs' => $numberOfFormateurs, // Passez cette variable au template
             'numberOfVeterinaires' => $numberOfVeterinaires, // Passez cette variable au template
+            'numberOfAdmins' => $numberOfAdmins, // Passez cette variable au template
+
             'userCountByRole' => $userCountByRole,
             'reclamationCounts' => $reclamationCounts,
             'totalReclamations' => $totalReclamations,

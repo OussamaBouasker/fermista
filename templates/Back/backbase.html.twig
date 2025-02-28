@@ -74,25 +74,28 @@
 											</span>
 										</div>
 									</div>
+
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="col-sm-6 col-xl-4 stretch-card grid-margin">
-						<div class="card">	<div
-					class="row">
-					<!-- Graphique pour les réclamations -->
-					<div class="col-xl-6 stretch-card grid-margin">
-						
-							<div class="card-body">
-							
-								<div class="chart-container">
-									<canvas id="reclamationStatusChart" width="300" height="400"></canvas>
-								
+						<div class="card">
+							<div
+								class="row">
+								<!-- Graphique pour les réclamations -->
+								<div class="col-xl-6 stretch-card grid-margin">
+
+									<div class="card-body">
+
+										<div class="chart-container">
+											<canvas id="reclamationStatusChart" width="300" height="400"></canvas>
+
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
-				</div></div>
 					</div>
 					<div class="col-sm-6 col-xl-4 stretch-card grid-margin">
 						<div class="card">
@@ -115,7 +118,7 @@
 											<i class="mdi mdi-account-outline"></i>
 										</div>
 									</div>
-                  
+
 									<div class="ps-4">
 										<h4 class="fw-bold text-danger mb-0">Total des utilisateurs</h4>
 										<h6 class="text-muted">{{ totalUsers }}</h6>
@@ -143,7 +146,7 @@
 										<h6 class="text-muted">{{ totalReservations }}</h6>
 									</div>
 								</div>
-                
+
 								<div class="d-flex">
 									<div class="hexagon">
 										<div class="hex-mid hexagon-primary">
@@ -153,12 +156,12 @@
 									<div class="ps-4">
 										<h4 class="fw-bold text-primary mb-0">Total des consultions</h4>
 										<h6 class="text-muted mb-0">{{ totalConsultations }}</h6>
-                    
+
 									</div>
-                  
-                  
+
+
 								</div>
-                
+
 							</div>
 						</div>
 					</div>
@@ -193,7 +196,7 @@
 					</div>
 
 				</div>
-			
+
 			</body>
 		</html>
 	</div>
@@ -204,7 +207,11 @@ const userRolesPieChart = new Chart(ctxPie, {
 type: 'pie', // Type de graphique (camembert)
 data: {
 labels: [
-'Clients', 'Agriculteurs', 'Formateurs', 'Vétérinaires'
+'Clients',
+'Agriculteurs',
+'Formateurs',
+'Vétérinaires',
+'Admins'
 ], // Rôles
 datasets: [
 {
@@ -213,16 +220,23 @@ data: [
 {{ numberOfClients }}, // Nombre de clients
 {{ numberOfAgricultors }}, // Nombre d'agriculteurs
 {{ numberOfFormateurs }}, // Nombre de formateurs
-{{ numberOfVeterinaires }} // Nombre de vétérinaires
+{{ numberOfVeterinaires }}, // Nombre de vétérinaires
+{{ numberOfAdmins }} // Nombre d'administrateurs
+
 ],
 backgroundColor: [
 'rgba(255, 99, 132, 0.8)', // Rouge
 'rgba(54, 162, 235, 0.8)', // Bleu
 'rgba(255, 206, 86, 0.8)', // Jaune
 'rgba(75, 192, 192, 0.8)', // Turquoise
+'rgba(204, 153, 255, 0.8)' // Violet pastel
 ],
 borderColor: [
-'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)',
+'rgba(255, 99, 132, 1)',
+'rgba(54, 162, 235, 1)',
+'rgba(255, 206, 86, 1)',
+'rgba(75, 192, 192, 1)',
+'rgba(204, 153, 255, 0.8)', // Violet pastel
 ],
 borderWidth: 2,
 shadowOffsetX: 3,
@@ -284,7 +298,11 @@ const userRolesBarChart = new Chart(ctxBar, {
 type: 'bar', // Type de graphique (barres)
 data: {
 labels: [
-'Clients', 'Agriculteurs', 'Formateurs', 'Vétérinaires'
+'Clients',
+'Agriculteurs',
+'Formateurs',
+'Vétérinaires',
+'Admins',
 ], // Rôles
 datasets: [
 {
@@ -293,16 +311,22 @@ data: [
 {{ numberOfClients }}, // Nombre de clients
 {{ numberOfAgricultors }}, // Nombre d'agriculteurs
 {{ numberOfFormateurs }}, // Nombre de formateurs
-{{ numberOfVeterinaires }} // Nombre de vétérinaires
+{{ numberOfVeterinaires }}, // Nombre de vétérinaires
+{{ numberOfAdmins }} // Nombre d'administrateurs
 ],
 backgroundColor: [
 'rgba(255, 99, 132, 0.8)', // Rouge
 'rgba(54, 162, 235, 0.8)', // Bleu
 'rgba(255, 206, 86, 0.8)', // Jaune
 'rgba(75, 192, 192, 0.8)', // Turquoise
+'rgba(204, 153, 255, 0.8)' // Violet pastel
 ],
 borderColor: [
-'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)',
+'rgba(255, 99, 132, 1)',
+'rgba(54, 162, 235, 1)',
+'rgba(255, 206, 86, 1)',
+'rgba(75, 192, 192, 1)',
+'rgba(204, 153, 255, 0.8)', // Violet pastel
 ],
 borderWidth: 2,
 shadowOffsetX: 3,
@@ -383,105 +407,106 @@ easing: 'easeInOutQuart'
 }
 });
 });
-document.addEventListener('DOMContentLoaded', function () {
-            // Graphique pour les réclamations par statut
-            const ctxReclamation = document.getElementById('reclamationStatusChart').getContext('2d');
-            const reclamationStatusChart = new Chart(ctxReclamation, {
-                type: 'bar', // Type de graphique (barres)
-                data: {
-                    labels: ['Pending', 'Confirmed', 'Canceled'], // Statuts
-                    datasets: [{
-                        label: 'Nombre de réclamations',
-                        data: [
-                            {{ reclamationCounts['Pending'] }}, // Nombre de réclamations en attente
-                            {{ reclamationCounts['Confirmed'] }}, // Nombre de réclamations confirmées
-                            {{ reclamationCounts['Canceled'] }} // Nombre de réclamations annulées
-                        ],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.8)', // Rouge pour Pending
-                            'rgba(54, 162, 235, 0.8)', // Bleu pour Confirmed
-                            'rgba(75, 192, 192, 0.8)', // Turquoise pour Canceled
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(75, 192, 192, 1)',
-                        ],
-                        borderWidth: 2,
-                        shadowOffsetX: 3,
-                        shadowOffsetY: 3,
-                        shadowBlur: 10,
-                        shadowColor: 'rgba(0, 0, 0, 0.3)',
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                font: {
-                                    size: 14,
-                                    family: 'Arial, sans-serif',
-                                },
-                                color: '#333',
-                            },
-                        },
-                        title: {
-                            display: true,
-                            text: 'Statut des réclamations',
-                            font: {
-                                size: 18,
-                                family: 'Arial, sans-serif',
-                            },
-                            color: '#333',
-                            padding: 20,
-                        },
-                        tooltip: {
-                            enabled: true,
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleFont: {
-                                size: 16,
-                            },
-                            bodyFont: {
-                                size: 14,
-                            },
-                            footerFont: {
-                                size: 12,
-                            },
-                        },
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.1)',
-                            },
-                            ticks: {
-                                font: {
-                                    size: 14,
-                                },
-                                color: '#333',
-                            },
-                        },
-                        x: {
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.1)',
-                            },
-                            ticks: {
-                                font: {
-                                    size: 14,
-                                },
-                                color: '#333',
-                            },
-                        },
-                    },
-                    animation: {
-                        duration: 1000,
-                        easing: 'easeInOutQuart',
-                    },
-                }
-            });
-        });</script>{% endblock %}{% endblock %}</body></html>{% endblock %}
+document.addEventListener('DOMContentLoaded', function () { // Graphique pour les réclamations par statut
+const ctxReclamation = document.getElementById('reclamationStatusChart').getContext('2d');
+const reclamationStatusChart = new Chart(ctxReclamation, {
+type: 'bar', // Type de graphique (barres)
+data: {
+labels: [
+'Pending', 'Confirmed', 'Canceled'
+], // Statuts
+datasets: [
+{
+label: 'Nombre de réclamations',
+data: [
+{{ reclamationCounts['Pending'] }}, // Nombre de réclamations en attente
+{{ reclamationCounts['Confirmed'] }}, // Nombre de réclamations confirmées
+{{ reclamationCounts['Canceled'] }} // Nombre de réclamations annulées
+],
+backgroundColor: [
+'rgba(255, 99, 132, 0.8)', // Rouge pour Pending
+'rgba(54, 162, 235, 0.8)', // Bleu pour Confirmed
+'rgba(75, 192, 192, 0.8)', // Turquoise pour Canceled
+],
+borderColor: [
+'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(75, 192, 192, 1)',
+],
+borderWidth: 2,
+shadowOffsetX: 3,
+shadowOffsetY: 3,
+shadowBlur: 10,
+shadowColor: 'rgba(0, 0, 0, 0.3)'
+}
+]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+plugins: {
+legend: {
+display: true,
+position: 'top',
+labels: {
+font: {
+size: 14,
+family: 'Arial, sans-serif'
+},
+color: '#333'
+}
+},
+title: {
+display: true,
+text: 'Statut des réclamations',
+font: {
+size: 18,
+family: 'Arial, sans-serif'
+},
+color: '#333',
+padding: 20
+},
+tooltip: {
+enabled: true,
+backgroundColor: 'rgba(0, 0, 0, 0.8)',
+titleFont: {
+size: 16
+},
+bodyFont: {
+size: 14
+},
+footerFont: {
+size: 12
+}
+}
+},
+scales: {
+y: {
+beginAtZero: true,
+grid: {
+color: 'rgba(0, 0, 0, 0.1)'
+},
+ticks: {
+font: {
+size: 14
+},
+color: '#333'
+}
+},
+x: {
+grid: {
+color: 'rgba(0, 0, 0, 0.1)'
+},
+ticks: {
+font: {
+size: 14
+},
+color: '#333'
+}
+}
+},
+animation: {
+duration: 1000,
+easing: 'easeInOutQuart'
+}
+}
+});
+});</script>{% endblock %}{% endblock %}</body></html>{% endblock %}

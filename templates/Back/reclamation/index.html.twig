@@ -12,102 +12,58 @@
             <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
             {% block stylesheets %}
                 <style>
-                    table thead th {
-                        background-color: rgb(191, 221, 205) !important; /* Gris pastel */
-                        color: white !important; /* Texte en blanc */
-                        font-weight: bold !important; /* Texte en gras */
-                        font-size: 16px !important; /* Taille de police plus grande */
-                        font-family: 'Arial', sans-serif !important; /* Police sans-serif */
-                        text-align: center !important; /* Aligner le texte au centre */
-                        padding: 12px 15px !important; /* Espacement interne */
-                        border: 1px solid #ddd !important; /* Bordure légère */
-                        text-transform: uppercase !important; /* Rendre les titres en majuscules */
-                        letter-spacing: 1px !important; /* Espacement entre les lettres */
-                    }
+                   table thead th {
+    background-color: rgb(211, 211, 211) !important; /* Gris pastel */
+    color: white !important; /* Texte en blanc */
+    font-weight: bold !important;
+    font-size: 16px !important;
+    font-family: 'Arial', sans-serif !important;
+    text-align: center !important;
+    padding: 12px 15px !important;
+    border: 1px solid #ddd !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
 
-                    /* Conteneur de la pagination */
-                    .pagination {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        padding: 15px;
-                        list-style: none;
-                        gap: 6px;
-                    }
+/* Centering h1 */
+h1 {
+    text-align: center;
+    width: 100%;
+}
 
-                    /* Style des boutons de pagination */
-                    .pagination a, .pagination span {
-                        display: inline-flex;
-                        align-items: center;
-                        justify-content: center;
-                        width: 40px;
-                        height: 40px;
-                        text-decoration: none;
-                        border-radius: 50%; /* Cercle parfait */
-                        font-size: 15px;
-                        font-weight: 600;
-                        background-color: #C1E1C1; /* Vert pastel clair */
-                        border: none;
-                        color: #2F5D50; /* Vert foncé doux */
-                        transition: all 0.3s ease-in-out;
-                        box-shadow: 0 3px 6px rgba(139, 183, 158, 0.3);
-                    }
+/* Pagination styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    list-style: none;
+    gap: 6px;
+}
+.pagination a, .pagination span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    text-decoration: none;
+    border-radius: 50%;
+    font-size: 15px;
+    font-weight: 600;
+    background-color: #D3D3D3; /* Gris pastel simple */
+    border: none;
+    color: #4F4F4F; /* Gris foncé */
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 3px 6px rgba(169, 169, 169, 0.3);
+}
+.pagination a:hover {
+    background-color: #C0C0C0; /* Gris clair */
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(169, 169, 169, 0.4);
+}
 
-                    /* Effet au survol */
-                    .pagination a:hover {
-                        background-color: #A8D5BA; /* Vert pastel plus foncé */
-                        color: white;
-                        transform: translateY(-2px);
-                        box-shadow: 0 5px 10px rgba(139, 183, 158, 0.4);
-                    }
-
-                    /* Page active */
-                    .pagination .current {
-                        background-color: #A8D5BA; /* Vert plus foncé */
-                        color: white;
-                        font-weight: bold;
-                        box-shadow: 0 4px 10px rgba(139, 183, 158, 0.5);
-                    }
-
-                    /* Boutons désactivés */
-                    .pagination .disabled {
-                        color: #bbb;
-                        pointer-events: none;
-                        background-color: transparent;
-                        box-shadow: none;
-                    }
-
-                    /* Style des flèches */
-                    .pagination .pagination-prev a, .pagination .pagination-next a {
-                        display: inline-flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 18px; /* Taille de la flèche */
-                        width: 40px;
-                        height: 40px;
-                        border-radius: 50%;
-                        background-color: #C1E1C1; /* Vert pastel clair */
-                        color: #2F5D50;
-                        transition: all 0.3s ease-in-out;
-                        box-shadow: 0 3px 6px rgba(216, 195, 165, 0.3);
-                    }
-
-                    /* Effet au survol des flèches */
-                    .pagination .pagination-prev a:hover, .pagination .pagination-next a:hover {
-                        background-color: #A8D5BA; /* Vert pastel plus foncé */
-                        color: white;
-                        transform: translateY(-2px);
-                        box-shadow: 0 4px 10px rgba(139, 183, 158, 0.4);
-                    }
-
-                    /* Centrer le titre comme le tableau */
-                    .title-container {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        width: 100%;
-                        padding-left: 50px; /* Ajuste si nécessaire */
-                    }
+                    
                 </style>
                 {{ parent() }}
             {% endblock %}

@@ -17,49 +17,49 @@
 		<body>
 			{% block body %}
 
-								<h1>Delete User</h1>
+				<h1>Delete User</h1>
 
-								<table class="table">
-									<tbody>
-										<tr>
-											<th>Id</th>
-											<td>{{ user.id }}</td>
-										</tr>
-										<tr>
-											<th>Prénom</th>
-											<td>{{ user.firstName }}</td>
-										</tr>
-										<tr>
-											<th>Nom</th>
-											<td>{{ user.lastName }}</td>
-										</tr>
-										<tr>
-											<th>Num Tel</th>
-											<td>{{ user.number }}</td>
-										</tr>
-										<tr>
-											<th>Email</th>
-											<td>{{ user.email }}</td>
-										</tr>
-										<tr>
-											<th>Role</th>
-											<td>{{ user.roles|join(' ') }}
-										</tr>
-										
-									</tbody>
-								</table>
-								{{ include('Back/user/_delete_form.html.twig') }}
-								<a href="{{ path('app_user_index') }}" style="text-decoration: none; color: black; padding-left:950px">back to list</a>
+				<table class="table">
+					<tbody>
+						<tr>
+							<th>Image</th>
+							<td>
+								<img src="{{ asset(user.image) }}" alt="Image de l'utilisateur" style="border-radius: 0; width: 80px; height: auto;"/>
+							</td>
+						</tr>
 
-							
+						<tr>
+							<th>Prénom</th>
+							<td>{{ user.firstName }}</td>
+						</tr>
+						<tr>
+							<th>Nom</th>
+							<td>{{ user.lastName }}</td>
+						</tr>
+						<tr>
+							<th>Num Tel</th>
+							<td>{{ user.number }}</td>
+						</tr>
+						<tr>
+							<th>Email</th>
+							<td>{{ user.email }}</td>
+						</tr>
+						<tr>
+							<th>Role</th>
+							<td>{{ user.roles|join(' ') }}</td>
+						</tr>
+
+					</tbody>
+				</table>
+				{{ include('Back/user/_delete_form.html.twig') }}
+				<a href="{{ path('app_user_index') }}" style="text-decoration: none; color: black; padding-left:950px">back to list</a>
 
 
-					{% block javascripts %}
-						{{ parent() }}
-					{% endblock %}
-
+				{% block javascripts %}
+					{{ parent() }}
 				{% endblock %}
-			</body>
+
+			{% endblock %}
 		</body>
 	</html>
-{% endblock %}
+</body></html>{% endblock %}

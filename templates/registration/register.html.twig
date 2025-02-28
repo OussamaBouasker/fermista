@@ -37,7 +37,7 @@
 				font-size: 0.95rem;
 				transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
 				display: inline-block;
-				margin-left: 15px; 
+				margin-left: 15px;
 			}
 
 			.form-label:hover {
@@ -134,7 +134,7 @@
 				align-items: center;
 				animation: fadeIn 0.3s ease-in-out;
 				max-width: 240px;
-				margin-left: 15px; 
+				margin-left: 15px;
 			}
 
 			.error-feedback i {
@@ -254,6 +254,17 @@
 						</div>
 					{% endif %}
 				</div>
+				<div class="mb-2">
+					{{ form_label(registrationForm.image, "Photo de profil", {'label_attr': {'class': 'form-label'}}) }}
+					{{ form_widget(registrationForm.image, {'attr': {'class': 'form-control'}}) }}
+					{% if registrationForm.image.vars.errors|length > 0 %}
+						<div class="error-feedback">
+							<i class="bi bi-exclamation-triangle-fill"></i>
+							{{ form_errors(registrationForm.image) }}
+						</div>
+					{% endif %}
+				</div>
+
 				<div class="mb-2">
 					{{ form_label(registrationForm.captcha, "Vérification", {'label_attr': {'class': 'form-label'}}) }}
 					<div class="captcha-container">
