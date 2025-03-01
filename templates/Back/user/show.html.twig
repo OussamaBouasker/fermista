@@ -24,7 +24,11 @@
 						<tr>
 							<th>Image</th>
 							<td>
-								<img src="{{ asset(user.image) }}" alt="Image de l'utilisateur" style="border-radius: 0; width: 80px; height: auto;"/>
+								{% if user.image %}
+											<img src="{{ asset(user.image) }}" alt="Image de {{ user.firstName }}" class="user-image">
+										{% else %}
+											<img src="{{ asset('uploads/images/default-avatar.png') }}" alt="default" class="user-image">
+										{% endif %}
 							</td>
 						</tr>
 

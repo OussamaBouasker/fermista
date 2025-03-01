@@ -106,28 +106,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // Dans l'entité User
 
     // Dans ton entité User
-    public function getReadableRoles(): array
-    {
+   // public function getReadableRoles(): array
+   // {
         // Récupérer les rôles depuis la propriété $roles de ton entité
-        $roles = $this->roles;
+       // $roles = $this->roles;
 
         // Dictionnaire des rôles lisibles
-        $roleNames = [
-            'ROLE_ADMIN' => 'Administrateur',
-            'ROLE_FORMATEUR' => 'Formateur',
-            'ROLE_AGRICULTOR' => 'Agriculteur',
-            'ROLE_VETERINAIR' => 'Vétérinaire',
-            'ROLE_CLIENT' => 'Client',
+       // $roleNames = [
+           // 'ROLE_ADMIN' => 'Administrateur',
+           // 'ROLE_FORMATEUR' => 'Formateur',
+            //'ROLE_AGRICULTOR' => 'Agriculteur',
+           // 'ROLE_VETERINAIR' => 'Vétérinaire',
+            //'ROLE_CLIENT' => 'Client',
 
             // Ajoute d'autres rôles ici
-        ];
+      //  ];
 
         // Transformer les rôles en noms lisibles
-        return array_map(function ($role) use ($roleNames) {
-            return $roleNames[$role] ?? $role; // Si le rôle n'existe pas dans le tableau, laisse-le tel quel
-        }, $roles);
-        return $this->roles ?: ['ROLE_USER'];
-    }
+       // return array_map(function ($role) use ($roleNames) {
+          //  return $roleNames[$role] ?? $role; // Si le rôle n'existe pas dans le tableau, laisse-le tel quel
+       // }, $roles);
+       // return $this->roles ?: ['ROLE_USER'];
+   // }
 
     public function getRoles(): array
     {
