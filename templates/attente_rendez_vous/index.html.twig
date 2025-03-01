@@ -32,11 +32,11 @@
 								{% if rdv.status == 'en attente' %}
 									<a href="{{ path('app_attente_rendez_vous_accept', {'id': rdv.id}) }}" class="btn btn-success">Accepter</a>
 									<a href="{{ path('app_attente_rendez_vous_suggere', {'id': rdv.id}) }}" class="btn btn-warning btn-suggest">Suggérer un créneau</a>
+									<a href="{{ path('app_attente_rendez_vous_refuser', {'id': rdv.id}) }}" class="btn btn-danger">Refuser</a>
 								{% else %}
 									<span class="badge bg-info text-white">{{ rdv.status }}</span>
 								{% endif %}
 							</td>
-
 						</tr>
 					{% endfor %}
 				</tbody>
@@ -45,7 +45,6 @@
 			<p>Aucune demande de rendez-vous.</p>
 		{% endif %}
 	</div>
-
 
 	{% block javascripts %}
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -79,7 +78,6 @@ preConfirm: () => {
 const form = Swal.getPopup().querySelector('#suggest-form');
 const formData = $(form).serialize();
 
-
 return $.ajax({url: url, type: 'POST', data: formData, dataType: 'json'}).then(function (result) {
 if (result.status === 'success') {
 return result;
@@ -109,6 +107,4 @@ Swal.fire({icon: 'error', title: 'Erreur', text: 'Impossible de charger le formu
 		</script>
 		{{ parent() }}
 	{% endblock %}
-
-
 {% endblock %}

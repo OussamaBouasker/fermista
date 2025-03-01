@@ -119,4 +119,38 @@ final class AttenteRendezVousController extends AbstractController
             'rendezVous' => $rendezVous,
         ]);
     }
+    #[Route('/attente/rendez/vous/refuser/{id}', name: 'app_attente_rendez_vous_refuser')]
+    public function refuserRendezVous(
+        int $id,
+        RendezVousRepository $rendezVousRepository,
+        EntityManagerInterface $entityManager,
+        MailerInterface $mailer
+    ): Response {
+        $rendezVous = $rendezVousRepository->find($id);
+        if (!$rendezVous) {
+            throw $this->createNotFoundException('Rendez-vous non trouvé.');
+        }
+
+        // Met à jour le statut en "annulé"
+        $rendezVous->setStatus('annulé');
+        $entityManager->flush();
+
+        // Envoi d'un email à l'agriculteur pour l'informer de l'annulation
+        $agriculteurEmail = $rendezVous->getAgriculteur()->getEmail();
+        $email = (new Email())
+            ->from('noreply@votre-domaine.com')
+            ->to($agriculteurEmail)
+            ->subject('Votre demande de rendez-vous a été annulée')
+            ->text(sprintf(
+                "Bonjour %s,\n\nNous vous informons que votre demande de rendez-vous prévue le %s à %s a été annulée par le vétérinaire.\n\nVeuillez nous contacter pour reprogrammer un rendez-vous si besoin.",
+                $rendezVous->getAgriculteur()->getUserIdentifier(),
+                $rendezVous->getDate()->format('d/m/Y'),
+                $rendezVous->getHeure()->format('H:i')
+            ));
+        $mailer->send($email);
+
+        $this->addFlash('success', 'Le rendez-vous a été annulé. Un email a été envoyé à l’agriculteur.');
+
+        return $this->redirectToRoute('app_attente_rendez_vous');
+    }
 }

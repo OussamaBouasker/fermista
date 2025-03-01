@@ -45,7 +45,7 @@ final class ConsultationController extends AbstractController
     #[Route('/{id}', name: 'app_consultations_show', methods: ['GET'])]
     public function show(Consultation $consultation): Response
     {
-        return $this->render('Back/consultation/show.ht+ml.twig', [
+        return $this->render('Back/consultation/show.html.twig', [
             'consultation' => $consultation,
         ]);
     }
