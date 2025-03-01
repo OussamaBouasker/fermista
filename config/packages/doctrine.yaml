@@ -48,3 +48,12 @@ when@prod:
                     adapter: cache.app
                 doctrine.system_cache_pool:
                     adapter: cache.system
+<<<<<<< HEAD
+=======
+
+    # config/packages/doctrine.yaml
+
+    dbal:
+        types:
+            statut_commande_enum: App\Doctrine\Type\StatutCommandeEnumType                   
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {{ form_start(form, {'attr': {'class': 'form-group','novalidate': 'novalidate'}}) }}
 
 
@@ -110,5 +111,27 @@
 </div>
 
 <button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>
+=======
+{{ form_start(form, {'attr': {'class': 'form-group'}}) }}
+
+{% for field in form %}
+    <div class="mb-3" style="gap: 20px; width:600px">
+        {{ form_label(field, null, {'label_attr': {'class': 'form-label'}}) }}
+
+        {% if field.vars.block_prefixes is defined and 'checkbox' in field.vars.block_prefixes %}
+            <div class="form-check">
+                {{ form_widget(field, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_label(field, null, {'label_attr': {'class': 'form-check-label'}}) }}
+            </div>
+        {% else %}
+            {{ form_widget(field, {'attr': {'class': 'form-control', 'placeholder': field.vars.label}}) }}
+        {% endif %}
+
+        {{ form_errors(field) }}
+    </div>
+{% endfor %}
+
+<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Save') }}</button>
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
 {{ form_end(form) }}

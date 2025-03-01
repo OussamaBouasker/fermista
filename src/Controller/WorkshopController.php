@@ -6,7 +6,10 @@ use App\Entity\Workshop;
 use App\Form\WorkshopType;
 use App\Repository\WorkshopRepository;
 use Doctrine\ORM\EntityManagerInterface;
+<<<<<<< HEAD
 use Proxies\__CG__\App\Entity\Workshop as EntityWorkshop;
+=======
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +34,11 @@ final class WorkshopController extends AbstractController
         $workshop = new Workshop();
         $form = $this->createForm(WorkshopType::class, $workshop);
         $form->handleRequest($request);
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         if ($form->isSubmitted() && $form->isValid()) {
             // Handle file upload
             $imageFile = $form->get('image')->getData();
@@ -39,6 +46,7 @@ final class WorkshopController extends AbstractController
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+<<<<<<< HEAD
     
                 // Move file to the uploads directory
                 $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
@@ -61,6 +69,31 @@ final class WorkshopController extends AbstractController
         return $this->render('Back/workshop/new.html.twig', [
             'workshop' => $workshop,
             'form' => $form,
+=======
+
+                // Move file to the uploads directory
+                try {
+                    $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
+                } catch (\Exception $e) {
+                    // Handle error, maybe log it or return an error response
+                    $this->addFlash('error', 'Failed to upload the image.');
+                    return $this->redirectToRoute('app_workshop_new');
+                }
+
+                // Set image filename in entity
+                $workshop->setImage($newFilename);
+            }
+
+            $entityManager->persist($workshop);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_workshop_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('Back/workshop/new.html.twig', [
+            'workshop' => $workshop,
+            'form' => $form->createView(),
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         ]);
     }
 
@@ -77,6 +110,7 @@ final class WorkshopController extends AbstractController
     public function edit(Request $request, Workshop $workshop, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(WorkshopType::class, $workshop);
+<<<<<<< HEAD
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
@@ -116,12 +150,58 @@ final class WorkshopController extends AbstractController
         'workshop' => $workshop,
         'form' => $form,
     ]);
+=======
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Handle file upload
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile instanceof UploadedFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+                // Move file to the uploads directory
+                try {
+                    $imageFile->move($this->getParameter('uploads_directory'), $newFilename);
+                } catch (\Exception $e) {
+                    // Handle error, maybe log it or return an error response
+                    $this->addFlash('error', 'Failed to upload the image.');
+                    return $this->redirectToRoute('app_workshop_edit', ['id' => $workshop->getId()]);
+                }
+
+                // Delete old image if necessary
+                if ($workshop->getImage()) {
+                    $oldImagePath = $this->getParameter('uploads_directory') . '/' . $workshop->getImage();
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                }
+
+                // Update image filename
+                $workshop->setImage($newFilename);
+            }
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_workshop_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('Back/workshop/edit.html.twig', [
+            'workshop' => $workshop,
+            'form' => $form->createView(),
+        ]);
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     }
 
     #[Route('/{id}', name: 'app_workshop_delete', methods: ['POST'])]
     public function delete(Request $request, Workshop $workshop, EntityManagerInterface $entityManager): Response
     {
+<<<<<<< HEAD
         if ($this->isCsrfTokenValid('delete' . $workshop->getId(), $request->getPayload()->getString('_token'))) {
+=======
+        if ($this->isCsrfTokenValid('delete' . $workshop->getId(), $request->request->get('_token'))) {
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
             // Delete the associated image file
             if ($workshop->getImage()) {
                 $imagePath = $this->getParameter('uploads_directory') . '/' . $workshop->getImage();

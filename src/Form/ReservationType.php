@@ -10,18 +10,22 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+<<<<<<< HEAD
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 
+=======
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
 class ReservationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+<<<<<<< HEAD
             ->add('reservation_date', HiddenType::class, [
                 'disabled' => true, // Make it read-only
                 'mapped' => false, // We handle this manually
@@ -84,6 +88,26 @@ class ReservationType extends AbstractType
 
 
 
+=======
+            ->add('reservation_date', null, [
+                'widget' => 'single_text',
+            ])
+            ->add('status', ChoiceType::class, [
+                'choices' => [
+                    'Pending' => 'pending',
+                    'Confirmed' => 'confirmed',
+                    'Canceled' => 'canceled',
+                ],
+                'expanded' => false,  // Set to true for radio buttons instead of a dropdown
+                'multiple' => false,  // Ensure only one option can be selected
+            ])
+            ->add('prix')
+            ->add('commentaire')
+            ->add('workshop', EntityType::class, [
+                'class' => Workshop::class,
+                'choice_label' => 'titre',
+            ])
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
             ->add('confirmation', CheckboxType::class, [
                 'required' => true, // Allow the checkbox to be unchecked
                 'label' => 'Accepter le reglement des workshops',

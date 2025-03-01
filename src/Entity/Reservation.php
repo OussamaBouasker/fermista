@@ -5,7 +5,10 @@ namespace App\Entity;
 use App\Repository\ReservationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+<<<<<<< HEAD
 use Symfony\Component\Validator\Constraints as Assert;
+=======
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
@@ -25,6 +28,7 @@ class Reservation
     private ?string $prix = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+<<<<<<< HEAD
     #[Assert\Length(
         max: 255,
         maxMessage: "Le commentaire ne doit pas dépasser {{ limit }} caractères."
@@ -33,11 +37,17 @@ class Reservation
 
     #[ORM\Column(nullable: true)]
     #[Assert\NotBlank(message: "Vous devez accepter le reglement des workshops")]
+=======
+    private ?string $commentaire = null;
+
+    #[ORM\Column(nullable: true)]
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     private ?bool $confirmation = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservation')]
     private ?Workshop $workshop = null;
 
+<<<<<<< HEAD
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(message: "Le email est obligatoire.")]
 
@@ -73,6 +83,8 @@ class Reservation
     )]
     private ?string $num_carte_bancaire = null;
 
+=======
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     // Enum-like constants for status
     public const STATUS_PENDING = 'pending';
     public const STATUS_CONFIRMED = 'confirmed';
@@ -164,6 +176,7 @@ class Reservation
 
         return $this;
     }
+<<<<<<< HEAD
 
     public function getEmail(): ?string
     {
@@ -200,4 +213,6 @@ class Reservation
 
         return $this;
     }
+=======
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 }

@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use App\Repository\VacheRepository;
 use Doctrine\ORM\Mapping as ORM;
+<<<<<<< HEAD
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+=======
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
 #[ORM\Entity(repositoryClass: VacheRepository::class)]
 class Vache
@@ -16,6 +19,7 @@ class Vache
     #[ORM\Column]
     private ?int $id = null;
 
+<<<<<<< HEAD
     #[ORM\Column(nullable: true)]
     #[Assert\Length(
         min: 1,
@@ -88,6 +92,16 @@ class Vache
 
         return $this;
     }
+=======
+    #[ORM\Column]
+    private ?int $age = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $race = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $EtatMedical = null;
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
     public function getId(): ?int
     {
@@ -99,7 +113,11 @@ class Vache
         return $this->age;
     }
 
+<<<<<<< HEAD
     public function setAge(?int $age): static
+=======
+    public function setAge(int $age): static
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     {
         $this->age = $age;
 
@@ -111,7 +129,11 @@ class Vache
         return $this->race;
     }
 
+<<<<<<< HEAD
     public function setRace(?string $race): static
+=======
+    public function setRace(string $race): static
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     {
         $this->race = $race;
 
@@ -120,6 +142,7 @@ class Vache
 
     public function getEtatMedical(): ?string
     {
+<<<<<<< HEAD
         return $this->etatMedical;
     }
 
@@ -138,6 +161,14 @@ class Vache
     public function setName(?string $name): static
     {
         $this->name = $name;
+=======
+        return $this->EtatMedical;
+    }
+
+    public function setEtatMedical(string $EtatMedical): static
+    {
+        $this->EtatMedical = $EtatMedical;
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
         return $this;
     }

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Form;
+<<<<<<< HEAD
 
 use App\Entity\Produit;
 use Symfony\Component\Form\AbstractType;
@@ -15,10 +16,23 @@ use App\Entity\Commande;
 class ProduitType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
+=======
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Produit;
+use App\Entity\Commande;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class ProduitType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     {
         $builder
             ->add('Nom')
             ->add('Prix')
+<<<<<<< HEAD
             ->add('Etat', ChoiceType::class, [
                 'choices' => [
                     'Frais' => 'Frais',
@@ -58,3 +72,23 @@ class ProduitType extends AbstractType
             ]);
     }
 }
+=======
+            ->add('Etat')
+            ->add('Description')
+            ->add('categorie')
+            ->add('commande', EntityType::class, [
+                'class' => Commande::class,
+                'choice_label' => 'id',
+
+            ])
+        ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Produit::class,
+        ]);
+    }
+}
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f

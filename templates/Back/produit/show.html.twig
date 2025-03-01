@@ -31,6 +31,7 @@
                 <th>Categorie</th>
                 <td>{{ produit.categorie }}</td>
             </tr>
+<<<<<<< HEAD
             <tr>
                 <th>Image</th>
                 <td>
@@ -47,6 +48,14 @@
     <div class="text-center mt-3">
         <a href="{{ path('app_produit_index') }}" class="btn btn-secondary btn-lg">Retour à la liste</a>
     </div>
+=======
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_produit_index') }}">back to list</a>
+
+    <a href="{{ path('app_produit_edit', {'id': produit.id}) }}">edit</a>
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
     {{ include('Back/produit/_delete_form.html.twig') }}
 {% endblock %}

@@ -7,7 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+<<<<<<< HEAD
 use Symfony\Component\Validator\Constraints as Assert;
+=======
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
 #[ORM\Entity(repositoryClass: LivraisonRepository::class)]
 class Livraison
@@ -19,6 +22,7 @@ class Livraison
 
     
 
+<<<<<<< HEAD
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Assert\NotBlank(message: "La date de livraison est obligatoire.")]
     #[Assert\GreaterThan("today", message: "La date de livraison doit être dans le futur.")]
@@ -48,6 +52,15 @@ class Livraison
         pattern: "/^[a-zA-Z\s]+$/",
         message: "Le nom du livreur doit contenir uniquement des lettres et des espaces, sans chiffres."
     )]
+=======
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $Date = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $Heure = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     private ?string $Livreur = null;
 
     /**
@@ -85,6 +98,7 @@ class Livraison
         return $this;
     }
 
+<<<<<<< HEAD
     public function getLieu(): ?string
     {
         return $this->lieu;
@@ -93,6 +107,16 @@ class Livraison
     public function setLieu(?string $lieu): self
     {
         $this->lieu = $lieu;
+=======
+    public function getHeure(): ?\DateTimeInterface
+    {
+        return $this->Heure;
+    }
+
+    public function setHeure(?\DateTimeInterface $Heure): static
+    {
+        $this->Heure = $Heure;
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
         return $this;
     }

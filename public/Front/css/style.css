@@ -219,6 +219,7 @@
 
 .page-header {
     position: relative;
+<<<<<<< HEAD
     background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(../img/backgroundshop.jpg);
     background-position: center center;
     background-repeat: no-repeat;
@@ -235,6 +236,14 @@
 
 
 
+=======
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(../img/cart-page-header-img.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 @media (min-width: 992px) {
     .hero-header,
     .page-header {

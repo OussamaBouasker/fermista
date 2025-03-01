@@ -1,11 +1,18 @@
 <?php
 
 namespace App\Entity;
+<<<<<<< HEAD
 
 use App\Repository\ReclamationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+=======
+use App\Enum\StatutReclamation;
+use App\Repository\ReclamationRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
 #[ORM\Entity(repositoryClass: ReclamationRepository::class)]
 class Reclamation
@@ -15,6 +22,7 @@ class Reclamation
     #[ORM\Column]
     private ?int $id = null;
 
+<<<<<<< HEAD
     #[ORM\Column(length: 30, nullable: true)]
     #[Assert\NotBlank(message: "Le titre ne peut pas être vide.")]
     #[Assert\Length(
@@ -50,6 +58,22 @@ class Reclamation
 
     #[ORM\ManyToOne(inversedBy: 'reclamations')]
     #[ORM\JoinColumn(nullable: true, onDelete: "CASCADE")]
+=======
+    #[ORM\Column(length: 30)]
+    private ?string $titre = null;
+
+    #[ORM\Column(type: "text")]
+    private string $description;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $status = self::STATUS_PENDING;
+   
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $dateSoumission = null;
+
+    #[ORM\ManyToOne(inversedBy: 'reclamations')]
+    #[ORM\JoinColumn(nullable: false ,onDelete: "CASCADE")]
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     private ?User $user = null;
 
     public function getId(): ?int
@@ -62,9 +86,16 @@ class Reclamation
         return $this->titre;
     }
 
+<<<<<<< HEAD
     public function setTitre(?string $titre): static
     {
         $this->titre = $titre;
+=======
+    public function setTitre(string $titre): static
+    {
+        $this->titre = $titre;
+
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         return $this;
     }
 
@@ -73,20 +104,39 @@ class Reclamation
         return $this->description;
     }
 
+<<<<<<< HEAD
     public function setDescription(?string $description): static
     {
         $this->description = $description;
         return $this;
     }
 
+=======
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+   
+
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     public function getDateSoumission(): ?\DateTimeInterface
     {
         return $this->dateSoumission;
     }
 
+<<<<<<< HEAD
     public function setDateSoumission(?\DateTimeInterface $dateSoumission): static
     {
         $this->dateSoumission = $dateSoumission;
+=======
+    public function setDateSoumission(\DateTimeInterface $dateSoumission): static
+    {
+        $this->dateSoumission = $dateSoumission;
+
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         return $this;
     }
 
@@ -98,6 +148,10 @@ class Reclamation
     public function setUser(?User $user): static
     {
         $this->user = $user;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         return $this;
     }
 
@@ -105,6 +159,7 @@ class Reclamation
     public const STATUS_CONFIRMED = 'confirmed';
     public const STATUS_CANCELED = 'canceled';
 
+<<<<<<< HEAD
     public const AVAILABLE_STATUSES = [
         self::STATUS_PENDING,
         self::STATUS_CONFIRMED,
@@ -116,6 +171,16 @@ class Reclamation
         return self::AVAILABLE_STATUSES;
     }
 
+=======
+    public static function getAvailableStatuses(): array
+    {
+        return [
+            self::STATUS_PENDING,
+            self::STATUS_CONFIRMED,
+            self::STATUS_CANCELED,
+        ];
+    }
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     public function getStatus(): ?string
     {
         return $this->status;
@@ -124,6 +189,10 @@ class Reclamation
     public function setStatus(?string $status): static
     {
         $this->status = $status;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         return $this;
     }
 }
