@@ -5,10 +5,7 @@ namespace App\Entity;
 use App\Repository\ProduitRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-<<<<<<< HEAD
 use Symfony\Component\Validator\Constraints as Assert;
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
@@ -18,7 +15,6 @@ class Produit
     #[ORM\Column]
     private ?int $id = null;
 
-<<<<<<< HEAD
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(message: "Le nom du produit est obligatoire.")]
     #[Assert\Length(
@@ -81,27 +77,6 @@ class Produit
     }
 
     // Autres méthodes (getter et setter)...
-=======
-    
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Nom = null;
-
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0, nullable: true)]
-    private ?string $Prix = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Etat = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Description = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $categorie=null;
-
-    #[ORM\ManyToOne(inversedBy: 'prodcommande')]
-    private ?Commande $commande = null;
-
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     public function getId(): ?int
     {
         return $this->id;
@@ -109,11 +84,7 @@ class Produit
 
     public function setId(?int $Id): static
     {
-        $this->Id = $Id;
-<<<<<<< HEAD
-=======
-
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
+        $this->id = $Id;
         return $this;
     }
 
@@ -125,10 +96,6 @@ class Produit
     public function setNom(?string $Nom): static
     {
         $this->Nom = $Nom;
-<<<<<<< HEAD
-=======
-
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         return $this;
     }
 
@@ -140,10 +107,6 @@ class Produit
     public function setPrix(?string $Prix): static
     {
         $this->Prix = $Prix;
-<<<<<<< HEAD
-=======
-
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         return $this;
     }
 
@@ -155,10 +118,6 @@ class Produit
     public function setEtat(?string $Etat): static
     {
         $this->Etat = $Etat;
-<<<<<<< HEAD
-=======
-
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         return $this;
     }
 
@@ -170,10 +129,6 @@ class Produit
     public function setDescription(?string $Description): static
     {
         $this->Description = $Description;
-<<<<<<< HEAD
-=======
-
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         return $this;
     }
 
@@ -196,13 +151,6 @@ class Produit
     public function setCommande(?Commande $commande): static
     {
         $this->commande = $commande;
-<<<<<<< HEAD
         return $this;
     }
-=======
-
-        return $this;
-    }
-
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 }

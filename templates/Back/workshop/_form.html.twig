@@ -6,7 +6,6 @@
     }
 }) }}
 <div class="mb-3" style="gap: 20px; width:600px">
-<<<<<<< HEAD
 	{{ form_label(form.titre, "Titre", {'label_attr': {'class': 'form-label'}}) }}
 	{{ form_widget(form.titre, {'attr': {'class': 'form-control' ~ (form.titre.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Entrez le titre'}}) }}
 	{% if form.titre.vars.errors|length > 0 %}
@@ -95,7 +94,7 @@
 <div class="mb-3" style="gap: 20px; width:600px">
 	{{ form_label(form.nbrPlacesMax, "Nombre maximum de places", {'label_attr': {'class': 'form-label'}}) }}
 	{{ form_widget(form.nbrPlacesMax, {'attr': {'class': 'form-control' ~ (form.nbrPlacesMax.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Entrez le nombre maximum de places'}}) }}
-    {% if form.nbrPlacesMax.vars.errors|length > 0 %}
+	{% if form.nbrPlacesMax.vars.errors|length > 0 %}
 		<div class="text-danger mt-1">
 			{% for error in form.nbrPlacesMax.vars.errors %}
 				<small>{{ error.message }}</small>
@@ -129,76 +128,3 @@ input.classList.add("is-valid"); // Add green border
 });
 });
 });</script>
-=======
-    {{ form_label(form.titre, "Titre", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.titre, {'attr': {'class': 'form-control' ~ (form.titre.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Entrez le titre'}}) }}
-    {% if form.titre.vars.errors|length > 0 %}
-        <div class="text-danger mt-1">
-            {% for error in form.titre.vars.errors %}
-                <small>{{ error.message }}</small>
-            {% endfor %}
-        </div>
-    {% endif %}
-</div>
-
-<div class="mb-3" style="gap: 20px; width:600px">
-    {{ form_label(form.description, "Description", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Entrez la description'}}) }}
-    {{ form_errors(form.description) }}
-</div>
-
-<div class="mb-3" style="gap: 20px; width:600px">
-    {{ form_label(form.date, "Date", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.date, {'attr': {'class': 'form-control datetime-picker'}}) }}
-    {{ form_errors(form.date) }}
-</div>
-
-<div class="mb-3" style="gap: 20px; width:600px">
-    {{ form_label(form.prix, "Prix", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.prix, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le prix'}}) }}
-    {{ form_errors(form.prix) }}
-</div>
-
-<div class="mb-3" style="gap: 20px; width:600px">
-    {{ form_label(form.theme, "Thème", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.theme, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le thème'}}) }}
-    {{ form_errors(form.theme) }}
-</div>
-
-<div class="mb-3" style="gap: 20px; width:600px">
-    {{ form_label(form.duration, "Durée", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.duration, {'attr': {'class': 'form-control', 'placeholder': 'Entrez la durée'}}) }}
-    {{ form_errors(form.duration) }}
-</div>
-
-<!-- Type field added -->
-<div class="mb-3" style="gap: 20px; width:600px">
-    {{ form_label(form.type, "Type", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
-    {{ form_errors(form.type) }}
-</div>
-
-<div class="mb-3" style="gap: 20px; width:600px">
-    {{ form_label(form.image, "Image", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
-    {{ form_errors(form.image) }}
-</div>
-
-<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>
-
-{{ form_end(form) }}
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const inputs = document.querySelectorAll(".form-control");
-
-        inputs.forEach(input => {
-            input.addEventListener("input", function () {
-                if (input.classList.contains("is-invalid")) {
-                    input.classList.remove("is-invalid");
-                }
-            });
-        });
-    });
-</script>
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f

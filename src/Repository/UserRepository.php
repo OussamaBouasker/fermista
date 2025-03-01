@@ -8,10 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
-<<<<<<< HEAD
 use Doctrine\ORM\Query;
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -37,7 +34,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-<<<<<<< HEAD
     public function findVeterinariansQuery(): Query
     {
         return $this->createQueryBuilder('u')
@@ -46,8 +42,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery();
     }
 
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

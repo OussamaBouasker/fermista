@@ -1,61 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Produit{% endblock %}
+{% block title %}Produit
+{% endblock %}
 
 {% block body %}
-    <h1>Produit</h1>
+	<h1>Produit</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ produit.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ produit.Nom }}</td>
-            </tr>
-            <tr>
-                <th>Prix</th>
-                <td>{{ produit.Prix }}</td>
-            </tr>
-            <tr>
-                <th>Etat</th>
-                <td>{{ produit.Etat }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ produit.Description }}</td>
-            </tr>
-            <tr>
-                <th>Categorie</th>
-                <td>{{ produit.categorie }}</td>
-            </tr>
-<<<<<<< HEAD
-            <tr>
-                <th>Image</th>
-                <td>
-                    {% if produit.image %}
-                        <img src="{{ asset('uploads/images/' ~ produit.image) }}" alt="{{ produit.Nom }}" width="100">
-                    {% else %}
-                        Pas d'image disponible
-                    {% endif %}
-                </td>
-            </tr>
-        </tbody>
-    </table>
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>Id</th>
+				<td>{{ produit.id }}</td>
+			</tr>
+			<tr>
+				<th>Nom</th>
+				<td>{{ produit.Nom }}</td>
+			</tr>
+			<tr>
+				<th>Prix</th>
+				<td>{{ produit.Prix }}</td>
+			</tr>
+			<tr>
+				<th>Etat</th>
+				<td>{{ produit.Etat }}</td>
+			</tr>
+			<tr>
+				<th>Description</th>
+				<td>{{ produit.Description }}</td>
+			</tr>
+			<tr>
+				<th>Categorie</th>
+				<td>{{ produit.categorie }}</td>
+			</tr>
+			<tr>
+				<th>Image</th>
+				<td>
+					{% if produit.image %}
+						<img src="{{ asset('uploads/images/' ~ produit.image) }}" alt="{{ produit.Nom }}" width="100">
+					{% else %}
+						Pas d'image disponible
+					{% endif %}
+				</td>
+			</tr>
+		</tbody>
+	</table>
 
-    <div class="text-center mt-3">
-        <a href="{{ path('app_produit_index') }}" class="btn btn-secondary btn-lg">Retour à la liste</a>
-    </div>
-=======
-        </tbody>
-    </table>
+	<div class="text-center mt-3">
+		<a href="{{ path('app_produit_index') }}" class="btn btn-secondary btn-lg">Retour à la liste</a>
+	</div>
 
-    <a href="{{ path('app_produit_index') }}">back to list</a>
-
-    <a href="{{ path('app_produit_edit', {'id': produit.id}) }}">edit</a>
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
-
-    {{ include('Back/produit/_delete_form.html.twig') }}
+	{{ include('Back/produit/_delete_form.html.twig') }}
 {% endblock %}

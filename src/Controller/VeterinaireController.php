@@ -2,10 +2,7 @@
 // src/Controller/VeterinaireController.php
 namespace App\Controller;
 
-<<<<<<< HEAD
 use App\Entity\Vache;
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 use App\Entity\Consultation;
 use App\Form\ConsultationType;
 use App\Entity\RapportMedical;
@@ -15,12 +12,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-<<<<<<< HEAD
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Repository\VacheRepository;
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
 class VeterinaireController extends AbstractController
 {
@@ -271,7 +265,6 @@ class VeterinaireController extends AbstractController
 
         return $this->redirectToRoute('app_calendrier');
     }
-<<<<<<< HEAD
 
     #[Route('/calendrier/search', name: 'app_vache_search', methods: ['GET'])]
     public function search(Request $request, VacheRepository $vacheRepository): Response
@@ -328,6 +321,4 @@ class VeterinaireController extends AbstractController
             'Content-Disposition' => 'inline; filename="fiche_vache.pdf"',
         ]);
     }
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 }

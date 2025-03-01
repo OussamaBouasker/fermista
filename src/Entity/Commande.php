@@ -7,12 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-<<<<<<< HEAD
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
 class Commande
@@ -22,10 +19,9 @@ class Commande
     #[ORM\Column]
     private ?int $id = null;
 
-    
+
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-<<<<<<< HEAD
     #[Assert\NotBlank(message: "La date de la commande est requise.")]
     #[Assert\Type(type: "\DateTimeInterface", message: "La date doit être valide.")]
     #[Assert\GreaterThan("today", message: "Il faut une date supérieure à aujourd'hui.")]
@@ -40,14 +36,6 @@ class Commande
     #[Assert\NotBlank(message: "Le montant total est requis.")]
     #[Assert\PositiveOrZero(message: "Le montant doit être un nombre positif ou égal à zéro.")]
     #[Assert\Type(type: 'numeric', message: "Le montant doit être un nombre.")]
-=======
-    private ?\DateTimeInterface $dateCommande = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $statut = null;
-
-    #[ORM\Column(nullable: true)]
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     private ?float $montantTotal = null;
 
     /**
@@ -57,10 +45,7 @@ class Commande
     private Collection $prodcommande;
 
     #[ORM\ManyToOne(inversedBy: 'livcom')]
-<<<<<<< HEAD
     #[Assert\NotNull(message: "Veuillez sélectionner une livraison associée.")]
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     private ?Livraison $livcom = null;
 
     public function __construct()
@@ -75,7 +60,7 @@ class Commande
 
     public function setId(?string $Id): static
     {
-        $this->Id = $Id;
+        $this->id = $Id;
 
         return $this;
     }

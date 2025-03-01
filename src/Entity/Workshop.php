@@ -7,10 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
-<<<<<<< HEAD
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,7 +22,6 @@ class Workshop
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(message: "Le titre est obligatoire.")]
     #[Assert\Length(
-<<<<<<< HEAD
         min: 3,
         minMessage: "Le titre doit comporter au moins 3 caractères."
     )]
@@ -33,20 +29,11 @@ class Workshop
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(message: "La Description est obligatoire.")]
-=======
-        min: 6,
-        minMessage: "Le titre doit comporter au moins 6 caractères."
-    )]
-    private ?string $titre = null;
-    
-    #[ORM\Column(length: 255, nullable: true)]
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     #[Assert\Length(
         min: 10,
         minMessage: "La description doit comporter au moins 10 caractères."
     )]
     private ?string $description = null;
-<<<<<<< HEAD
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Assert\NotBlank(message: "La date est obligatoire.")]
@@ -63,18 +50,6 @@ class Workshop
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(message: "Le thème est obligatoire.")]
-=======
-    
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Assert\NotBlank(message: "time .")]
-    #[Assert\GreaterThan("now", message: "L'heure doit être supérieure à l'heure actuelle.")]
-    private ?\DateTimeInterface $date = null;    
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $prix = null;
-    
-    #[ORM\Column(length: 255, nullable: true)]
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     #[Assert\Length(
         max: 10,
         maxMessage: "Le thème ne doit pas dépasser 10 caractères."
@@ -82,17 +57,13 @@ class Workshop
     private ?string $theme = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
-<<<<<<< HEAD
     #[Assert\NotBlank(message: "L'heure ne peut pas être vide.")]
 
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     private ?\DateTimeInterface $duration = null;
 
     /**
      * @var Collection<int, Reservation>
      */
-<<<<<<< HEAD
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'workshop', orphanRemoval: true)]
     private Collection $reservation;
 
@@ -100,19 +71,11 @@ class Workshop
     #[Assert\NotBlank(message: "Le nombre maximum de places est requis.")]
     #[Assert\GreaterThan(value: 10, message: "Le nombre maximum de places doit être supérieur à 10.")]
     private ?int $nbrPlacesMax = null;
-=======
-    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'workshop',orphanRemoval:true)]
-    private Collection $reservation;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $nbr_places_max_ = null;
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
     #[ORM\Column(nullable: true)]
     private ?int $nbr_places_restantes = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-<<<<<<< HEAD
     #[Assert\NotBlank(message: "Vous devez sélectionner un type.")]
     private ?string $type = null;
 
@@ -121,23 +84,13 @@ class Workshop
 
     private ?string $image = null;
 
-    #[ORM\Column(length: 255,nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $meetlink = null;
 
 
     public const TYPE_LIVE_WORKSHOP = 'Atelier Live';
     public const TYPE_SELF_PACED_WORKSHOP = 'Formation Autonome';
 
-=======
-    private ?string $type = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $image = null;
-
-    public const TYPE_LIVE_WORKSHOP = 'Atelier Live';
-    public const TYPE_SELF_PACED_WORKSHOP = 'Formation Autonome';
-    
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     public static function getAvailableWorkshopTypes(): array
     {
         return [
@@ -258,25 +211,15 @@ class Workshop
         return $this;
     }
 
-<<<<<<< HEAD
 
     public function getNbrPlacesMax(): ?int
     {
         return $this->nbrPlacesMax;
-=======
-    public function getNbrPlacesMax(): ?int
-    {
-        return $this->nbr_places_max_;
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     }
 
     public function setNbrPlacesMax(?int $nbr_places_max_): static
     {
-<<<<<<< HEAD
         $this->nbrPlacesMax = $nbr_places_max_;
-=======
-        $this->nbr_places_max_ = $nbr_places_max_;
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
         return $this;
     }
@@ -316,7 +259,6 @@ class Workshop
 
         return $this;
     }
-<<<<<<< HEAD
 
     public function getMeetlink(): ?string
     {
@@ -329,6 +271,4 @@ class Workshop
 
         return $this;
     }
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 }

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<form method="post" style="padding-top: 20px "  action="{{ path('app_user_delete', {'id': user.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');"novalidate>
-=======
-<form method="post" style="padding-top: 20px "  action="{{ path('app_user_delete', {'id': user.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-    <button class="btn btn-outline-dark btn-fw" >Delete</button>
+<form method="post" style="padding-top: 20px " action="{{ path('app_user_delete', {'id': user.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');" novalidate>
+	<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+	<button class="btn btn-outline-dark btn-fw">Delete</button>
 </form>

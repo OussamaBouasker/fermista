@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Vache;
 use App\Repository\ConsultationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -64,7 +65,6 @@ class Consultation
         return $this;
     }
 
-<<<<<<< HEAD
     #[ORM\ManyToOne(targetEntity: Vache::class, inversedBy: 'consultations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Vache $vache = null;
@@ -79,9 +79,6 @@ class Consultation
         $this->vache = $vache;
         return $this;
     }
-=======
-
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
     #[Assert\Callback]
     public function validateDateHeure(ExecutionContextInterface $context): void

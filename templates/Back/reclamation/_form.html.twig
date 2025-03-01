@@ -1,102 +1,83 @@
-
-<<<<<<< HEAD
-
 {{ form_start(form, {'attr': {'class': 'form-group', 'novalidate': 'novalidate'}}) }}
 
 <!-- Champ Titre -->
 <div class="mb-3" style="width:600px;">
-    {{ form_label(form.titre, "Titre de la réclamation", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.titre, {
+	{{ form_label(form.titre, "Titre de la réclamation", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.titre, {
         'attr': {
             'class': 'form-control' ~ (form.titre.vars.errors|length > 0 ? ' is-invalid' : ''),
             'placeholder': 'Entrez le titre'
         }
     }) }}
-    {% if form.titre.vars.errors|length > 0 %}
-        <div class="invalid-feedback">
-            {{ form_errors(form.titre) }}
-        </div>
-    {% endif %}
+	{% if form.titre.vars.errors|length > 0 %}
+		<div class="invalid-feedback">
+			{{ form_errors(form.titre) }}
+		</div>
+	{% endif %}
 </div>
 
 <!-- Champ Description -->
 <div class="mb-3" style="width:600px;">
-    {{ form_label(form.description, "Description", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.description, {
+	{{ form_label(form.description, "Description", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.description, {
         'attr': {
             'class': 'form-control' ~ (form.description.vars.errors|length > 0 ? ' is-invalid' : ''),
             'placeholder': 'Décrivez votre réclamation'
         }
     }) }}
-    {% if form.description.vars.errors|length > 0 %}
-        <div class="invalid-feedback">
-            {{ form_errors(form.description) }}
-        </div>
-    {% endif %}
+	{% if form.description.vars.errors|length > 0 %}
+		<div class="invalid-feedback">
+			{{ form_errors(form.description) }}
+		</div>
+	{% endif %}
 </div>
 
 <!-- Champ Status -->
 <div class="mb-3" style="width:600px;">
-    {{ form_label(form.status, "Statut de la réclamation", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.status, {
+	{{ form_label(form.status, "Statut de la réclamation", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.status, {
         'attr': {
             'class': 'form-select' ~ (form.status.vars.errors|length > 0 ? ' is-invalid' : '')
         }
     }) }}
-    {% if form.status.vars.errors|length > 0 %}
-        <div class="invalid-feedback">
-            {{ form_errors(form.status) }}
-        </div>
-    {% endif %}
+	{% if form.status.vars.errors|length > 0 %}
+		<div class="invalid-feedback">
+			{{ form_errors(form.status) }}
+		</div>
+	{% endif %}
 </div>
 
 <!-- Champ Date de Soumission -->
 <div class="mb-3" style="width: 600px;">
-    {{ form_label(form.dateSoumission, "Date de soumission", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.dateSoumission, {
+	{{ form_label(form.dateSoumission, "Date de soumission", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.dateSoumission, {
         'attr': {
             'class': 'form-control datetime-picker' ~ (form.dateSoumission.vars.errors|length > 0 ? ' is-invalid' : '')
         }
     }) }}
-    {% if form.dateSoumission.vars.errors|length > 0 %}
-        <div class="invalid-feedback">
-            {{ form_errors(form.dateSoumission) }}
-        </div>
-    {% endif %}
+	{% if form.dateSoumission.vars.errors|length > 0 %}
+		<div class="invalid-feedback">
+			{{ form_errors(form.dateSoumission) }}
+		</div>
+	{% endif %}
 </div>
 
 <!-- Champ Utilisateur -->
 <div class="mb-3" style="width:600px;">
-    {{ form_label(form.user, "Utilisateur concerné", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.user, {
+	{{ form_label(form.user, "Utilisateur concerné", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.user, {
         'attr': {
             'class': 'form-select' ~ (form.user.vars.errors|length > 0 ? ' is-invalid' : '')
         }
     }) }}
-    {% if form.user.vars.errors|length > 0 %}
-        <div class="invalid-feedback">
-            {{ form_errors(form.user) }}
-        </div>
-    {% endif %}
+	{% if form.user.vars.errors|length > 0 %}
+		<div class="invalid-feedback">
+			{{ form_errors(form.user) }}
+		</div>
+	{% endif %}
 </div>
 
 <!-- Bouton Soumettre -->
 <button class="btn btn-outline-dark btn-fw">{{ button_label|default('Soumettre la réclamation') }}</button>
 
 {{ form_end(form) }}
-=======
-{{ form_start(form, {'attr': {'class': 'form-group'}}) }}
-
-{% for field in form %}
-    <div class="mb-3" style="gap: 20px; width:600px">
-        {{ form_label(field, null, {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(field, {'attr': {'class': 'form-control', 'placeholder': field.vars.label}}) }}
-
-        {{ form_errors(field) }}
-    </div>
-{% endfor %}
-
-<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Save') }}</button>
-
-{{ form_end(form) }}
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f

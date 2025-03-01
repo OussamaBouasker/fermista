@@ -16,34 +16,22 @@ class RendezVous
     #[ORM\Column]
     private ?int $id = null;
 
-<<<<<<< HEAD
     // Date du rendez-vous
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
     #[Assert\NotBlank(message: "La date du rendez-vous ne peut pas être vide.")]
     private ?\DateTimeInterface $date = null;
 
-<<<<<<< HEAD
     // Heure du rendez-vous
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: false)]
     #[Assert\NotBlank(message: "L'heure du rendez-vous est requise.")]
     private ?\DateTimeInterface $heure = null;
 
-<<<<<<< HEAD
     // Sexe (pour information ou contexte, par exemple pour la personne concernée)
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     #[ORM\Column(length: 50, nullable: false)]
     #[Assert\NotBlank(message: "Le sexe ne peut pas être vide.")]
     private ?string $sex = null;
 
-<<<<<<< HEAD
     // Cause du rendez-vous
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     #[ORM\Column(length: 255, nullable: false)]
     #[Assert\NotBlank(message: "Veuillez préciser la cause du rendez-vous.")]
     #[Assert\Length(
@@ -54,7 +42,6 @@ class RendezVous
     )]
     private ?string $cause = null;
 
-<<<<<<< HEAD
     // Le vétérinaire concerné (relation ManyToOne)
     #[ORM\ManyToOne(targetEntity: \App\Entity\User::class)]
     #[ORM\JoinColumn(nullable: false)]
@@ -103,8 +90,6 @@ class RendezVous
 
     // Getters et setters pour l'ID, la date, l'heure, le sexe et la cause
 
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     public function getId(): ?int
     {
         return $this->id;
@@ -118,10 +103,6 @@ class RendezVous
     public function setDate(?\DateTimeInterface $date): static
     {
         $this->date = $date;
-<<<<<<< HEAD
-=======
-
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         return $this;
     }
 
@@ -133,10 +114,6 @@ class RendezVous
     public function setHeure(?\DateTimeInterface $heure): static
     {
         $this->heure = $heure;
-<<<<<<< HEAD
-=======
-
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         return $this;
     }
 
@@ -148,10 +125,6 @@ class RendezVous
     public function setSex(?string $sex): static
     {
         $this->sex = $sex;
-<<<<<<< HEAD
-=======
-
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         return $this;
     }
 
@@ -163,18 +136,10 @@ class RendezVous
     public function setCause(?string $cause): static
     {
         $this->cause = $cause;
-<<<<<<< HEAD
         return $this;
     }
 
     // Validation personnalisée : la date ne peut pas être dans le passé ni tomber un week-end
-=======
-
-        return $this;
-    }
-
-
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     #[Assert\Callback]
     public function validateFields(ExecutionContextInterface $context): void
     {
@@ -184,10 +149,6 @@ class RendezVous
                     ->atPath('date')
                     ->addViolation();
             }
-<<<<<<< HEAD
-=======
-
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
             // Vérifier si la date correspond à un week-end
             $dayOfWeek = (int) $this->date->format('N'); // 6 = samedi, 7 = dimanche
             if ($dayOfWeek >= 6) {

@@ -1,53 +1,52 @@
-<<<<<<< HEAD
 {{ form_start(form, {'attr': {'class': 'form-group','novalidate': 'novalidate'}}) }}
 
 
 <div class="mb-3" style="gap: 20px; width:600px">
-    {{ form_label(form.email, "Adresse Email", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.email, {'attr': {'class': 'form-control' ~ (form.email.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'exemple@email.com'}}) }}
-    {% if form.email.vars.errors|length > 0 %}
-        <div class="text-danger mt-1">
-            {% for error in form.email.vars.errors %}
-                <small>{{ error.message }}</small>
-            {% endfor %}
-        </div>
-    {% endif %}
+	{{ form_label(form.email, "Adresse Email", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.email, {'attr': {'class': 'form-control' ~ (form.email.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'exemple@email.com'}}) }}
+	{% if form.email.vars.errors|length > 0 %}
+		<div class="text-danger mt-1">
+			{% for error in form.email.vars.errors %}
+				<small>{{ error.message }}</small>
+			{% endfor %}
+		</div>
+	{% endif %}
 </div>
 
 <div class="mb-3" style="gap: 20px; width:600px">
-    {{ form_label(form.num_tel, "Numéro de Téléphone", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.num_tel, {'attr': {'class': 'form-control' ~ (form.num_tel.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Entrez votre numéro'}}) }}
-    {% if form.num_tel.vars.errors|length > 0 %}
-        <div class="text-danger mt-1">
-            {% for error in form.num_tel.vars.errors %}
-                <small>{{ error.message }}</small>
-            {% endfor %}
-        </div>
-    {% endif %}
+	{{ form_label(form.num_tel, "Numéro de Téléphone", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.num_tel, {'attr': {'class': 'form-control' ~ (form.num_tel.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Entrez votre numéro'}}) }}
+	{% if form.num_tel.vars.errors|length > 0 %}
+		<div class="text-danger mt-1">
+			{% for error in form.num_tel.vars.errors %}
+				<small>{{ error.message }}</small>
+			{% endfor %}
+		</div>
+	{% endif %}
 </div>
 
 <div class="mb-3" style="gap: 20px; width:600px">
-    {{ form_label(form.num_carte_bancaire, "Numéro de carte bancaire", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.num_carte_bancaire, {'attr': {'class': 'form-control' ~ (form.num_carte_bancaire.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Entrez votre numéro de carte'}}) }}
-    {% if form.num_carte_bancaire.vars.errors|length > 0 %}
-        <div class="text-danger mt-1">
-            {% for error in form.num_carte_bancaire.vars.errors %}
-                <small>{{ error.message }}</small>
-            {% endfor %}
-        </div>
-    {% endif %}
+	{{ form_label(form.num_carte_bancaire, "Numéro de carte bancaire", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.num_carte_bancaire, {'attr': {'class': 'form-control' ~ (form.num_carte_bancaire.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Entrez votre numéro de carte'}}) }}
+	{% if form.num_carte_bancaire.vars.errors|length > 0 %}
+		<div class="text-danger mt-1">
+			{% for error in form.num_carte_bancaire.vars.errors %}
+				<small>{{ error.message }}</small>
+			{% endfor %}
+		</div>
+	{% endif %}
 </div>
 
 <div class="mb-3" style="gap: 20px; width:600px">
-    {{ form_label(form.commentaire, "Commentaire", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.commentaire, {'attr': {'class': 'form-control' ~ (form.commentaire.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Ajouter un commentaire'}}) }}
-    {% if form.commentaire.vars.errors|length > 0 %}
-        <div class="text-danger mt-1">
-            {% for error in form.commentaire.vars.errors %}
-                <small>{{ error.message }}</small>
-            {% endfor %}
-        </div>
-    {% endif %}
+	{{ form_label(form.commentaire, "Commentaire", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.commentaire, {'attr': {'class': 'form-control' ~ (form.commentaire.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Ajouter un commentaire'}}) }}
+	{% if form.commentaire.vars.errors|length > 0 %}
+		<div class="text-danger mt-1">
+			{% for error in form.commentaire.vars.errors %}
+				<small>{{ error.message }}</small>
+			{% endfor %}
+		</div>
+	{% endif %}
 </div>
 
 {# <div class="mb-3" style="gap: 20px; width:600px">
@@ -63,75 +62,51 @@
 </div> #}
 
 
-
 <div class="mb-3" style="gap: 20px; width:600px">
-    {{ form_label(form.workshop, "Workshop", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.workshop, {
+	{{ form_label(form.workshop, "Workshop", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.workshop, {
         'attr': {
             'class': 'form-control' ~ (form.workshop.vars.errors|length > 0 ? ' is-invalid' : '')
         }
     }) }}
-    {% if form.workshop.vars.errors|length > 0 %}
-        <div class="text-danger mt-1">
-            {% for error in form.workshop.vars.errors %}
-                <small>{{ error.message }}</small>
-            {% endfor %}
-        </div>
-    {% endif %}
+	{% if form.workshop.vars.errors|length > 0 %}
+		<div class="text-danger mt-1">
+			{% for error in form.workshop.vars.errors %}
+				<small>{{ error.message }}</small>
+			{% endfor %}
+		</div>
+	{% endif %}
 </div>
 
 <div class="mb-3" style="gap: 20px; width:600px">
-    {{ form_label(form.status, "Workshop", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.status, {
+	{{ form_label(form.status, "Workshop", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.status, {
         'attr': {
             'class': 'form-control' ~ (form.status.vars.errors|length > 0 ? ' is-invalid' : '')
         }
     }) }}
-    {% if form.status.vars.errors|length > 0 %}
-        <div class="text-danger mt-1">
-            {% for error in form.workshop.vars.errors %}
-                <small>{{ error.message }}</small>
-            {% endfor %}
-        </div>
-    {% endif %}
+	{% if form.status.vars.errors|length > 0 %}
+		<div class="text-danger mt-1">
+			{% for error in form.workshop.vars.errors %}
+				<small>{{ error.message }}</small>
+			{% endfor %}
+		</div>
+	{% endif %}
 </div>
-
 
 
 <div class="mb-3" style="gap: 20px; width:600px">
-    {{ form_label(form.confirmation, "Accepter le règlement des workshops", {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.confirmation, {'attr': {'class': 'form-check-input' ~ (form.confirmation.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
-    {% if form.confirmation.vars.errors|length > 0 %}
-        <div class="text-danger mt-1">
-            {% for error in form.confirmation.vars.errors %}
-                <small>{{ error.message }}</small>
-            {% endfor %}
-        </div>
-    {% endif %}
+	{{ form_label(form.confirmation, "Accepter le règlement des workshops", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.confirmation, {'attr': {'class': 'form-check-input' ~ (form.confirmation.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+	{% if form.confirmation.vars.errors|length > 0 %}
+		<div class="text-danger mt-1">
+			{% for error in form.confirmation.vars.errors %}
+				<small>{{ error.message }}</small>
+			{% endfor %}
+		</div>
+	{% endif %}
 </div>
 
 <button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>
-=======
-{{ form_start(form, {'attr': {'class': 'form-group'}}) }}
-
-{% for field in form %}
-    <div class="mb-3" style="gap: 20px; width:600px">
-        {{ form_label(field, null, {'label_attr': {'class': 'form-label'}}) }}
-
-        {% if field.vars.block_prefixes is defined and 'checkbox' in field.vars.block_prefixes %}
-            <div class="form-check">
-                {{ form_widget(field, {'attr': {'class': 'form-check-input'}}) }}
-                {{ form_label(field, null, {'label_attr': {'class': 'form-check-label'}}) }}
-            </div>
-        {% else %}
-            {{ form_widget(field, {'attr': {'class': 'form-control', 'placeholder': field.vars.label}}) }}
-        {% endif %}
-
-        {{ form_errors(field) }}
-    </div>
-{% endfor %}
-
-<button class="btn btn-outline-dark btn-fw">{{ button_label|default('Save') }}</button>
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
 {{ form_end(form) }}

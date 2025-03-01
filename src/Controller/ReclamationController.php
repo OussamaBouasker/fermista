@@ -4,10 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Reclamation;
 use App\Form\ReclamationType;
-<<<<<<< HEAD
 use App\Form\ReclamationType2;
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 use App\Repository\ReclamationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -57,11 +54,7 @@ final class ReclamationController extends AbstractController
     #[Route('/{id}/edit', name: 'app_reclamation_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
     {
-<<<<<<< HEAD
         $form = $this->createForm(ReclamationType2::class, $reclamation);
-=======
-        $form = $this->createForm(ReclamationType::class, $reclamation);
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -79,7 +72,7 @@ final class ReclamationController extends AbstractController
     #[Route('/{id}', name: 'app_reclamation_delete', methods: ['POST'])]
     public function delete(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$reclamation->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $reclamation->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($reclamation);
             $entityManager->flush();
         }

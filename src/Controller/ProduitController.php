@@ -9,20 +9,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-<<<<<<< HEAD
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Annotation\Route;
-=======
-use Symfony\Component\Routing\Attribute\Route;
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
 
 #[Route('/produit')]
 final class ProduitController extends AbstractController
 {
-<<<<<<< HEAD
     // Affichage de tous les produits
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     #[Route(name: 'app_produit_index', methods: ['GET'])]
     public function index(ProduitRepository $produitRepository): Response
     {
@@ -31,7 +24,6 @@ final class ProduitController extends AbstractController
         ]);
     }
 
-<<<<<<< HEAD
     // Affichage des produits par catégorie
     #[Route('/categorie/{category}', name: 'app_produit_category_index', methods: ['GET'])]
     public function categoryIndex(ProduitRepository $produitRepository, string $category): Response
@@ -54,8 +46,6 @@ final class ProduitController extends AbstractController
     }
 
     // Création d'un nouveau produit
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     #[Route('/new', name: 'app_produit_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -64,7 +54,6 @@ final class ProduitController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-<<<<<<< HEAD
             /** @var UploadedFile $imageFile */
             $imageFile = $form->get('image')->getData();
 
@@ -78,28 +67,15 @@ final class ProduitController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('app_produit_category_index', ['category' => $produit->getCategorie()]);
-=======
-            $entityManager->persist($produit);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         }
 
         return $this->render('Back/produit/new.html.twig', [
             'produit' => $produit,
-<<<<<<< HEAD
             'form' => $form->createView(),
         ]);
     }
 
     // Affichage d'un produit spécifique
-=======
-            'form' => $form,
-        ]);
-    }
-
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     #[Route('/{id}', name: 'app_produit_show', methods: ['GET'])]
     public function show(Produit $produit): Response
     {
@@ -108,10 +84,7 @@ final class ProduitController extends AbstractController
         ]);
     }
 
-<<<<<<< HEAD
     // Édition d'un produit
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     #[Route('/{id}/edit', name: 'app_produit_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Produit $produit, EntityManagerInterface $entityManager): Response
     {
@@ -119,7 +92,6 @@ final class ProduitController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-<<<<<<< HEAD
             /** @var UploadedFile $imageFile */
             $imageFile = $form->get('image')->getData();
 
@@ -132,16 +104,10 @@ final class ProduitController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('app_produit_category_index', ['category' => $produit->getCategorie()]);
-=======
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
         }
 
         return $this->render('Back/produit/edit.html.twig', [
             'produit' => $produit,
-<<<<<<< HEAD
             'form' => $form->createView(),
         ]);
     }
@@ -150,25 +116,11 @@ final class ProduitController extends AbstractController
     #[Route('/{id}', name: 'app_produit_delete', methods: ['POST'])]
     public function delete(Request $request, Produit $produit, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$produit->getId(), $request->request->get('_token'))) {
-=======
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_produit_delete', methods: ['POST'])]
-    public function delete(Request $request, Produit $produit, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$produit->getId(), $request->getPayload()->getString('_token'))) {
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
+        if ($this->isCsrfTokenValid('delete' . $produit->getId(), $request->request->get('_token'))) {
             $entityManager->remove($produit);
             $entityManager->flush();
         }
 
-<<<<<<< HEAD
         return $this->redirectToRoute('app_produit_index');
-=======
-        return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     }
 }
