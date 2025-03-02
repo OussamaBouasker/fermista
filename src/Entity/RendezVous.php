@@ -44,7 +44,7 @@ class RendezVous
 
     // Le vétérinaire concerné (relation ManyToOne)
     #[ORM\ManyToOne(targetEntity: \App\Entity\User::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?\App\Entity\User $veterinaire = null;
 
     public function getVeterinaire(): ?\App\Entity\User
@@ -59,7 +59,7 @@ class RendezVous
     }
 
     #[ORM\ManyToOne(targetEntity: \App\Entity\User::class)]
-    #[ORM\JoinColumn(nullable: false)] // Cette ligne signifie que agriculteur_id ne peut pas être NULL
+    #[ORM\JoinColumn(nullable: true)] // Cette ligne signifie que agriculteur_id ne peut pas être NULL
     private ?User $agriculteur = null;
 
     // Getter et Setter

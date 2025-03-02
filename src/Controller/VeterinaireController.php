@@ -36,6 +36,30 @@ class VeterinaireController extends AbstractController
         $rapportMedicalForm = $this->createForm(RapportMedicalType::class, $rapportMedical);
         $rapportMedicalForm->handleRequest($request);
 
+        // Si la requête est AJAX, vérifier s'il y a des erreurs de validation et les renvoyer
+        if ($request->isXmlHttpRequest()) {
+            if ($consultationForm->isSubmitted() && !$consultationForm->isValid()) {
+                $errors = [];
+                foreach ($consultationForm->getErrors(true) as $error) {
+                    $errors[] = $error->getOrigin()->getName() . " : " . $error->getMessage();
+                }
+                return $this->json([
+                    'status'  => 'error',
+                    'message' => implode("\n", $errors)
+                ], 400);
+            }
+            if ($rapportMedicalForm->isSubmitted() && !$rapportMedicalForm->isValid()) {
+                $errors = [];
+                foreach ($rapportMedicalForm->getErrors(true) as $error) {
+                    $errors[] = $error->getOrigin()->getName() . " : " . $error->getMessage();
+                }
+                return $this->json([
+                    'status'  => 'error',
+                    'message' => implode("\n", $errors)
+                ], 400);
+            }
+        }
+
         // Traitement du formulaire de Consultation
         if ($consultationForm->isSubmitted() && $consultationForm->isValid()) {
             // Synchronisation de la relation si un rapport médical est associé
@@ -47,7 +71,7 @@ class VeterinaireController extends AbstractController
 
             if ($request->isXmlHttpRequest()) {
                 return $this->json([
-                    'success' => true,
+                    'status'  => 'success',
                     'message' => 'La consultation a été enregistrée.'
                 ]);
             }
@@ -63,7 +87,7 @@ class VeterinaireController extends AbstractController
 
             if ($request->isXmlHttpRequest()) {
                 return $this->json([
-                    'success' => true,
+                    'status'  => 'success',
                     'message' => 'Le rapport médical a été enregistré.'
                 ]);
             }
@@ -92,7 +116,6 @@ class VeterinaireController extends AbstractController
         $form = $this->createForm(ConsultationType::class, $consultation);
         $form->handleRequest($request);
 
-        // Si la requête est AJAX et de type POST, on renvoie une réponse JSON
         if ($request->isXmlHttpRequest() && $request->isMethod('POST')) {
             if ($form->isSubmitted() && $form->isValid()) {
                 if ($consultation->getRapportmedical()) {
@@ -101,23 +124,21 @@ class VeterinaireController extends AbstractController
                 $doctrine->getManager()->flush();
 
                 return $this->json([
-                    'success' => true,
+                    'status'  => 'success',
                     'message' => 'La consultation a été mise à jour.'
                 ]);
             } else {
                 $errors = [];
                 foreach ($form->getErrors(true) as $error) {
-                    $errors[] = $error->getMessage();
+                    $errors[] = $error->getOrigin()->getName() . " : " . $error->getMessage();
                 }
                 return $this->json([
-                    'success' => false,
-                    'message' => 'Erreur de validation.',
-                    'errors'  => $errors
+                    'status'  => 'error',
+                    'message' => implode("\n", $errors)
                 ], 400);
             }
         }
 
-        // Sinon, on affiche le formulaire classique
         return $this->render('Front/veterinaire/edit_consultation.html.twig', [
             'consultationForm' => $form->createView(),
             'consultation'     => $consultation,
@@ -137,7 +158,7 @@ class VeterinaireController extends AbstractController
 
             if ($request->isXmlHttpRequest()) {
                 return $this->json([
-                    'success' => true,
+                    'status'  => 'success',
                     'message' => 'La consultation a été supprimée.'
                 ]);
             }
@@ -146,7 +167,7 @@ class VeterinaireController extends AbstractController
         } else {
             if ($request->isXmlHttpRequest()) {
                 return $this->json([
-                    'success' => false,
+                    'status'  => 'error',
                     'message' => 'Token CSRF invalide.'
                 ], 400);
             }
@@ -170,18 +191,17 @@ class VeterinaireController extends AbstractController
                 $doctrine->getManager()->flush();
 
                 return $this->json([
-                    'success' => true,
+                    'status'  => 'success',
                     'message' => 'Le rapport médical a été mis à jour.'
                 ]);
             } else {
                 $errors = [];
                 foreach ($form->getErrors(true) as $error) {
-                    $errors[] = $error->getMessage();
+                    $errors[] = $error->getOrigin()->getName() . " : " . $error->getMessage();
                 }
                 return $this->json([
-                    'success' => false,
-                    'message' => 'Erreur de validation.',
-                    'errors'  => $errors
+                    'status'  => 'error',
+                    'message' => implode("\n", $errors)
                 ], 400);
             }
         }
@@ -205,7 +225,7 @@ class VeterinaireController extends AbstractController
 
             if ($request->isXmlHttpRequest()) {
                 return $this->json([
-                    'success' => true,
+                    'status'  => 'success',
                     'message' => 'Le rapport médical a été supprimé.'
                 ]);
             }
@@ -214,7 +234,7 @@ class VeterinaireController extends AbstractController
         } else {
             if ($request->isXmlHttpRequest()) {
                 return $this->json([
-                    'success' => false,
+                    'status'  => 'error',
                     'message' => 'Token CSRF invalide.'
                 ], 400);
             }
@@ -230,10 +250,11 @@ class VeterinaireController extends AbstractController
      * Si la requête est AJAX, on retourne un JSON avec les données,
      * sinon on rend la vue habituelle.
      */
-    #[Route('/calendrier/search', name: 'app_vache_search', methods: ['GET'])]
+    #[Route('/calendrier/search', name: 'app_vache_search', methods: ['GET', 'POST'])]
     public function search(Request $request, VacheRepository $vacheRepository): Response
     {
-        $nom = $request->query->get('nom');
+        // Récupère le paramètre 'nom' quel que soit le type de requête (GET ou POST)
+        $nom = $request->get('nom');
         $allVaches = $vacheRepository->findAll();
 
         if ($nom) {
@@ -256,13 +277,11 @@ class VeterinaireController extends AbstractController
 
         // Si c'est une requête AJAX, retourner les données au format JSON
         if ($request->isXmlHttpRequest()) {
-            // Formatage des données de la vache
             $vacheData = $vache ? [
                 'id'   => $vache->getId(),
                 'name' => $vache->getName(),
             ] : null;
 
-            // Formatage des consultations en tableau
             $consultationsData = [];
             foreach ($consultations as $consultation) {
                 $consultationsData[] = [
@@ -274,7 +293,6 @@ class VeterinaireController extends AbstractController
                 ];
             }
 
-            // Formatage de la liste complète des vaches
             $allVachesData = [];
             foreach ($allVaches as $v) {
                 $allVachesData[] = [

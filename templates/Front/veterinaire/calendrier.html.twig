@@ -166,7 +166,7 @@
 		.popup-content form select {
 			display: block;
 			width: 100%;
-			margin-bottom: 15px;
+			margin-bottom: 5px;
 			box-sizing: border-box;
 		}
 		.form-error {
@@ -191,6 +191,7 @@
 	</style>
 	{{ parent() }}
 {% endblock %}
+
 {% block body %}
 
 	<div class="search-container">
@@ -207,7 +208,7 @@
 			</form>
 		</div>
 
-		{# Si une vache est trouvée, affichage de ses consultations dans une popup #}
+		{# Affichage des consultations d'une vache dans une popup si elle est trouvée #}
 		{% if vache is defined and vache %}
 			<script>
 				document.addEventListener("DOMContentLoaded", function () {
@@ -247,14 +248,17 @@ popup.style.display = "flex";
 						'pattern': '^[A-Za-z0-9À-ÿ\\s]+$'
 					}
 				}) }}
+					{{ form_errors(consultationForm.nom) }}
 				</div>
 				<div class="form-group">
 					{{ form_label(consultationForm.date) }}
 					{{ form_widget(consultationForm.date, {'attr': {'min': tomorrow}}) }}
+					{{ form_errors(consultationForm.date) }}
 				</div>
 				<div class="form-group">
 					{{ form_label(consultationForm.heure) }}
 					{{ form_widget(consultationForm.heure, {'attr': {'min': '09:00', 'max': '18:00'}}) }}
+					{{ form_errors(consultationForm.heure) }}
 				</div>
 				<div class="form-group">
 					{{ form_label(consultationForm.lieu) }}
@@ -264,14 +268,17 @@ popup.style.display = "flex";
 						'pattern': '^[A-Za-z0-9À-ÿ\\s]+$'
 					}
 				}) }}
+					{{ form_errors(consultationForm.lieu) }}
 				</div>
 				<div class="form-group">
 					{{ form_label(consultationForm.rapportmedical) }}
 					{{ form_widget(consultationForm.rapportmedical) }}
+					{{ form_errors(consultationForm.rapportmedical) }}
 				</div>
 				<div class="form-group">
 					{{ form_label(consultationForm.vache) }}
 					{{ form_widget(consultationForm.vache) }}
+					{{ form_errors(consultationForm.vache) }}
 				</div>
 				<button type="submit">Enregistrer la consultation</button>
 				{{ form_end(consultationForm) }}
@@ -287,22 +294,27 @@ popup.style.display = "flex";
 				<div class="form-group">
 					{{ form_label(rapportMedicalForm.num) }}
 					{{ form_widget(rapportMedicalForm.num, { 'attr': {'placeholder': 'Entrez le numéro'} }) }}
+					{{ form_errors(rapportMedicalForm.num) }}
 				</div>
 				<div class="form-group">
 					{{ form_label(rapportMedicalForm.race) }}
 					{{ form_widget(rapportMedicalForm.race, { 'attr': {'placeholder': 'Entrez la race'} }) }}
+					{{ form_errors(rapportMedicalForm.race) }}
 				</div>
 				<div class="form-group">
 					{{ form_label(rapportMedicalForm.historique_de_maladie) }}
 					{{ form_widget(rapportMedicalForm.historique_de_maladie, { 'attr': {'placeholder': "Entrez l'historique de maladie"} }) }}
+					{{ form_errors(rapportMedicalForm.historique_de_maladie) }}
 				</div>
 				<div class="form-group">
 					{{ form_label(rapportMedicalForm.cas_medical) }}
 					{{ form_widget(rapportMedicalForm.cas_medical, { 'attr': {'placeholder': 'Entrez le cas médical'} }) }}
+					{{ form_errors(rapportMedicalForm.cas_medical) }}
 				</div>
 				<div class="form-group">
 					{{ form_label(rapportMedicalForm.solution) }}
 					{{ form_widget(rapportMedicalForm.solution, { 'attr': {'placeholder': 'Entrez la solution'} }) }}
+					{{ form_errors(rapportMedicalForm.solution) }}
 				</div>
 				<button type="submit">Enregistrer le rapport médical</button>
 				{{ form_end(rapportMedicalForm) }}
@@ -334,7 +346,33 @@ popup.style.display = "flex";
 			<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 			<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 			<script>
-				// Fonctions utilitaires
+				// Affiche les erreurs directement dans le formulaire
+function displayFormErrors(form, errors) { // Supprime les anciens messages d'erreur
+form.querySelectorAll('.form-error').forEach(function (el) {
+el.remove();
+});
+// Parcourt chaque champ d'erreur et les affiche
+for (let field in errors) { // Recherche dans les formulaires consultation ou rapport_medical
+let input = form.querySelector('[name^="consultation[' + field + ']"]') || form.querySelector('[name^="rapport_medical[' + field + ']"]');
+if (input) {
+let errorDiv = document.createElement('div');
+errorDiv.className = 'form-error';
+errorDiv.innerText = errors[field].join(', ');
+input.parentNode.insertBefore(errorDiv, input.nextSibling);
+}
+}
+}
+
+// Fonction utilitaire pour formater les erreurs en une chaîne de caractères
+function formatErrors(errors) {
+let messages = [];
+for (let field in errors) {
+messages.push(errors[field].join(', '));
+}
+return messages.join('\n');
+}
+
+// Fonctions utilitaires pour les popups
 function toggleFormPopup(popupId) {
 var popup = document.getElementById(popupId);
 popup.style.display = (popup.style.display === 'none' || popup.style.display === '') ? 'flex' : 'none';
@@ -344,13 +382,6 @@ document.getElementById(popupId).style.display = "none";
 }
 function closeModal(modalId) {
 document.getElementById(modalId).style.display = "none";
-}
-function formatErrors(errors) {
-let errorsText = "";
-for (let field in errors) {
-errorsText += field + ": " + errors[field].join(", ") + "\n";
-}
-return errorsText;
 }
 
 document.addEventListener("DOMContentLoaded", function () { // Création d'une consultation en AJAX
@@ -365,26 +396,27 @@ headers: {
 "X-Requested-With": "XMLHttpRequest"
 }
 }).then(response => {
+return response.json().then(data => {
 if (!response.ok) {
-return response.text().then(text => {
-throw new Error(text);
-});
+return Promise.reject(data);
 }
-return response.json();
+return data;
+});
 }).then(data => {
-if (data.success) {
+if (data.status === 'success') {
 Swal.fire("Succès", data.message, "success");
 closePopup("consultation-form-popup");
 location.reload();
-} else {
-let message = data.errors ? formatErrors(data.errors) : data.message;
-Swal.fire("Erreur", message, "error");
+} else { // Affiche les erreurs détaillées dans le formulaire
+displayFormErrors(consultationForm, data.errors);
+Swal.fire("Erreur", data.message, "error");
 }
-}).catch(err => {
-console.error(err);
-Swal.fire("Erreur", "Une erreur est survenue.", "error");
+}).catch(errorData => {
+let errorMessage = errorData && errorData.message ? errorData.message : "Une erreur est survenue.";
+Swal.fire("Erreur", errorMessage, "error");
 });
 });
+
 
 // Création d'un rapport médical en AJAX
 const rapportMedicalForm = document.querySelector("#rapport-medical-form-popup form");
@@ -398,33 +430,34 @@ headers: {
 "X-Requested-With": "XMLHttpRequest"
 }
 }).then(response => {
+return response.json().then(data => {
 if (!response.ok) {
-return response.text().then(text => {
-throw new Error(text);
-});
+return Promise.reject(data);
 }
-return response.json();
+return data;
+});
 }).then(data => {
-if (data.success) {
+if (data.status === 'success') {
 Swal.fire("Succès", data.message, "success");
 closePopup("rapport-medical-form-popup");
 location.reload();
-} else {
-let message = data.errors ? formatErrors(data.errors) : data.message;
-Swal.fire("Erreur", message, "error");
+} else { // Affiche les erreurs détaillées dans le formulaire
+displayFormErrors(rapportMedicalForm, data.errors);
+Swal.fire("Erreur", data.message, "error");
 }
-}).catch(err => {
-console.error(err);
-Swal.fire("Erreur", "Une erreur est survenue.", "error");
+}).catch(errorData => {
+let errorMessage = errorData && errorData.message ? errorData.message : "Une erreur est survenue.";
+Swal.fire("Erreur", errorMessage, "error");
 });
 });
+
 
 // --- Edition d'une consultation ---
 window.editConsultation = function (dateStr, index) {
 var consultation = consultationsByDate[dateStr][index];
-console.log("Consultation à éditer :", consultation);
 if (! consultation) 
 return;
+
 
 
 var rapportMedicalId = consultation.rapportmedical ? consultation.rapportmedical.id : "";
@@ -449,7 +482,6 @@ consultation.time
 							<input type="text" id="consultation-lieu" name="consultation[lieu]" value="${
 consultation.location
 }" required pattern="^[A-Za-z0-9À-ÿ\\s]+$" /><br/>
-							<!-- Champ caché pour transmettre l'id de la vache -->
 							<input type="hidden" id="consultation-vache" name="consultation[vache]" value="${
 consultation.vache
 }" />
@@ -505,16 +537,14 @@ throw new Error(text);
 }
 return response.json();
 }).then(data => {
-if (data.success) {
+if (data.status === 'success') {
 Swal.fire("Modifiée!", data.message, "success").then(() => location.reload());
 } else {
-let message = data.errors ? formatErrors(data.errors) : data.message;
-Swal.fire("Erreur", message || "Erreur lors de la modification", "error");
+displayFormErrors(document.getElementById('consultation-edit-form'), data.errors);
 }
 }).catch(error => {
 console.error("Erreur lors de l'édition de la consultation :", error);
-// Au lieu d'afficher l'erreur, on considère que la modification a bien eu lieu
-Swal.fire("Modifiée!", "La consultation a été modifiée.", "success").then(() => location.reload());
+displayFormErrors(document.getElementById('consultation-edit-form'), {"global": ["Une erreur technique est survenue. Veuillez réessayer."]});
 });
 };
 
@@ -523,6 +553,7 @@ window.editRapportMedical = function (dateStr, index) {
 var consultation = consultationsByDate[dateStr][index];
 if (! consultation || ! consultation.rapportmedical) 
 return;
+
 
 
 var formHtml = `
@@ -583,6 +614,7 @@ if (! consultation || ! consultation.rapportmedical)
 return;
 
 
+
 var editData = new URLSearchParams();
 editData.append('rapport_medical[num]', document.getElementById('rapportmedical-num').value);
 editData.append('rapport_medical[race]', document.getElementById('rapportmedical-race').value);
@@ -608,15 +640,14 @@ throw new Error(text);
 }
 return response.json();
 }).then(data => {
-if (data.success) {
+if (data.status === 'success') {
 Swal.fire("Modifié!", data.message, "success").then(() => location.reload());
 } else {
-let message = data.errors ? formatErrors(data.errors) : data.message;
-Swal.fire("Erreur", message || "Erreur lors de la modification du rapport médical", "error");
+displayFormErrors(document.getElementById('rapportmedical-edit-form'), data.errors);
 }
 }).catch(error => {
 console.error("Erreur lors de l'édition du rapport médical :", error);
-Swal.fire("Erreur", "Une erreur est survenue lors de la modification du rapport médical", "error");
+displayFormErrors(document.getElementById('rapportmedical-edit-form'), {"global": ["Une erreur technique est survenue."]});
 });
 };
 
@@ -625,6 +656,7 @@ window.deleteConsultation = function (dateStr, index) {
 var consultation = consultationsByDate[dateStr][index];
 if (! consultation) 
 return;
+
 
 
 Swal.fire({
@@ -655,8 +687,8 @@ throw new Error(text);
 }
 return response.json();
 }).then(data => {
-if (data.success) {
-Swal.fire("Supprimée!", "La consultation a été supprimée.", "success").then(() => location.reload());
+if (data.status === 'success') {
+Swal.fire("Supprimée!", data.message, "success").then(() => location.reload());
 } else {
 let message = data.errors ? formatErrors(data.errors) : data.message;
 Swal.fire("Erreur", message || "Erreur lors de la suppression", "error");
@@ -674,6 +706,7 @@ window.deleteMedicalReport = function (dateStr, index) {
 var consultation = consultationsByDate[dateStr][index];
 if (! consultation || ! consultation.rapportmedical) 
 return;
+
 
 
 var reportId = consultation.rapportmedical.id;
@@ -703,7 +736,7 @@ throw new Error(text);
 }
 return response.json();
 }).then(data => {
-if (data.success) {
+if (data.status === 'success') {
 Swal.fire("Supprimé!", data.message || "Le rapport médical a été supprimé.", "success").then(() => location.reload());
 } else {
 let message = data.errors ? formatErrors(data.errors) : data.message;
@@ -726,9 +759,7 @@ closePopup('consultation-popup');
 });
 
 // --- Calendrier ---
-var consultationsByDate = {};{% for consultation in consultations %}
-{% set dateStr = consultation.date|date('Y-m-d') %}
-if (! consultationsByDate["{{ dateStr }}"]) {
+var consultationsByDate = {};{% for consultation in consultations %}{% set dateStr = consultation.date|date('Y-m-d') %}if (! consultationsByDate["{{ dateStr }}"]) {
 consultationsByDate["{{ dateStr }}"] = [];
 }
 consultationsByDate["{{ dateStr }}"].push({
@@ -736,10 +767,8 @@ id: "{{ consultation.id }}",
 time: "{{ consultation.heure|date('H:i') }}",
 nom: "{{ consultation.nom }}",
 location: "{{ consultation.lieu }}",
-// Ajout de la propriété vache pour transmettre l'id de la vache associée
 vache: "{{ consultation.vache ? consultation.vache.id : '' }}",
-csrfToken: "{{ csrf_token('delete' ~ consultation.id) }}",{% if consultation.rapportmedical is defined and consultation.rapportmedical %}
-rapportmedical : {
+csrfToken: "{{ csrf_token('delete' ~ consultation.id) }}",{% if consultation.rapportmedical is defined and consultation.rapportmedical %}rapportmedical : {
 id: "{{ consultation.rapportmedical.id }}",
 num: "{{ consultation.rapportmedical.num }}",
 race: "{{ consultation.rapportmedical.race }}",
@@ -751,8 +780,7 @@ csrfToken: "{{ csrf_token('deleteRapportMedical' ~ consultation.rapportmedical.i
 {% else %}
 rapportmedical : null
 {% endif %}
-});{% endfor %}
-console.log("ConsultationsByDate:", consultationsByDate);
+});{% endfor %}console.log("ConsultationsByDate:", consultationsByDate);
 
 function formatDate(dateObj) {
 var year = dateObj.getFullYear();
@@ -804,6 +832,7 @@ window.showDetails = function (dateStr, index) {
 var consultation = consultationsByDate[dateStr][index];
 if (! consultation) 
 return;
+
 
 
 var detailsHtml = `
