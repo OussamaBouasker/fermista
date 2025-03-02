@@ -31,6 +31,7 @@
 						width: 100%;
 					}
 
+					
 					/* Pagination styles */
 					.pagination {
 						display: flex;
@@ -62,10 +63,7 @@
 						color: white;
 						transform: translateY(-2px);
 						box-shadow: 0 5px 10px rgba(169, 169, 169, 0.4);
-
-
 					}
-
 					/* Décalage de la table vers la droite */
 					.table-container {
 						margin-left: 90px; /* Décale la table de 20px vers la droite */
@@ -92,12 +90,17 @@
 					</div>
 				</div>
 
+				<!-- Champ de recherche -->
+				<div class="form-group mx-2 mb-4" style="text-align: center;">
+					<input type="text" id="searchInput" class="form-control" placeholder="Rechercher par nom, prénom, email ou téléphone..." style="width: 60%; margin: 0 auto;">
+				</div>
+
+				<!-- Tableau des utilisateurs -->
 				<div class="table-container">
 					<table class="table">
 						<thead>
 							<tr>
 								<th>Image</th>
-								<!-- Nouvelle colonne pour l'image -->
 								<th>Nom</th>
 								<th>Prénom</th>
 								<th>Numéro de téléphone</th>
@@ -106,58 +109,133 @@
 								<th>Actions</th>
 							</tr>
 						</thead>
-						<tbody>
-							{% for user in users %}
-								<tr>
-									<td>
-										{% if user.image %}
-											<img src="{{ asset(user.image) }}" alt="Image de {{ user.firstName }}" class="user-image">
-										{% else %}
-											<img src="{{ asset('uploads/images/default-avatar.png') }}" alt="default" class="user-image">
-										{% endif %}
-									</td>
-									<td>{{ user.firstName }}</td>
-									<td>{{ user.lastName }}</td>
-									<td>{{ user.number }}</td>
-									<td>{{ user.email }}</td>
-									<td>{{ user.roles|join(' ') }}</td>
-									<td>
-										<a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-success">Edit</a>
-										<a href="{{ path('app_user_delete', {'id': user.id}) }}" class="btn btn-danger">Delete</a>
-									</td>
-								</tr>
-							{% else %}
-								<tr>
-									<td colspan="7">No records found</td>
-								</tr>
-							{% endfor %}
+						<tbody id="userTableBody">
+							
 						</tbody>
 					</table>
 				</div>
 
+				<!-- Pagination -->
 				<div class="navigation">
 					<ul class="pagination">
-						{% if users.previousPageNumber is defined %}
-							<li class="pagination-prev">
-								<a href="{{ path('app_user_index', {'page': users.previousPageNumber}) }}">
-									<i class="fas fa-chevron-left"></i>
-								</a>
-							</li>
-						{% endif %}
-						{{ knp_pagination_render(users) }}
-						{% if users.nextPageNumber is defined %}
-							<li class="pagination-next">
-								<a href="{{ path('app_user_index', {'page': users.nextPageNumber}) }}">
-									<i class="fas fa-chevron-right"></i>
-								</a>
-							</li>
-						{% endif %}
+						
 					</ul>
 				</div>
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        let currentPage = 1; // Page actuelle
+        const limit = 5; // Nombre d'éléments par page
 
-				{% block javascripts %}
-					{{ parent() }}
-				{% endblock %}
+        // Fonction pour charger les utilisateurs
+        function loadUsers(searchTerm, page) {
+            fetch(`{{ path('app_user_search') }}?searchTerm=${encodeURIComponent(searchTerm)}&page=${page}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('userTableBody');
+                tbody.innerHTML = ''; // Vide le tableau
+
+                if (data.users.length === 0) {
+                    // Affiche un message si aucun résultat n'est trouvé
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7">Aucun utilisateur trouvé</td>
+                        </tr>
+                    `;
+                } else {
+                    // Ajoute chaque utilisateur au tableau
+                    data.users.forEach(user => {
+                        const row = `
+                            <tr>
+                                <td>
+                                    <img src="${user.image ? '{{ asset('') }}' + user.image : '{{ asset('uploads/images/default-avatar.png') }}'}" alt="Image de ${user.firstName}" class="user-image">
+                                </td>
+                                <td>${user.firstName}</td>
+                                <td>${user.lastName}</td>
+                                <td>${user.number}</td>
+                                <td>${user.email}</td>
+                                <td>${user.roles.join(', ')}</td> <!-- Affiche les rôles -->
+                                <td>
+                                    <a href="{{ path('app_user_edit', {'id': 'USER_ID'}) }}" class="btn btn-success">Edit</a>
+                                    <a href="{{ path('app_user_delete', {'id': 'USER_ID'}) }}" class="btn btn-danger">Delete</a>
+                                </td>
+                            </tr>
+                        `.replace(/USER_ID/g, user.id); // Remplace USER_ID par l'ID de l'utilisateur
+
+                        tbody.insertAdjacentHTML('beforeend', row); // Ajoute la ligne au tableau
+                    });
+                }
+
+                // Met à jour la pagination
+                updatePagination(data.total, data.page, data.limit);
+            })
+            .catch(error => console.error('Erreur:', error)); // Affiche les erreurs dans la console
+        }
+
+        // Fonction pour mettre à jour la pagination
+        function updatePagination(total, page, limit) {
+            const totalPages = Math.ceil(total / limit); // Calcule le nombre total de pages
+            const pagination = document.querySelector('.pagination');
+            pagination.innerHTML = ''; // Vide la pagination
+
+            // Bouton "Précédent"
+            if (page > 1) {
+                pagination.innerHTML += `
+                    <li class="pagination-prev">
+                        <a href="#" onclick="loadUsers('${document.getElementById('searchInput').value}', ${page - 1})">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                `;
+            }
+
+            // Numéros de page
+            for (let i = 1; i <= totalPages; i++) {
+                pagination.innerHTML += `
+                    <li class="${i === page ? 'active' : ''}">
+                        <a href="#" onclick="loadUsers('${document.getElementById('searchInput').value}', ${i})">${i}</a>
+                    </li>
+                `;
+            }
+
+            // Bouton "Suivant"
+            if (page < totalPages) {
+                pagination.innerHTML += `
+                    <li class="pagination-next">
+                        <a href="#" onclick="loadUsers('${document.getElementById('searchInput').value}', ${page + 1})">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                `;
+            }
+        }
+
+        // Fonction debounce pour limiter les requêtes AJAX
+        function debounce(func, timeout = 300) {
+            let timer;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => { func.apply(this, args); }, timeout);
+            };
+        }
+
+        // Écouteur d'événement pour la recherche avec debounce
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', debounce(function (e) {
+            const searchTerm = e.target.value.trim();
+            currentPage = 1; // Réinitialise la page à 1 lors d'une nouvelle recherche
+            loadUsers(searchTerm, currentPage);
+        }));
+
+        // Charger les utilisateurs au démarrage
+        loadUsers('', currentPage);
+    </script>
+{% endblock %}
 			{% endblock %}
 		</body>
 	</html>

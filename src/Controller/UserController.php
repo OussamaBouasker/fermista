@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 #[Route('/user')]
 final class UserController extends AbstractController
 {
@@ -142,4 +144,45 @@ final class UserController extends AbstractController
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+
+ // src/Controller/UserController.php
+
+ #[Route('/user/search', name: 'app_user_search', methods: ['GET'])]
+ public function search(Request $request, UserRepository $userRepository): JsonResponse
+ {
+     $searchTerm = $request->query->get('searchTerm', '');
+     $page = $request->query->get('page', 1); // Récupère le numéro de page
+     $limit = 5; // Nombre d'éléments par page
+     $offset = ($page - 1) * $limit; // Calcule l'offset
+ 
+     // Récupère les utilisateurs paginés
+     $users = $userRepository->searchAndFilter($searchTerm, $offset, $limit)->getResult();
+ 
+     // Récupère le nombre total d'utilisateurs pour la pagination
+     $totalUsers = $userRepository->countSearchResults($searchTerm);
+ 
+     // Transforme les résultats en un tableau simple pour JSON
+     $data = [];
+     foreach ($users as $user) {
+         $data[] = [
+             'id' => $user->getId(),
+             'firstName' => $user->getFirstName(),
+             'lastName' => $user->getLastName(),
+             'email' => $user->getEmail(),
+             'roles' => $user->getRoles(),
+             'image' => $user->getImage(),
+             'number' => $user->getNumber(),
+         ];
+     }
+ 
+     // Renvoie les données avec des informations de pagination
+     return $this->json([
+         'users' => $data,
+         'total' => $totalUsers,
+         'page' => $page,
+         'limit' => $limit,
+     ]);
+ }
 }

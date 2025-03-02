@@ -19,18 +19,35 @@ final class ReclamationController extends AbstractController
     #[Route(name: 'app_reclamation_index', methods: ['GET'])]
     public function index(ReclamationRepository $reclamationRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        $query = $reclamationRepository->findAll();
-        $reclamations = $paginator->paginate(
-            $query, // Requête à paginer
-            $request->query->getInt('page', 1), // Numéro de page, 1 par défaut
-            5 // Nombre d'éléments par page
-        );
+        // Récupérer le filtre de statut depuis la requête
+        $statusFilter = $request->query->get('status');
     
+        // Créer un QueryBuilder pour adapter la requête
+        $qb = $reclamationRepository->createQueryBuilder('r');
+        
+        // Si un filtre est appliqué, ajouter la condition
+        if ($statusFilter) {
+             $qb->andWhere('r.status = :status')
+                ->setParameter('status', $statusFilter);
+        }
+    
+        // Ordonner les réclamations par date de soumission (du plus ancien au plus récent)
+        $qb->orderBy('r.dateSoumission', 'ASC');
+    
+        // Récupérer la requête finale
+        $query = $qb->getQuery();
+    
+        // Paginer les résultats
+        $reclamations = $paginator->paginate(
+            $query, 
+            $request->query->getInt('page', 1), 
+            5
+        );
+        
         return $this->render('Back/reclamation/index.html.twig', [
             'reclamations' => $reclamations,
         ]);
     }
-    
     #[Route('/new', name: 'app_reclamation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {

@@ -72,5 +72,39 @@ public function countUsersByRole(string $role): int
         ->getSingleScalarResult();
 }
 
+// src/Repository/UserRepository.php
+// src/Repository/UserRepository.php
+
+public function searchAndFilter($searchTerm, $offset = 0, $limit = 5)
+{
+    $queryBuilder = $this->createQueryBuilder('u');
+
+    if (!empty($searchTerm)) {
+        $queryBuilder
+            ->andWhere('u.firstName LIKE :searchTerm OR u.lastName LIKE :searchTerm OR u.email LIKE :searchTerm OR u.number LIKE :searchTerm OR u.roles LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . $searchTerm . '%');
+    }
+
+    // Ajoute la pagination
+    $queryBuilder
+        ->setFirstResult($offset)
+        ->setMaxResults($limit);
+
+    return $queryBuilder->getQuery();
+}
+
+public function countSearchResults($searchTerm)
+{
+    $queryBuilder = $this->createQueryBuilder('u')
+        ->select('COUNT(u.id)');
+
+    if (!empty($searchTerm)) {
+        $queryBuilder
+            ->andWhere('u.firstName LIKE :searchTerm OR u.lastName LIKE :searchTerm OR u.email LIKE :searchTerm OR u.number LIKE :searchTerm OR u.roles LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . $searchTerm . '%');
+    }
+
+    return $queryBuilder->getQuery()->getSingleScalarResult();
+}
 }
 
