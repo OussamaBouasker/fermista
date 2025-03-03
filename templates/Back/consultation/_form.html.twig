@@ -49,7 +49,15 @@
 		</div>
 	{% endif %}
 </div>
-
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.vache, "La vache correspondante", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.vache, {'attr': {'class': 'form-select'}}) }}
+	{% if form_errors(form.vache) %}
+		<div class="alert alert-danger mt-2 p-1">
+			{{ form_errors(form.vache) }}
+		</div>
+	{% endif %}
+</div>
 <button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>
 
 {{ form_end(form) }}

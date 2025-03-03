@@ -43,7 +43,7 @@ class WorkshopType extends AbstractType
             ->add('duration', TimeType::class, [
                 'widget'   => 'single_text',
                 'required' => true, // pour forcer la saisie
-            ])            ->add('nbrPlacesMax', IntegerType::class, [
+            ])->add('nbrPlacesMax', IntegerType::class, [
                 'label' => 'Nombre maximum de places',
                 'attr' => ['class' => 'form-control'],
             ])

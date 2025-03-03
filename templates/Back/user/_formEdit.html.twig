@@ -70,6 +70,18 @@
 	{{ form_errors(form.roles) }}
 </div>
 
+<div class="mb-3" style="gap: 20px; width:600px">
+	{{ form_label(form.image, "Photo de profil", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.image, {'attr': {'class': 'form-control' ~ (form.image.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+	{% if form.image.vars.errors|length > 0 %}
+		<div class="invalid-feedback">
+			<i class="bi bi-exclamation-triangle-fill"></i>
+			{{ form_errors(form.image) }}
+		</div>
+	{% endif %}
+</div>
+
+
 <button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>
 
 {{ form_end(form) }}

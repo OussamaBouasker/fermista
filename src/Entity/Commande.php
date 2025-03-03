@@ -19,7 +19,7 @@ class Commande
     #[ORM\Column]
     private ?int $id = null;
 
-    
+
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Assert\NotBlank(message: "La date de la commande est requise.")]
@@ -60,7 +60,7 @@ class Commande
 
     public function setId(?string $Id): static
     {
-        $this->Id = $Id;
+        $this->id = $Id;
 
         return $this;
     }

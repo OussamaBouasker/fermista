@@ -1,0 +1,34 @@
+{{ form_start(form, {'attr': {'id': 'suggest-form'}}) }}
+
+
+<div>
+	{{ form_label(form.date, "Date du rendez-vous", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.date, {'attr': {'class': 'form-control' ~ (form_errors(form.date) ? ' is-invalid' : '')}}) }}
+	{{ form_errors(form.date) }}
+
+</div>
+
+<div>
+	{{ form_label(form.heure, "Heure du rendez-vous", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.heure, {'attr': {'class': 'form-control' ~ (form_errors(form.heure) ? ' is-invalid' : '')}}) }}
+	{{ form_errors(form.heure) }}
+
+</div>
+
+<div>
+	{{ form_label(form.sex, "Sexe de la vache", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.sex, {'attr': {'class': 'form-control' ~ (form_errors(form.sex) ? ' is-invalid' : '')}}) }}
+	{{ form_errors(form.sex) }}
+
+</div>
+
+<div>
+	{{ form_label(form.cause, "La cause du rendez-vous", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_widget(form.cause, {'attr': {'class': 'form-control' ~ (form_errors(form.cause) ? ' is-invalid' : '')}}) }}
+	{{ form_errors(form.cause) }}
+
+
+</div>
+
+
+{{ form_end(form) }}

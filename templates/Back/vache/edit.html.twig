@@ -1,41 +1,46 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-<!DOCTYPE html>
-<html>
+	<!DOCTYPE html>
+	<html>
 
-<head>
-  <meta charset="UTF-8">
-  <title>{% block title %}Welcome!{% endblock %}</title>
-  <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-  {% block stylesheets %}
-  {{ parent() }}
+		<head>
+			<meta charset="UTF-8">
+			<title>
+				{% block title %}Welcome!
+				{% endblock %}
+			</title>
+			<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+			{% block stylesheets %}
+				{{ parent() }}
 
-  {% endblock %}
-</head>
+			{% endblock %}
+		</head>
 
-<body>
-  {% block body %}
+		<body>
+			{% block body %}
 
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; width:100% ">
-    <h1>Edit Vache</h1>
+				<div style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; width:100% ">
+					<h1>Edit Vache</h1>
 
-    {{ include('Back/vache/_form.html.twig', {'button_label': 'Update'}) }}
+					{{ include('Back/vache/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{path('app_vache_index') }}" style="text-decoration: none; color: black; padding-left:500px">back to
-      list</a>
+					<a href="{{path('app_vache_index') }}" style="text-decoration: none; color: black; padding-left:500px">back to
+						      list</a>
 
-      {{ include('Back/vache/_delete_form.html.twig') }}
-  </div>
+					{{ include('Back/vache/_delete_form.html.twig') }}
+				</div>
 
 
+				{% block javascripts %}
+					{{ parent() }}
+				{% endblock %}
 
-  {% block javascripts %}
-  {{ parent() }}
-  {% endblock %}
+				{% block javascripts %}
+					{{ parent() }}
+				{% endblock %}
 
-  {% endblock %}
-</body>
+			{% endblock %}
+		</body>
 
-</html>
+	</html>
 {% endblock %}

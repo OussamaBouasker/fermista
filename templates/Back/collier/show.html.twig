@@ -1,51 +1,57 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Collier{% endblock %}
+{% block title %}Collier
+{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-  <h1 class="text-center mb-4"> Collier </h1>
+	<div class="container mt-5">
+		<h1 class="text-center mb-4">
+			Collier
+		</h1>
 
-  <div class="card shadow-lg">
-    <div class="card-header" style="background-color: #6b8e23; color: white;"> <!-- Changement ici -->
-      <h4 class="m-0">Détails de Collier </h4>
-    </div>
-    <div class="card-body">
-      <table class="table table-bordered table-striped">
-  <tbody>
-    <tr>
-      <th>Id</th>
-      <td>{{ collier.id }}</td>
-    </tr>
-    <tr>
-      <th>Reference</th>
-      <td>{{ collier.reference }}</td>
-    </tr>
-    <tr>
-      <th>Taille</th>
-      <td>{{ collier.taille }}</td>
-    </tr>
-    <tr>
-      <th>ValeurTemperature</th>
-      <td>{{ collier.valeurTemperature }}</td>
-    </tr>
-    <tr>
-      <th>ValeurAgitation</th>
-      <td>{{ collier.valeurAgitation }}</td>
-    </tr>
+		<div class="card shadow-lg">
+			<div
+				class="card-header" style="background-color: #6b8e23; color: white;">
+				<!-- Changement ici -->
+				<h4 class="m-0">Détails de Collier
+				</h4>
+			</div>
+			<div class="card-body">
+				<table class="table table-bordered table-striped">
+					<tbody>
+						<tr>
+							<th>Id</th>
+							<td>{{ collier.id }}</td>
+						</tr>
+						<tr>
+							<th>Reference</th>
+							<td>{{ collier.reference }}</td>
+						</tr>
+						<tr>
+							<th>Taille</th>
+							<td>{{ collier.taille }}</td>
+						</tr>
+						<tr>
+							<th>ValeurTemperature</th>
+							<td>{{ collier.valeurTemperature }}</td>
+						</tr>
+						<tr>
+							<th>ValeurAgitation</th>
+							<td>{{ collier.valeurAgitation }}</td>
+						</tr>
 
-  </tbody>
-</table>
+					</tbody>
+				</table>
 
-      <div class="text-center mt-4">
-        <a href="{{ path('app_vache_index') }}" class="btn btn-secondary btn-lg">Retour à la liste</a>
-      </div>
-    </div>
-  </div>
+				<div class="text-center mt-4">
+					<a href="{{ path('app_vache_index') }}" class="btn btn-secondary btn-lg">Retour à la liste</a>
+				</div>
+			</div>
+		</div>
 
-  <div class="mt-4">
-{{ include('Back/collier/_delete_form.html.twig') }}
-  </div>
-</div>
+		<div class="mt-4">
+			{{ include('Back/collier/_delete_form.html.twig') }}
+		</div>
+	</div>
 
 {% endblock %}

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Vache;
 use App\Repository\ConsultationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,30 +17,52 @@ class Consultation
     #[ORM\Column]
     private ?int $id = null;
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotNull(message: "Le lieu ne peut pas être vide.")]
+    #[Assert\NotNull(message: "Le nom ne peut pas être vide.")]
     #[Assert\Regex(
         pattern: "/^[A-Za-z0-9À-ÿ\s]+$/",
-        message: "Le lieu ne doit contenir que des lettres et des chiffres."
+        message: "Le nom ne doit contenir que des lettres et des chiffres."
     )]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Assert\NotNull(message: "La date ne peut pas être vide.")]
-    #[Assert\GreaterThan("today", message: "La date doit être après aujourd’hui.")]
     private ?\DateTimeInterface $date = null;
+
+    #[Assert\Callback]
+    public function validateDateNotWeekend(ExecutionContextInterface $context, $payload): void
+    {
+        if ($this->date && in_array($this->date->format('N'), [6, 7])) {
+            $context->buildViolation("La date ne doit pas être dans les week-ends.")
+                ->atPath('date')
+                ->addViolation();
+        }
+    }
 
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
     #[Assert\NotNull(message: "L'heure ne peut pas être vide.")]
-    // #[Assert\GreaterThan("now", message: "L'heure doit être dans le futur.")]
     private ?\DateTimeInterface $heure = null;
 
+    #[Assert\Callback]
+    public function validateHeure(ExecutionContextInterface $context, $payload): void
+    {
+        if ($this->heure) {
+            // On récupère l'heure sous forme d'entier (ex : 9, 10, ...)
+            $heure = (int)$this->heure->format('H');
+            if ($heure < 9 || $heure >= 18) {
+                $context->buildViolation("L'heure de la consultation doit être entre 09h00 et 18h00.")
+                    ->atPath('heure')
+                    ->addViolation();
+            }
+        }
+    }
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotNull(message: "Le lieu ne peut pas être vide.")]
     #[Assert\Regex(
         pattern: "/^[A-Za-z0-9À-ÿ\s]+$/",
-        message: "Le lieu ne doit contenir que des lettres et des chiffres."
+        message: "Le lieu ne doit contenir que des lettres et des chiffres.",
+
     )]
     private ?string $lieu = null;
 
@@ -64,7 +87,20 @@ class Consultation
         return $this;
     }
 
+    #[ORM\ManyToOne(targetEntity: Vache::class, inversedBy: 'consultations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Vache $vache = null;
 
+    public function getVache(): ?Vache
+    {
+        return $this->vache;
+    }
+
+    public function setVache(?Vache $vache): static
+    {
+        $this->vache = $vache;
+        return $this;
+    }
 
     #[Assert\Callback]
     public function validateDateHeure(ExecutionContextInterface $context): void

@@ -1,40 +1,40 @@
 <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f8f9fa;">
-    <div style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); width: 700px; max-height: 90%; overflow-y: auto;">
-        {{ form_start(form, {'attr': {'class': 'form-group', 'novalidate': 'novalidate'}}) }}
+	<div style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); width: 700px; max-height: 90%; overflow-y: auto;">
+		{{ form_start(form, {'attr': {'class': 'form-group', 'novalidate': 'novalidate'}}) }}
 
-        <h2 class="text-center mb-5">Modifier le Produit</h2>
+		<h2 class="text-center mb-5">Modifier le Produit</h2>
 
-        {% for field in [form.Nom, form.Prix, form.Etat, form.Description, form.categorie, form.commande] %}
-            <div class="mb-4">
-                {{ form_label(field, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-                {{ form_widget(field, {'attr': {'class': 'form-control', 'placeholder': 'Entrez ' ~ field.vars.label|lower}}) }}
-                {% if field.vars.errors|length > 0 %}
-                    <div class="alert alert-danger mt-2 p-2" style="border-left: 5px solid #dc3545; border-radius: 5px;">
-                        {% for error in field.vars.errors %}
-                            <p class="mb-0 fw-bold">{{ error.message }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-        {% endfor %}
+		{% for field in [form.Nom, form.Prix, form.Etat, form.Description, form.categorie, form.commande] %}
+			<div class="mb-4">
+				{{ form_label(field, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+				{{ form_widget(field, {'attr': {'class': 'form-control', 'placeholder': 'Entrez ' ~ field.vars.label|lower}}) }}
+				{% if field.vars.errors|length > 0 %}
+					<div class="alert alert-danger mt-2 p-2" style="border-left: 5px solid #dc3545; border-radius: 5px;">
+						{% for error in field.vars.errors %}
+							<p class="mb-0 fw-bold">{{ error.message }}</p>
+						{% endfor %}
+					</div>
+				{% endif %}
+			</div>
+		{% endfor %}
 
-        <!-- Champ image -->
-        <div class="mb-4">
-            {{ form_label(form.image, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
-            {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
-            {% if form.image.vars.errors|length > 0 %}
-                <div class="alert alert-danger mt-2 p-2" style="border-left: 5px solid #dc3545; border-radius: 5px;">
-                    {% for error in form.image.vars.errors %}
-                        <p class="mb-0 fw-bold">{{ error.message }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        </div>
+		<!-- Champ image -->
+		<div class="mb-4">
+			{{ form_label(form.image, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+			{{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+			{% if form.image.vars.errors|length > 0 %}
+				<div class="alert alert-danger mt-2 p-2" style="border-left: 5px solid #dc3545; border-radius: 5px;">
+					{% for error in form.image.vars.errors %}
+						<p class="mb-0 fw-bold">{{ error.message }}</p>
+					{% endfor %}
+				</div>
+			{% endif %}
+		</div>
 
-        <div class="text-center mt-5">
-            <button class="btn btn-dark btn-lg px-5">{{ button_label|default('Enregistrer') }}</button>
-        </div>
+		<div class="text-center mt-5">
+			<button class="btn btn-dark btn-lg px-5">{{ button_label|default('Enregistrer') }}</button>
+		</div>
 
-        {{ form_end(form) }}
-    </div>
+		{{ form_end(form) }}
+	</div>
 </div>
