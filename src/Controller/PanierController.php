@@ -15,7 +15,10 @@ class PanierController extends AbstractController
 {
     #[Route('/panier', name: 'panier_index')]
     public function index(SessionInterface $session): Response
-    {
+    {   
+        if (!$session->has('panier')) {
+            $session->set('panier', []); // Ne pas recréer automatiquement un panier rempli
+        }
         $panier = $session->get('panier', []);
 
         // Calcul du total
@@ -49,9 +52,11 @@ class PanierController extends AbstractController
         } else {
             $panier[$id] = [
                 'id' => $produit->getId(),
+                'image' => $produit->getImage(),
                 'name' => $produit->getNom(),
                 'price' => $produit->getPrix(),
                 'quantity' => 1
+                
             ];
         }
 

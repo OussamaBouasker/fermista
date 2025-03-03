@@ -1,0 +1,371 @@
+{% extends 'Front/frontbase.html.twig' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Produits Laitiers{% endblock %}</title>
+
+    {% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .fruite-img img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        .fruite-img img:hover {
+            transform: scale(1.05);
+        }
+        .fruite-item {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .product-item {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .product-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+        .product-category,
+        .product-state {
+            position: absolute;
+            top: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+        }
+        .product-category {
+            background-color: #6c757d;
+            left: 10px;
+        }
+        .product-state {
+            background-color: #007bff;
+            right: 10px;
+        }
+        .product-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .add-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .add-button:hover {
+            background-color: #218838;
+        }
+        .form-range {
+            width: 100%;
+            max-width: 400px;
+            display: block;
+            margin: 10px auto;
+        }
+        .filter-container {
+            margin-top: 30px;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .filter-title {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .pagination a {
+            padding: 10px 15px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #333;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .pagination a:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+        .separator {
+            border-top: 1px solid #ddd;
+            margin: 30px 0;
+        }
+        .footer {
+            background-color: #222;
+            color: #aaa;
+            padding: 40px 0;
+        }
+        .footer a {
+            color: #bbb;
+            transition: color 0.3s ease;
+        }
+        .footer a:hover {
+            color: #f1f1f1;
+        }
+    </style>
+    {% endblock %}
+</head>
+
+<body>
+    {% block body %}
+    <div class="container mt-5">
+        <a href="{{ path('app_produit_index') }}" class="add-button">+ Ajouter un produit</a>
+        <h2 class="text-center mb-4">🧀 Collection Produits Laitiers 🥛</h2>
+
+        <div class="alert alert-info text-center" id="product-count">
+            <strong>Il y a actuellement {{ produits|length }} produits dans notre collection !</strong>
+        </div>
+        <a href="{{ path('app_produit_index') }}" class="add-button">+ Ajouter un produit</a>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="filter-container">
+                    <h2 class="text-center mb-4">🧀 Collection Produits Laitiers 🥛</h2>
+                    
+                    <h3 class="filter-title">Recherche par nom</h3>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Cherchez un produit...">
+                    <br>
+                    <h3 class="filter-title">Filtrer par prix</h3>
+                    <label for="priceFilter">Prix maximum:</label>
+                    <span id="minPrice">0</span> DT
+                    <input type="range" id="priceFilter" min="0" max="1000" step="1" value="1000" class="form-range">
+                    <span id="maxPrice">1000</span> DT (<span id="priceValue">1000</span> DT sélectionné)
+                    <br>
+                    <br>
+
+                    <h3 class="filter-title">Trier par prix</h3>
+                    <select id="sortPrice" class="form-control">
+                        <option value="asc">Du prix le plus bas au plus élevé</option>
+                        <option value="desc">Du prix le plus élevé au plus bas</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="separator"></div>
+                <div class="row g-4" id="product-list">
+                    {% for produit in produits %}
+                    <div class="col-md-6 col-lg-6 col-xl-4 product-item" data-price="{{ produit.Prix }}" data-name="{{ produit.Nom | lower }}">
+                        <div class="position-relative fruite-item">
+                            <div class="fruite-img">
+                                <img src="{{ asset('uploads/images/' ~ produit.image) }}" class="img-fluid w-100 rounded-top" alt="{{ produit.Nom }}">
+                            </div>
+                            <div class="text-white product-category">{{ produit.categorie }}</div>
+                            <div class="product-state">{{ produit.Etat }}</div>
+                            <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                <h4 class="product-name">{{ produit.Nom }}</h4>
+                                <p>{{ produit.Description }}</p>
+                                <div class="button-container">
+                                    <p class="text-dark fs-5 fw-bold mb-0">{{ produit.Prix }} DT</p>
+                                    <a href="{{ path('panier_add', {'id': produit.id}) }}" class="btn btn-outline-primary rounded-pill px-3">
+                                        <i class="fa fa-shopping-bag me-2"></i> Ajouter au panier
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+  <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
+        <div class="container py-5">
+            <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(226, 175, 24, 0.5) ;">
+                <div class="row g-4">
+                    <div class="col-lg-3">
+                        <a href="#">
+                            <h1 class="text-primary mb-0">Fermista</h1>
+                            <p class="text-secondary mb-0">Produits Laitiers</p>
+                        </a>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="position-relative mx-auto">
+                            <input class="form-control border-0 w-100 py-3 px-4 rounded-pill" type="number" placeholder="Your Email">
+                            <button type="submit" class="btn btn-primary border-0 border-secondary py-3 px-4 position-absolute rounded-pill text-white" style="top: 0; right: 0;">Subscribe Now</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="d-flex justify-content-end pt-3">
+                            <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i class="fab fa-youtube"></i></a>
+                            <a class="btn btn-outline-secondary btn-md-square rounded-circle" href=""><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-item">
+                        <h4 class="text-light mb-3">Pourquoi les gens nous aiment !</h4>
+                        <p class="mb-4">Chez Fermista, nous offrons des produits laitiers frais de qualité supérieure, à des prix attractifs. Notre priorité est la satisfaction de nos clients, et cela se reflète dans notre service et nos produits uniques. Venez découvrir pourquoi nous sommes le choix préféré de nombreux clients !</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="d-flex flex-column text-start footer-item">
+                        <h4 class="text-light mb-3">Shop Info</h4>
+                        <a class="btn-link" href="">About Us</a>
+                        <a class="btn-link" href="">Contact Us</a>
+                        <a class="btn-link" href="">Privacy Policy</a>
+                        <a class="btn-link" href="">Terms & Condition</a>
+                        <a class="btn-link" href="">Return Policy</a>
+                        <a class="btn-link" href="">FAQs & Help</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="d-flex flex-column text-start footer-item">
+                        <h4 class="text-light mb-3">Account</h4>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-item">
+                        <h4 class="text-light mb-3">Contact</h4>
+                        <p>Address: Tunisie , Tunis</p>
+                        <p>Email: Fermista@gmail.com</p>
+                        <p>Payment Accepté</p>
+                        <img src="img/payment.png" class="img-fluid" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% block javascripts %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const itemsPerPage = 6;
+        let currentPage = 1;
+        let products = Array.from(document.querySelectorAll(".product-item"));
+        let totalPages = Math.ceil(products.length / itemsPerPage);
+        let pagination = document.getElementById("pagination");
+        let priceFilter = document.getElementById("priceFilter");
+        let priceValue = document.getElementById("priceValue");
+        let searchInput = document.getElementById("searchInput");
+        let sortPrice = document.getElementById("sortPrice");
+
+        function showPage(page) {
+            currentPage = page;
+            let start = (currentPage - 1) * itemsPerPage;
+            let end = start + itemsPerPage;
+
+            products.forEach((product, index) => {
+                product.style.display = index >= start && index < end ? "block" : "none";
+            });
+
+            updatePagination();
+            updateProductCount(); // Met à jour le nombre de produits visibles
+        }
+
+        function updatePagination() {
+            pagination.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                let pageLink = document.createElement("a");
+                pageLink.textContent = i;
+                pageLink.href = "#";
+                pageLink.classList.add("btn", "btn-outline-secondary");
+                pageLink.classList.toggle("active", i === currentPage);
+                pageLink.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    showPage(i);
+                });
+                pagination.appendChild(pageLink);
+            }
+        }
+
+        function sortProducts() {
+            let sortedProducts = [...products];
+            let order = sortPrice.value;
+
+            sortedProducts.sort((a, b) => {
+                let priceA = parseInt(a.getAttribute("data-price"));
+                let priceB = parseInt(b.getAttribute("data-price"));
+                return order === "asc" ? priceA - priceB : priceB - priceA;
+            });
+
+            // Réorganiser les éléments sur la page
+            let productList = document.getElementById("product-list");
+            productList.innerHTML = "";
+            sortedProducts.forEach(product => {
+                productList.appendChild(product);
+            });
+
+            // Refaire le rendu de la pagination après le tri
+            totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+            showPage(1);
+        }
+
+        function filterProducts() {
+            let searchText = searchInput.value.toLowerCase();
+            let maxPrice = parseInt(priceFilter.value);
+
+            products.forEach(product => {
+                let productName = product.getAttribute("data-name");
+                let productPrice = parseInt(product.getAttribute("data-price"));
+                let isVisible = (productPrice <= maxPrice) && (productName.includes(searchText));
+                product.style.display = isVisible ? "block" : "none";
+            });
+
+            // Mettre à jour le compteur de produits
+            updateProductCount();
+        }
+
+        priceFilter.addEventListener("input", function () {
+            priceValue.textContent = priceFilter.value;
+            filterProducts();
+        });
+
+        searchInput.addEventListener("input", filterProducts);
+
+        // Appel de la fonction de tri lors de la sélection du tri
+        sortPrice.addEventListener("change", sortProducts);
+
+        function updateProductCount() {
+            const productCount = document.querySelectorAll('.product-item:visible').length;
+            const productCountMessage = document.getElementById('product-count');
+            productCountMessage.innerHTML = `<strong>Il y a actuellement ${productCount} produits dans notre collection !</strong>`;
+        }
+
+        showPage(currentPage);
+    });
+</script>
+</html>
+{% endblock %}
+{% endblock %}
+{% endblock %}
+
+
+

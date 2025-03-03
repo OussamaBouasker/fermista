@@ -68,6 +68,15 @@
         .container-fluid {
             padding: 2rem;
         }
+
+        .cart-summary-card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .cart-summary-card .card-body {
+            padding: 2rem;
+        }
     </style>
 </head>
 
@@ -118,7 +127,7 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="cart-items">
                     {% for item in panier %}
                     <tr id="item-{{ item.id }}">
                         <td>
@@ -140,13 +149,23 @@
                         </td>
                     </tr>
                     {% endfor %}
-                </tbody>
+                </tbody>                    
             </table>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <h4 class="font-weight-bold">Total de Panier: <span id="total">{{ total }} Dinar</span></h4>
-            <a href="/commandefront/nouvelle" class="btn btn-primary">Commander</a>
+        <!-- Card to display total -->
+        <div class="cart-summary-card card mt-5">
+            <div class="card-body">
+                <h4 class="card-title">Résumé du Panier</h4>
+                <hr>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <h5 class="font-weight-bold">Total: <span id="total">{{ total }} Dinar</span></h5>
+                    <div>
+                        <button id="clear-cart" class="btn btn-danger me-2">🗑 Vider le panier</button>
+                        <a href="/commandefront/nouvelle" class="btn btn-primary">Passer à la commander</a>
+                    </div>
+                </div>
+            </div>
         </div>
         {% endif %}
     </div>
@@ -163,16 +182,14 @@
             document.getElementById('total').innerText = total.toFixed(2) + ' Dinar';
         }
 
-        // Gestion de l'événement de suppression d'un produit
+        // Suppression d'un produit
         document.querySelectorAll('.remove').forEach(button => {
             button.addEventListener('click', function () {
                 const itemId = this.dataset.itemId;
                 const row = document.getElementById('item-' + itemId);
                 row.remove();
-                updateTotal();  // Recalculer le total après suppression
-                // Mettre à jour le compte du panier
-                const count = document.querySelectorAll('.remove').length;
-                document.getElementById('cart-count').innerText = count;
+                updateTotal();
+                document.getElementById('cart-count').innerText = document.querySelectorAll('.remove').length;
             });
         });
 
@@ -182,7 +199,7 @@
                 const itemId = this.dataset.itemId;
                 const quantitySpan = document.getElementById('quantity-' + itemId);
                 let quantity = parseInt(quantitySpan.innerText);
-                if (quantity > 1) {  // Eviter la quantité négative
+                if (quantity > 1) {
                     quantity--;
                     quantitySpan.innerText = quantity;
                     const subtotalSpan = document.getElementById('subtotal-' + itemId);
@@ -206,10 +223,33 @@
                 updateTotal();
             });
         });
+
+        // Vider tout le panier avec confirmation
+        document.getElementById('clear-cart').addEventListener('click', function () {
+            if (confirm("Êtes-vous sûr de vouloir vider le panier ?")) {
+                fetch('/panier/clear', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            document.getElementById('cart-items').innerHTML = '';
+                            document.getElementById('total').innerText = '0.00 Dinar';
+                            document.getElementById('cart-count').innerText = '0';
+                        } else {
+                            alert('Erreur lors de la suppression du panier');
+                        }
+                    })
+                    .catch(error => console.error('Erreur:', error));
+            }
+        });
     </script>
     {% endblock %}
 
-    {% endblock %}
+{% endblock %}
 </body>
 
 </html>

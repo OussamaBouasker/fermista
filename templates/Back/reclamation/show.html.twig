@@ -38,12 +38,12 @@
 							<th>Statut</th>
 							<td>
 										{% if reclamation.status == 'pending' %}
-											<label class="badge badge-danger" style="padding:20px ; font-size:13px" >Pending</label>
+											<label class="badge badge-danger" style="padding:20px ; font-size:13px " >Pending</label>
 											
 										{% elseif reclamation.status == 'confirmed' %}
-											<label class="badge badge-success" style="padding:20px ; font-size:13px">Completed</label>
+											<label class="badge badge-success" style="padding:20px ; font-size:13px">Confirmed</label>
 										{% elseif reclamation.status == 'canceled' %}
-											<label class="badge badge-warning" style="padding:20px ; font-size:13px">In progress</label>
+											<label class="badge badge-warning" style="padding:20px ; font-size:13px">canceled</label>
 										{% endif %}
 									</td>
 						</tr>
@@ -51,6 +51,7 @@
 							<th>DateSoumission</th>
 							<td>{{ reclamation.dateSoumission ? reclamation.dateSoumission|date('Y-m-d H:i:s') : '' }}</td>
 						</tr>
+						
 					</tbody>
 				</table>
 

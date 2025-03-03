@@ -1,6 +1,4 @@
 <?php
-
-// src/Form/CommandeFrontType.php
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;

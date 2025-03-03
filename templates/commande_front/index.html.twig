@@ -1,6 +1,4 @@
-
 {% extends 'Front/frontbase.html.twig' %}
-
 
 {% block title %}Nouvelle Commande{% endblock %}
 
@@ -14,55 +12,122 @@
             <div class="card p-4">
                 <h4>Informations de Commande</h4>
                 <div class="form-group">
-                    {{ form_row(form.nom) }}
+                    {{ form_row(form.nom, {'attr': {'required': 'required'}}) }}
                 </div>
                 <div class="form-group">
-                    {{ form_row(form.email) }}
+                    {{ form_row(form.email, {'attr': {'required': 'required'}}) }}
                 </div>
                 <div class="form-group">
-                    {{ form_row(form.localisation) }}
+                    {{ form_row(form.localisation, {'attr': {'required': 'required'}}) }}
                 </div>
-
-                <button type="submit" class="btn btn-primary mt-3">Commander</button>
+                <button type="button" class="btn btn-secondary mt-3" id="open-map-btn">Sélectionner votre localisation</button>
+                <button type="submit" class="btn btn-primary mt-3" id="submit-btn">Commander</button>
             </div>
             {{ form_end(form) }}
         </div>
     </div>
 
-    <!-- Intégration de la carte Leaflet -->
-    <div id="map" style="height: 300px; margin-top: 30px;"></div>
+    <!-- Carte cachée par défaut -->
+    <div id="map-container" style="position: relative; height: 400px; margin-top: 30px; display: none;">
+        <div id="close-map-btn" style="position: absolute; top: 10px; right: 10px; background: rgba(0, 0, 0, 0.5); color: white; border: none; padding: 5px 10px; cursor: pointer; font-size: 16px;">X</div>
+        <div id="map" style="height: 100%;"></div>
+    </div>
 </div>
 
-<!-- Ajout des scripts pour Leaflet -->
+<!-- Intégration de la bibliothèque Leaflet et OpenStreetMap -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<!-- Intégration de SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-    // Initialisation de la carte Leaflet avec les coordonnées de départ
-    var map = L.map('map').setView([36.8065, 10.1815], 13); // Coordonnées par défaut (ex : Tunis)
+    var map;
+    var marker;
 
-    // Ajout du fond de carte
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(map);
+    // Fonction pour initialiser la carte avec Leaflet
+    function initMap() {
+        map = L.map('map').setView([36.8065, 10.1815], 13);
 
-    // Ajouter un marqueur par défaut
-    var marker = L.marker([36.8065, 10.1815]).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
 
-    // Lorsque l'on clique sur la carte, déplacer le marqueur à l'endroit cliqué et mettre à jour la localisation
-    map.on('click', function (e) {
-        marker.setLatLng(e.latlng);  // Déplacer le marqueur
-        // Mettre à jour la valeur du champ caché avec les nouvelles coordonnées
-        document.querySelector('[name="commande[localisation]"]').value = e.latlng.lat + ',' + e.latlng.lng;
+        marker = L.marker([36.8065, 10.1815], {draggable: true}).addTo(map);
+
+        marker.on('dragend', function() {
+            var latLng = marker.getLatLng();
+            document.querySelector('[name="commande[localisation]"]').value = latLng.lat + ',' + latLng.lng;
+            reverseGeocode(latLng);
+        });
+
+        map.on('click', function(e) {
+            marker.setLatLng(e.latlng);
+            document.querySelector('[name="commande[localisation]"]').value = e.latlng.lat + ',' + e.latlng.lng;
+            reverseGeocode(e.latlng);
+        });
+    }
+
+    // Affichage de la carte
+    document.getElementById('open-map-btn').addEventListener('click', function() {
+        document.getElementById('map-container').style.display = 'block';
+        initMap();
+        window.scrollTo(0, document.body.scrollHeight);
     });
 
-    // Si une localisation a déjà été définie, mettre à jour le marqueur sur la carte
-    var localisation = document.querySelector('[name="commande[localisation]"]').value;
-    if (localisation) {
-        var coords = localisation.split(',');
-        var lat = parseFloat(coords[0]);
-        var lng = parseFloat(coords[1]);
-        marker.setLatLng([lat, lng]);
-        map.setView([lat, lng], 13); // Déplacer la carte à la localisation enregistrée
+    // Fonction de fermeture de la carte
+    document.getElementById('close-map-btn').addEventListener('click', function() {
+        document.getElementById('map-container').style.display = 'none';
+    });
+
+    // Fonction de géocodage inverse
+    function reverseGeocode(latLng) {
+        var lat = latLng.lat;
+        var lng = latLng.lng;
+        var url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.address) {
+                    var locationName = data.address.city || data.address.town || data.address.village || data.address.country;
+                    if (!locationName) {
+                        locationName = data.address.road || data.address.country;
+                    }
+                    document.querySelector('[name="commande[localisation]"]').value = locationName;
+                } else {
+                    console.log('Aucune adresse trouvée');
+                }
+            })
+            .catch(error => console.log('Erreur de géocodage inverse :', error));
     }
+
+    // Validation du formulaire et pop-up
+    document.querySelector('form').addEventListener('submit', function(event) {
+        var nom = document.querySelector('[name="commande[nom]"]');
+        var email = document.querySelector('[name="commande[email]"]');
+        var localisation = document.querySelector('[name="commande[localisation]"]');
+
+        if (!nom.value.trim() || !email.value.trim() || !localisation.value.trim()) {
+            event.preventDefault();
+            alert('Tous les champs doivent être remplis!');
+        } else {
+            // Affichage du pop-up après soumission
+            event.preventDefault();  // Empêche la soumission immédiate du formulaire pour afficher le pop-up
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Commande passée avec succès!',
+                text: 'Votre commande a été enregistrée. Vous serez redirigé vers le shop.',
+                confirmButtonText: 'OK',
+                showCancelButton: false,
+                allowOutsideClick: false
+            }).then(function() {
+                // Redirection vers la page du shop après le pop-up
+                window.location.href = '/home';  // Remplacez '/shop' par l'URL de votre page shop
+            });
+        }
+    });
 </script>
 
 {% endblock %}
