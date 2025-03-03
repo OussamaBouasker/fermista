@@ -11,6 +11,8 @@ use App\Enum\EnumRole;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
 class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -51,6 +53,19 @@ class UserType extends AbstractType
             'attr' => [
                 'class' => 'block w-full p-3 border border-gray-300 rounded-md text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'
             ]
+            ])
+            ->add('image', FileType::class, [
+                'label' => 'Photo de profil (JPG ou PNG)',
+                'mapped' => false,
+                'required' => false,
+                'attr' => ['class' => 'form-control'],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => ['image/jpeg', 'image/png'],
+                        'mimeTypesMessage' => 'Veuillez télécharger une image JPG ou PNG valide',
+                    ]),
+                ],
             ]);
         
     }

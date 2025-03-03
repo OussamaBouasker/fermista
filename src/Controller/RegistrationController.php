@@ -18,9 +18,7 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(private EmailVerifier $emailVerifier)
-    {
-    }
+    public function __construct(private EmailVerifier $emailVerifier) {}
 
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
@@ -30,6 +28,29 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $mimeType = $imageFile->getMimeType();
+                if (!in_array($mimeType, ['image/jpeg', 'image/png'])) {
+                    $this->addFlash('error', 'Seules les images JPEG et PNG sont autorisées.');
+                    return $this->redirectToRoute('app_register');
+                }
+
+                if ($imageFile->getSize() > 2 * 1024 * 1024) { // Limite de 2 Mo
+                    $this->addFlash('error', 'L\'image ne doit pas dépasser 2 Mo.');
+                    return $this->redirectToRoute('app_register');
+                }
+
+                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/images';
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+
+                // Déplacer l'image
+                $imageFile->move($destination, $newFilename);
+
+                // Enregistrer le chemin de l'image dans l'entité User
+                $user->setImage('uploads/images/' . $newFilename);
+            }
+
             // Get password from form
             $plainPassword = $form->get('password')->getData();
 
@@ -41,12 +62,14 @@ class RegistrationController extends AbstractController
 
             $selectedRole = $form->get('roles')->getData(); // Get the selected role
             $user->setRoles([$selectedRole]); // Store it as an array
-    
+
             $entityManager->persist($user);
             $entityManager->flush();
 
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email',
+                $user,
                 (new TemplatedEmail())
                     ->from(new Address('no-reply@fermista.com', 'No Reply'))
                     ->to((string) $user->getEmail())
