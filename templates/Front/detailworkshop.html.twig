@@ -185,22 +185,32 @@
 					<h1 class="text-white position-relative z-index-2">{{ workshop.titre }}</h1>
 				</div>
 
-{% if workshop.type == 'Atelier Live' and hasReservation %}
-    {% if existingReservation.status == 'pending' %}
+{% if workshop.type == 'Atelier Live' %}
+    {% if app.user == workshop.user %}
         <div class="container mt-4">
-            <div class="alert alert-warning" role="alert">
-                <i class="fa fa-hourglass-half me-2"></i>
-                Votre réservation est en cours de traitement. Le lien sera disponible après confirmation.
-            </div>
-        </div>
-    {% elseif existingReservation.status == 'confirmed' %}
-        <div class="container mt-4">
-            <div class="alert alert-success" role="alert">
+            <div class="alert alert-primary" role="alert">
                 <i class="fa fa-video me-2"></i>
                 <strong>Jitsi Meeting Link:</strong>
-                <a href="{{ workshop.meetlink }}" target="_blank" class="text-success">{{ workshop.meetlink }}</a>
+                <a href="{{ workshop.meetlink }}" target="_blank" class="text-primary">{{ workshop.meetlink }}</a>
             </div>
         </div>
+    {% elseif hasReservation %}
+        {% if existingReservation.status == 'pending' %}
+            <div class="container mt-4">
+                <div class="alert alert-warning" role="alert">
+                    <i class="fa fa-hourglass-half me-2"></i>
+                    Votre réservation est en cours de traitement. Le lien sera disponible après confirmation.
+                </div>
+            </div>
+        {% elseif existingReservation.status == 'confirmed' %}
+            <div class="container mt-4">
+                <div class="alert alert-success" role="alert">
+                    <i class="fa fa-video me-2"></i>
+                    <strong>Jitsi Meeting Link:</strong>
+                    <a href="{{ workshop.meetlink }}" target="_blank" class="text-success">{{ workshop.meetlink }}</a>
+                </div>
+            </div>
+        {% endif %}
     {% endif %}
 {% endif %}
 

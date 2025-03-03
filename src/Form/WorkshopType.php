@@ -17,6 +17,7 @@ use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class WorkshopType extends AbstractType
 {
@@ -71,12 +72,12 @@ class WorkshopType extends AbstractType
             ->add('user', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => function (User $user) {
-                    return $user->getFirstName() . ' ' . $user->getLastName(); 
+                    return $user->getFirstName() . ' ' . $user->getLastName();
                 },
                 'label' => 'Formateur',
                 'placeholder' => 'Sélectionnez un formateur',
                 'required' => false,
-                'query_builder' => function(\App\Repository\UserRepository $userRepository) {
+                'query_builder' => function (\App\Repository\UserRepository $userRepository) {
                     return $userRepository->createQueryBuilder('u')
                         ->where('u.roles LIKE :role')
                         ->setParameter('role', '%ROLE_FORMATEUR%');
@@ -87,6 +88,11 @@ class WorkshopType extends AbstractType
                 ],
                 // 'disabled' => true, // Désactivé par défaut
             ])
+
+            // ->add('keywords', TextType::class, [
+            //     'required' => false,
+            //     'attr' => ['placeholder' => 'Entrez les mots-clés']
+            // ]);
             ;
     }
 

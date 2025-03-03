@@ -251,28 +251,42 @@
 							<div class="tab-content">
 								<div id="tab-1" class="tab-pane fade show p-0 active">
 									<div class="row g-4" id="workshops-container">
-										{% for workshop in workshops %}
-											<div class="col-md-6 col-lg-4 col-xl-3 workshop-item">
-												<div class="rounded position-relative fruite-item border border-secondary">
-													<div class="fruite-img">
-														<img src="{{ asset('uploads/images/' ~ workshop.image) }}" alt="Workshop Image"/>
-													</div>
-													<div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 15px; left: 15px;">{{ workshop.type }}</div>
-													<div class="p-4 border-top-0 rounded-bottom">
-														<h4 class="text-center">{{ workshop.titre }}</h4>
-														<p class="text-muted">{{ workshop.description }}</p>
-														<div class="d-flex justify-content-between align-items-center">
-															<p class="text-dark fs-5 fw-bold mb-0">{{ workshop.prix }}
-																DT</p>
-															<a href="{{ path('app_workshop_detail', {'id': workshop.id}) }}" class="btn border border-secondary rounded-pill px-3">
-																<i class="fa fa-shopping-bag me-2"></i>
-																Afficher détails
-															</a>
-														</div>
-													</div>
-												</div>
-											</div>
-										{% endfor %}
+{% for workshop in workshops %}
+    <div class="col-md-6 col-lg-4 col-xl-3 workshop-item">
+        <div class="rounded position-relative fruite-item border border-secondary">
+            <div class="fruite-img">
+                <img src="{{ asset('uploads/images/' ~ workshop.image) }}" alt="Workshop Image"/>
+            </div>
+            <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 15px; left: 15px;">{{ workshop.type }}</div>
+            <div class="p-4 border-top-0 rounded-bottom">
+                <h4 class="text-center">{{ workshop.titre }}</h4>
+                <p class="text-muted">{{ workshop.description }}</p>
+
+                <!-- Section Formateur -->
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fa fa-user me-2 text-secondary"></i> <!-- Icône utilisateur -->
+                    <p class="text-dark fs-6 fw-bold mb-0">
+                        {% if workshop.user %}
+                            <span class="badge bg-light text-dark border border-secondary rounded-pill px-3 py-1">
+                                {{ workshop.user.firstName }} {{ workshop.user.lastName }}
+                            </span>
+                        {% else %}
+                            <span class="text-muted fst-italic">Aucun formateur attribué</span>
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="text-dark fs-5 fw-bold mb-0">{{ workshop.prix }} DT</p>
+                    <a href="{{ path('app_workshop_detail', {'id': workshop.id}) }}" class="btn border border-secondary rounded-pill px-3">
+                        <i class="fa fa-shopping-bag me-2"></i>
+                        Afficher détails
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
 									</div>
 								</div>
 							</div>

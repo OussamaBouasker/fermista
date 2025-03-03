@@ -27,7 +27,16 @@ final class WorkshopFrontController extends AbstractController
         $search = $request->query->get('search'); // Récupérer le terme de recherche
 
         // Create the base query
-        $queryBuilder = $em->getRepository(Workshop::class)->createQueryBuilder('w');
+        $queryBuilder = $em->getRepository(Workshop::class)->createQueryBuilder('w')
+            ->leftJoin('w.user', 'u') // Joindre l'entité User
+            ->addSelect('u'); // Sélectionner aussi les utilisateurs pour éviter des requêtes supplémentaires
+
+        // If a type is specified, filter workshops by type
+        if ($type) {
+            $queryBuilder->andWhere('w.type = :type')
+                ->setParameter('type', $type);
+        }
+
 
         // If a type is specified, filter workshops by type
         if ($type) {
@@ -37,9 +46,9 @@ final class WorkshopFrontController extends AbstractController
                 $queryBuilder->where('w.type = :type')->setParameter('type', 'Formation autonome');
             }
         }
-
+        // If a search term is provided, filter workshops by title, description, type, or user (firstName, lastName)
         if ($search) {
-            $queryBuilder->andWhere('w.titre LIKE :search OR w.description LIKE :search OR w.type LIKE :search')
+            $queryBuilder->andWhere('w.titre LIKE :search OR w.description LIKE :search OR w.type LIKE :search OR u.firstName LIKE :search OR u.lastName LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
         }
 
@@ -66,7 +75,7 @@ final class WorkshopFrontController extends AbstractController
     {
         $user = $this->getUser(); // Récupérer l'utilisateur connecté
         $existingReservation = null;
-        
+
         if ($user) {
             // Récupère la réservation existante, quel que soit le statut (pending, confirmed, etc.)
             $existingReservation = $entityManager->getRepository(Reservation::class)->findOneBy([
@@ -79,38 +88,38 @@ final class WorkshopFrontController extends AbstractController
         if ($workshop->getType() === "Atelier Live" && $hasReservation && $existingReservation->getStatus() === 'confirmed') {
             $showJitsiLink = true;
         }
-        
+
         // Création d'une nouvelle réservation pour le formulaire (pour une nouvelle soumission)
         $newReservation = new Reservation();
         $newReservation->setWorkshop($workshop);
         $newReservation->setPrix($workshop->getPrix());
         $newReservation->setUser($user);
-        
+
         $form = $this->createForm(ReservationType::class, $newReservation);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             if (!$user) {
                 $this->addFlash('error', 'Vous devez être connecté pour réserver un workshop.');
                 return $this->redirectToRoute('app_login');
             }
-        
+
             if (!$newReservation->getStatus()) {
                 $newReservation->setStatus('pending'); // Statut par défaut avant confirmation
             }
-        
+
             if ($newReservation->isConfirmation()) {
                 $newReservation->setReservationDate(new \DateTime());
             }
-        
+
             $entityManager->persist($newReservation);
             $entityManager->flush();
-        
+
             $this->addFlash('success', 'Votre réservation a bien été enregistrée !');
-        
+
             return $this->redirectToRoute('app_workshop_detail', ['id' => $workshop->getId()]);
         }
-        
+
         return $this->render('Front/detailworkshop.html.twig', [
             'workshop' => $workshop,
             'form' => $form->createView(),
@@ -120,7 +129,7 @@ final class WorkshopFrontController extends AbstractController
             'existingReservation' => $existingReservation, // Réservation existante
         ]);
     }
-    
+
 
 
 
@@ -163,7 +172,7 @@ final class WorkshopFrontController extends AbstractController
         // Vérifier si la réservation existe et appartient à l'utilisateur connecté
         if (!$reservation || $reservation->getUser() !== $user) {
             $this->addFlash('danger', "Vous n'êtes pas autorisé à supprimer cette réservation.");
-            return $this->redirectToRoute('app_reservations'); // Redirection vers la liste des réservations
+            return $this->redirectToRoute('user_reservations'); // Redirection vers la liste des réservations
         }
 
         $entityManager->remove($reservation);
@@ -171,7 +180,7 @@ final class WorkshopFrontController extends AbstractController
 
         $this->addFlash('success', "Votre réservation a été annulée avec succès.");
 
-        return $this->redirectToRoute('app_reservations'); // Redirection après suppression
+        return $this->redirectToRoute('user_reservations'); // Redirection après suppression
     }
 
     #[Route('/reservation/pdf/{id}', name: 'app_reservation_pdf')]

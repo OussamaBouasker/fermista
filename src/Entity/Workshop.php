@@ -93,6 +93,9 @@ class Workshop
     #[ORM\ManyToOne(inversedBy: 'workshop')]
     private ?User $user = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $keywords = null;
+
 
     public const TYPE_LIVE_WORKSHOP = 'Atelier Live';
     public const TYPE_SELF_PACED_WORKSHOP = 'Formation Autonome';
@@ -286,6 +289,18 @@ class Workshop
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getKeywords(): ?string
+    {
+        return $this->keywords;
+    }
+
+    public function setKeywords(?string $keywords): static
+    {
+        $this->keywords = $keywords;
 
         return $this;
     }

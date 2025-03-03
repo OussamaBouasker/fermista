@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 #[Route('/workshop')]
 final class WorkshopController extends AbstractController
@@ -47,10 +48,19 @@ final class WorkshopController extends AbstractController
                 $workshop->setImage($newFilename);
             }
     
-            // Generate Jitsi link if the type is "Atelier Live"
-            if ($workshop->getType() === Workshop::TYPE_LIVE_WORKSHOP) {
-                $workshop->setMeetlink('https://meet.jit.si/' . uniqid('workshop-', true)); // Or implement your own logic for generating Jitsi links
-            }
+        // Génération du lien Jitsi si c'est un "Atelier Live"
+        if ($workshop->getType() === Workshop::TYPE_LIVE_WORKSHOP) {
+            $meetId = uniqid('workshop-', true);
+
+            // Récupération du formateur
+            $formateur = $workshop->getUser(); // Assure-toi que la relation existe
+            $formateurName = $formateur ? urlencode($formateur->getFirstName()) : 'Formateur';
+
+            // Génération du lien Jitsi avec les paramètres
+            $meetLink = "https://meet.jit.si/{$meetId}#userInfo.displayName=\"{$formateurName}\"&config.prejoinPageEnabled=false&config.hosts.moderator=true";
+
+            $workshop->setMeetlink($meetLink);
+        }
     
             $entityManager->persist($workshop);
             $entityManager->flush();
@@ -136,5 +146,5 @@ final class WorkshopController extends AbstractController
 
         return $this->redirectToRoute('app_workshop_index', [], Response::HTTP_SEE_OTHER);
     }
-    
+
 }
