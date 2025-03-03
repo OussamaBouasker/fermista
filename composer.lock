@@ -5,9 +5,9 @@
         "This file is @generated automatically"
     ],
 
+
     "content-hash": "e8f7da9e97b21bbf33312035017a44b0",
 
-    
     "packages": [
         {
             "name": "composer/semver",
@@ -1372,6 +1372,7 @@
             "time": "2024-12-27T00:36:43+00:00"
         },
         {
+
             "name": "fortawesome/font-awesome",
             "version": "6.7.2",
             "source": {
@@ -7097,6 +7098,7 @@
             "time": "2024-09-25T14:18:03+00:00"
         },
         {
+
             "name": "symfony/ux-chartjs",
             "version": "v2.23.0",
             "source": {
@@ -7108,10 +7110,12 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/ux-chartjs/zipball/bbe034301ac2a89855ec79d6d5123156071a50c0",
                 "reference": "bbe034301ac2a89855ec79d6d5123156071a50c0",
+
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1",
+
                 "symfony/config": "^5.4|^6.0|^7.0",
                 "symfony/dependency-injection": "^5.4|^6.0|^7.0",
                 "symfony/http-kernel": "^5.4|^6.0|^7.0",
@@ -7144,6 +7148,7 @@
             ],
             "authors": [
                 {
+
                     "name": "Titouan Galopin",
                     "email": "galopintitouan@gmail.com"
                 },
@@ -7152,6 +7157,7 @@
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
+
             "description": "Chart.js integration for Symfony",
             "homepage": "https://symfony.com",
             "keywords": [
@@ -7174,6 +7180,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2025-01-05T13:18:49+00:00"
         },
         {
@@ -7985,6 +7992,59 @@
                 }
             ],
             "time": "2025-01-29T07:06:14+00:00"
+        },
+        {
+            "name": "twilio/sdk",
+            "version": "8.3.15",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twilio/twilio-php.git",
+                "reference": "3113e8a672edf5e012120fa6fafc201e013c7ba4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/3113e8a672edf5e012120fa6fafc201e013c7ba4",
+                "reference": "3113e8a672edf5e012120fa6fafc201e013c7ba4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^6.3 || ^7.0",
+                "phpunit/phpunit": ">=7.0 < 10"
+            },
+            "suggest": {
+                "guzzlehttp/guzzle": "An HTTP client to execute the API requests"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Twilio\\": "src/Twilio/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Twilio API Team",
+                    "email": "api@twilio.com"
+                }
+            ],
+            "description": "A PHP wrapper for Twilio's API",
+            "homepage": "https://github.com/twilio/twilio-php",
+            "keywords": [
+                "api",
+                "sms",
+                "twilio"
+            ],
+            "support": {
+                "issues": "https://github.com/twilio/twilio-php/issues",
+                "source": "https://github.com/twilio/twilio-php/tree/8.3.15"
+            },
+            "time": "2025-02-20T14:18:17+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -10317,6 +10377,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
+
     "stability-flags": [],
     "stability-flags": {},
     "stability-flags": [],
@@ -10327,6 +10388,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*"
     },
+
     "platform-dev": [],
     "platform-dev": {},
     "platform-dev": [],

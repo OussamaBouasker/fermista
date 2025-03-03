@@ -13,7 +13,6 @@
         "doctrine/doctrine-bundle": "^2.13",
         "doctrine/doctrine-migrations-bundle": "^3.4",
         "doctrine/orm": "^3.3",
-
         "dompdf/dompdf": "^3.1",
         "google/apiclient": "^2.18",
 
@@ -48,6 +47,7 @@
         "symfony/string": "6.4.*",
         "symfony/translation": "6.4.*",
         "symfony/twig-bundle": "6.4.*",
+
         "symfony/ux-chartjs": "^2.23",
         "symfony/ux-turbo": "^2.22",
         "symfony/validator": "6.4.*",
@@ -58,7 +58,8 @@
         "symfonycasts/verify-email-bundle": "^1.17",
         "twbs/bootstrap": "^5.3",
         "twig/extra-bundle": "^2.12|^3.0",
-        "twig/twig": "^2.12|^3.0"
+        "twig/twig": "^2.12|^3.0",
+        "twilio/sdk": "^8.3"
     },
     "config": {
         "allow-plugins": {

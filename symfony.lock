@@ -27,6 +27,7 @@
         ]
     },
 
+
     "google/apiclient": {
         "version": "2.18",
         "recipe": {
@@ -269,6 +270,7 @@
             "./templates/base.html.twig"
         ]
     },
+
     "symfony/ux-chartjs": {
         "version": "v2.23.0"
     },

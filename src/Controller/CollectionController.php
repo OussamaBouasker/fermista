@@ -18,4 +18,6 @@ final class CollectionController extends AbstractController
             'produits' => $produits, // Envoyer les produits au template
         ]);
     }
+
+    
 }
