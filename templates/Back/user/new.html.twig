@@ -17,6 +17,7 @@
 		<body>
 			{% block body %}
 
+
 								<div style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; width:180% ">
 									<h1>Create new User</h1>
 									{{ include('Back/user/_form.html.twig') }}
@@ -25,12 +26,11 @@
 							
 
 
-					{% block javascripts %}
-						{{ parent() }}
-					{% endblock %}
-
+				{% block javascripts %}
+					{{ parent() }}
 				{% endblock %}
-			</body>
+
+			{% endblock %}
 		</body>
 	</html>
-{% endblock %}
+</body></html>{% endblock %}

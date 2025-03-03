@@ -17,6 +17,7 @@
 		<body>
 			{% block body %}
 
+
 								<div style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; width:160% ">
 									<h1>Edit Reclamation</h1>
 									{{ include('Back/reclamation/_formEdit.html.twig') }}
@@ -25,12 +26,11 @@
 							
 
 
-					{% block javascripts %}
-						{{ parent() }}
-					{% endblock %}
-
+				{% block javascripts %}
+					{{ parent() }}
 				{% endblock %}
-			</body>
+
+			{% endblock %}
 		</body>
 	</html>
-{% endblock %}
+</body></html>{% endblock %}

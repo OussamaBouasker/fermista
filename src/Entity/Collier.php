@@ -12,7 +12,7 @@ class Collier
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer',nullable: true)]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -34,7 +34,7 @@ class Collier
     )]
     private ?string $reference = null;
 
-    #[ORM\Column(length: 255,nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(message: "La taille est obligatoire.")]
     #[Assert\Regex(
         pattern: "/^[a-zA-Z0-9]+$/",
@@ -42,7 +42,7 @@ class Collier
     )]
     private ?string $taille = null;
 
-    #[ORM\Column(type: 'float',nullable: true)]
+    #[ORM\Column(type: 'float', nullable: true)]
     #[Assert\NotNull(message: "La valeur de la température est obligatoire.")]
     #[Assert\Range(
         min: 36,

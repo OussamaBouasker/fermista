@@ -4,7 +4,10 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3aefbe28225c8cf56f663dcf462ca712",
+
+    "content-hash": "e8f7da9e97b21bbf33312035017a44b0",
+
+    
     "packages": [
         {
             "name": "composer/semver",
@@ -7729,9 +7732,9 @@
             "description": "Symfony bundle that adds password reset functionality.",
             "support": {
                 "issues": "https://github.com/SymfonyCasts/reset-password-bundle/issues",
-                "source": "https://github.com/SymfonyCasts/reset-password-bundle/tree/v1.23.1"
+                "source": "https://github.com/SymfonyCasts/reset-password-bundle/tree/v1.14.1"
             },
-            "time": "2024-12-09T19:04:36+00:00"
+            "time": "2022-08-03T17:23:36+00:00"
         },
         {
             "name": "symfonycasts/verify-email-bundle",
@@ -10315,6 +10318,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
+    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -10322,6 +10327,8 @@
         "ext-ctype": "*",
         "ext-iconv": "*"
     },
+    "platform-dev": [],
+    "platform-dev": {},
     "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }

@@ -24,7 +24,7 @@
 </div>
 
 <div class="mb-3" style="gap: 20px; width:600px">
-	{{ form_label(form.sex, "Sexe de la vache", {'label_attr': {'class': 'form-label'}}) }}
+	{{ form_label(form.sex, "Sex de la vache", {'label_attr': {'class': 'form-label'}}) }}
 	{{ form_widget(form.sex, {'attr': {'class': 'form-control' ~ (form_errors(form.sex) ? ' is-invalid' : '')}}) }}
 	{% if form_errors(form.sex) %}
 		<div class="alert alert-danger mt-2 p-1">
@@ -42,6 +42,7 @@
 		</div>
 	{% endif %}
 </div>
+
 
 <button class="btn btn-outline-dark btn-fw">{{ button_label|default('Enregistrer') }}</button>
 

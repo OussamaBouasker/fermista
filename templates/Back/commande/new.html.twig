@@ -1,43 +1,43 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-<!DOCTYPE html>
-<html>
+	<!DOCTYPE html>
+	<html>
 
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-    {% block stylesheets %}
-    {{ parent() }}
+		<head>
+			<meta charset="UTF-8">
+			<title>
+				{% block title %}Welcome!
+				{% endblock %}
+			</title>
+			<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+			{% block stylesheets %}
+				{{ parent() }}
 
-    {% endblock %}
-</head>
+			{% endblock %}
+		</head>
 
-<body>
-    {% block body %}
+		<body>
+			{% block body %}
 
-    <h1>Create new Commande</h1>
+				<h1>Create new Commande</h1>
 
-    {{ include('Back/commande/_form.html.twig') }}
+				{{ include('Back/commande/_form.html.twig') }}
 
-    <div class="text-center mt-3">
-        <a href="{{ path('app_commande_index') }}" class="btn btn-secondary btn-lg">Back to List</a>
-    </div>
-
-
-
-
+				<div class="text-center mt-3">
+					<a href="{{ path('app_commande_index') }}" class="btn btn-secondary btn-lg">Back to List</a>
+				</div>
 
 
+				{% block javascripts %}
+					{{ parent() }}
+				{% endblock %}
+
+			{% endblock %}
+		</body>
 
 
-    {% block javascripts %}
-    {{ parent() }}
-    {% endblock %}
-
-    {% endblock %}
-</body>
-
-</html>
-{% endblock %}
+		{% block javascripts %}
+			{{ parent() }}
+		{% endblock %}
+	{% endblock %}
+</html></body></html>{% endblock %}

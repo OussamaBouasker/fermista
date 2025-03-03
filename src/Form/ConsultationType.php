@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Consultation;
 use App\Entity\RapportMedical;
+use App\Entity\Vache;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,6 +26,11 @@ class ConsultationType extends AbstractType
             ->add('lieu')
             ->add('rapportmedical', EntityType::class, [
                 'class' => RapportMedical::class,
+                'choice_label' => 'id',
+
+            ])
+            ->add('vache', EntityType::class, [
+                'class' => Vache::class,
                 'choice_label' => 'id',
 
             ])

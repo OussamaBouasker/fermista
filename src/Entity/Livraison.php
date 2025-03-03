@@ -17,7 +17,6 @@ class Livraison
     #[ORM\Column]
     private ?int $id = null;
 
-    
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Assert\NotBlank(message: "La date de livraison est obligatoire.")]
@@ -27,8 +26,8 @@ class Livraison
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Assert\NotBlank(message: "Le lieu est obligatoire.")]
     #[Assert\Length(
-    max: 255,
-    maxMessage: "Le lieu ne peut pas dépasser {{ limit }} caractères."
+        max: 255,
+        maxMessage: "Le lieu ne peut pas dépasser {{ limit }} caractères."
     )]
     #[Assert\Regex(
         pattern: "/^[A-Z][a-zA-Z0-9\s]*$/",
@@ -43,7 +42,7 @@ class Livraison
         max: 255,
         minMessage: "Le nom doit contenir au moins {{ limit }} caractères.",
         maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères."
-        )]
+    )]
     #[Assert\Regex(
         pattern: "/^[a-zA-Z\s]+$/",
         message: "Le nom du livreur doit contenir uniquement des lettres et des espaces, sans chiffres."
@@ -68,7 +67,7 @@ class Livraison
 
     public function setId(?int $Id): static
     {
-        $this->Id = $Id;
+        $this->id = $Id;
 
         return $this;
     }
