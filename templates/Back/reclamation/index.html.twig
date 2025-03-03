@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+
 {% block content %}
 	<!DOCTYPE html>
 	<html>
@@ -8,28 +9,155 @@
 				{% block title %}Welcome!
 				{% endblock %}
 			</title>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 			<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
 			{% block stylesheets %}
-				{{ parent() }}
+				<style>
+					table thead th {
+						background-color: rgb(211, 211, 211) !important; /* Gris pastel */
+						color: white !important; /* Texte en blanc */
+						font-weight: bold !important;
+						font-size: 16px !important;
+						font-family: 'Arial', sans-serif !important;
+						text-align: center !important;
+						padding: 12px 15px !important;
+						border: 1px solid #ddd !important;
+						text-transform: uppercase !important;
+						letter-spacing: 1px !important;
+					}
 
+					/* Centering h1 */
+					h1 {
+						text-align: center;
+						width: 100%;
+					}
+
+					/* Pagination styles */
+					.pagination {
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						padding: 15px;
+						list-style: none;
+						gap: 6px;
+					}
+					.pagination a,
+					.pagination span {
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						width: 40px;
+						height: 40px;
+						text-decoration: none;
+						border-radius: 50%;
+						font-size: 15px;
+						font-weight: 600;
+						background-color: #D3D3D3; /* Gris pastel simple */
+						border: none;
+						color: #4F4F4F; /* Gris foncé */
+						transition: all 0.3s ease-in-out;
+						box-shadow: 0 3px 6px rgba(169, 169, 169, 0.3);
+					}
+					.pagination a:hover {
+						background-color: #C0C0C0; /* Gris clair */
+						color: white;
+						transform: translateY(-2px);
+						box-shadow: 0 5px 10px rgba(169, 169, 169, 0.4);
+					}
+
+						.filter-form-container {
+		max-width: 300px;
+		margin: 30px auto;
+		padding: 15px 20px;
+		background: #f9f9f9;
+		border: 1px solid #e0e0e0;
+		border-radius: 12px;
+		box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+		font-family: 'Arial', sans-serif;
+	}
+	.filter-form-container h2 {
+		text-align: center;
+		font-size: 20px;
+		margin-bottom: 15px;
+		color: #333;
+	}
+	.filter-form-container .form-group label {
+		font-size: 14px;
+		margin-bottom: 5px;
+		display: block;
+		color: #555;
+	}
+	.input-group {
+		display: flex;
+	}
+	.input-group .form-select {
+		flex: 1;
+		padding: 8px;
+		font-size: 14px;
+		border: 1px solid #ccc;
+		border-radius: 8px 0 0 8px;
+		transition: border-color 0.3s;
+	}
+	.input-group .form-select:focus {
+		border-color:rgb(163, 214, 173);
+		outline: none;
+	}
+	.input-group .btn-submit {
+		padding: 8px 15px;
+		font-size: 14px;
+		background-color:rgb(146, 202, 162);
+		color: #fff;
+		border: none;
+		border-radius: 0 8px 8px 0;
+		cursor: pointer;
+		transition: background-color 0.3s, transform 0.2s;
+	}
+	.input-group .btn-submit:hover {
+		background-color:rgb(177, 221, 189);
+		transform: translateY(-2px);
+	}
+				</style>
+				{{ parent() }}
 			{% endblock %}
 		</head>
 		<body>
 			{% block body %}
 
 				<div class="content-wrapper pb-0">
-					<div style="display: flex; justify-content: space-between; align-items: center; padding-left: 50px;">
+					<!-- Conteneur centré pour le titre -->
+					<div class="title-container">
 						<h1>Gestion Réclamations</h1>
 						{# <div class="col-sm-6 col-md-4 col-lg-3" style="padding: 10px; size:20px">
 																									<i class="fa fa-plus-square"></i>
 																								<a href="{{ path('app_reclamation_new') }}" style="text-decoration: none; color: black;">Create new</a>
 																							</div>
 																		 #}
+
 					</div>
+
+					<!-- Formulaire de filtre -->
+					<div class="filter-form-container">
+  <form method="get" action="{{ path('app_reclamation_index') }}" novalidate id="filterForm">
+    <div class="form-group">
+      <label for="status">Statut :</label>
+      <div class="input-group animate-group">
+        <select name="status" id="status" class="form-select">
+          <option value="">Tous</option>
+          <option value="pending" {{ app.request.get('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+          <option value="confirmed" {{ app.request.get('status') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+          <option value="canceled" {{ app.request.get('status') == 'canceled' ? 'selected' : '' }}>Canceled</option>
+        </select>
+        <button type="submit" class="btn-submit">Filtrer</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+					<!-- Fin formulaire de filtre -->
+
 					<table class="table">
 						<thead>
 							<tr>
-
 								<th>Titre</th>
 								<th>Description</th>
 								<th>Statut</th>
@@ -41,13 +169,11 @@
 						<tbody>
 							{% for reclamation in reclamations %}
 								<tr>
-
 									<td>{{ reclamation.titre }}</td>
 									<td>{{ reclamation.description }}</td>
 									<td>
 										{% if reclamation.status == 'pending' %}
 											<label class="badge badge-danger" style="padding:13px ; font-size:13px">Pending</label>
-
 										{% elseif reclamation.status == 'confirmed' %}
 											<label class="badge badge-success" style="padding:13px ; font-size:13px">Confirmed</label>
 										{% elseif reclamation.status == 'canceled' %}
@@ -58,13 +184,8 @@
 									<td>{{ reclamation.user ? reclamation.user.email : 'N/A' }}</td>
 
 									<td>
-
-
 										<a href="{{ path('app_reclamation_edit', {'id': reclamation.id}) }}" class="btn btn-success" style="text-decoration: none; color: #F2F2F2;">Edit</a>
-
-
 										<a href="{{ path('app_reclamation_delete', {'id': reclamation.id}) }}" class="btn btn-danger" style="text-decoration: none; color: #F2F2F2;">Delete</a>
-
 									</td>
 								</tr>
 							{% else %}
@@ -75,15 +196,24 @@
 						</tbody>
 					</table>
 
-
 				</div>
+				<!-- Pagination -->
+				<div class="navigation">
+					{{ knp_pagination_render(reclamations) }}
+				</div>
+			</body>
+		</html>
+	</div>
 
+	{% block javascripts %}
+		{{ parent() }}
+		<script>
+  document.getElementById('filterForm').addEventListener('submit', function(e) {
+      var btn = this.querySelector('button');
+      btn.disabled = true;
+      btn.textContent = 'Filtrage en cours...';
+  });
+</script>
+	{% endblock %}
 
-				{% block javascripts %}
-					{{ parent() }}
-				{% endblock %}
-
-			{% endblock %}
-		</body>
-	</html>
-</body></html>{% endblock %}
+{% endblock %}</body></html></body></html>{% endblock %}

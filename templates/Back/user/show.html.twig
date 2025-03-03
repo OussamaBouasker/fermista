@@ -22,9 +22,17 @@
 				<table class="table">
 					<tbody>
 						<tr>
-							<th>Id</th>
-							<td>{{ user.id }}</td>
+
+							<th>Image</th>
+							<td>
+								{% if user.image %}
+											<img src="{{ asset(user.image) }}" alt="Image de {{ user.firstName }}" class="user-image">
+										{% else %}
+											<img src="{{ asset('uploads/images/default-avatar.png') }}" alt="default" class="user-image">
+										{% endif %}
+							</td>
 						</tr>
+
 						<tr>
 							<th>Prénom</th>
 							<td>{{ user.firstName }}</td>
@@ -51,45 +59,7 @@
 				{{ include('Back/user/_delete_form.html.twig') }}
 				<a href="{{ path('app_user_index') }}" style="text-decoration: none; color: black; padding-left:950px">back to list</a>
 
-
-				<h1>Delete User</h1>
-
-				<table class="table">
-					<tbody>
-						<tr>
-							<th>Id</th>
-							<td>{{ user.id }}</td>
-						</tr>
-						<tr>
-							<th>Prénom</th>
-							<td>{{user.firstName}}</td>
-						</tr>
-						<tr>
-							<th>Nom</th>
-							<td>{{user.lastName}}</td>
-						</tr>
-						<tr>
-							<th>NumTel</th>
-							<td>{{user.number}}</td>
-						</tr>
-						<tr>=======>>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
-							<th>Email</th>
-							<td>{{ user.email }}</td>
-						</tr>
-						<tr>
-							<th>Role</th>
-							<td>{{user.roles|join('')}}</td>
-						</tr>=======<th>Roles</th>
-						<td>{{user.roles?user.roles|json_encode:''}}</td>
-					</tbody>
-				</tr>
-				<tr>
-					<th>Password</th>
-					<td>{{user.password}}</td>
-				</tr>
-
-				{{ include('Back/user/_delete_form.html.twig') }}
-				<a href="{{ path('app_user_index') }}" style="text-decoration: none; color: black; padding-left:950px">back to list</a>
+				
 
 				{% block javascripts %}
 					{{ parent() }}
@@ -99,4 +69,4 @@
 			{% endblock %}
 		</body>
 	</html>
-{% endblock %}
+</body></html>{% endblock %}

@@ -26,6 +26,7 @@
             "./migrations/.gitignore"
         ]
     },
+
     "google/apiclient": {
         "version": "2.18",
         "recipe": {
@@ -37,6 +38,10 @@
         "files": [
             "./config/packages/google_apiclient.yaml"
         ]
+
+    "gregwar/captcha-bundle": {
+        "version": "v2.3.0"
+
     },
     "knplabs/knp-paginator-bundle": {
         "version": "v6.6.1"
@@ -263,6 +268,9 @@
             "./config/packages/twig.yaml",
             "./templates/base.html.twig"
         ]
+    },
+    "symfony/ux-chartjs": {
+        "version": "v2.23.0"
     },
     "symfony/ux-turbo": {
         "version": "2.22",
