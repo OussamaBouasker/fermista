@@ -18,7 +18,6 @@ class Livraison
     private ?int $id = null;
 
 
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Assert\NotBlank(message: "La date de livraison est obligatoire.")]
     #[Assert\GreaterThan("today", message: "La date de livraison doit être dans le futur.")]

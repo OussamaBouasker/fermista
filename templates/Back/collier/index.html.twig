@@ -30,6 +30,8 @@
 				</div>
 
 
+				<a href="{{ path('app_collier_edit', {'id': collier.id}) }} " class="btn btn-success" style="text-decoration: none; color: #F2F2F2;">Edit</a>
+
 				<table class="table">
 					<thead>
 						<tr>
@@ -52,30 +54,28 @@
 
 								<td>
 
-
-									<a href="{{ path('app_collier_edit', {'id': collier.id}) }} " class="btn btn-success" style="text-decoration: none; color: #F2F2F2;">Edit</a>
-
-
 									<a href="{{ path('app_collier_delete', {'id': collier.id}) }}" class="btn btn-danger" style="text-decoration: none; color: #F2F2F2;">Delete</a>
 								</td>
 
 
+								<a href="{{ path('app_collier_edit', {'id': collier.id}) }} " class="btn btn-success" style="text-decoration: none; color: #F2F2F2;">Edit</a>
+
+
+								<a href="{{ path('app_collier_delete', {'id': collier.id}) }}" class="btn btn-danger" style="text-decoration: none; color: #F2F2F2;">Delete</a>
 							</tr>
-						{% else %}
-							<tr>
-								<td colspan="6">no records found</td>
-							</tr>
-						{% endfor %}
+						</td>
 					</tbody>
-				</table>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="6">no records found</td>
+				</tr>
+			{% endfor %}
+		</html>
+	</tbody>
+</table>
 
 
-				{% block javascripts %}
-					{{ parent() }}
-				{% endblock %}
-
-			{% endblock %}
-		</body>
-
-	</html>
-{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+{% endblock %}{% endblock %}</body>{% block javascripts %}{{ parent() }}{% endblock %}{% endblock %}</body></html>{% endblock %}

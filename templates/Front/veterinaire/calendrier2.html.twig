@@ -1,0 +1,889 @@
+{% extends 'Front/frontbase.html.twig' %}
+
+{% block title %}Calendrier des Consultations
+{% endblock %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+	<style>
+		/* Vos styles généraux */
+		body {
+			font-family: 'Poppins', sans-serif;
+			background: white;
+			color: #333;
+			margin: 130px 0 0;
+			padding: 170px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: flex-start;
+			height: 100vh;
+		}
+		h1 {
+			margin-top: 150px;
+			font-size: 2.5rem;
+			text-align: center;
+			color: #fff;
+			font-weight: 700;
+			letter-spacing: 1px;
+			text-transform: uppercase;
+			margin-bottom: 40px;
+		}
+		.calendar-container {
+			background: rgba(255, 255, 255, 0.9);
+			padding: 40px;
+			border-radius: 20px;
+			box-shadow: 0 5px 40px rgba(0, 0, 0, 0.2);
+			backdrop-filter: blur(15px);
+			text-align: center;
+			width: 80%;
+			max-width: 700px;
+			margin-top: 20px;
+		}
+		#calendar-input {
+			background: #fff;
+			border: 2px solid #aaa;
+			padding: 15px;
+			border-radius: 10px;
+			font-size: 20px;
+			width: 100%;
+			text-align: center;
+			box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+			transition: border-color 0.3s ease;
+		}
+		#calendar-input:focus {
+			outline: none;
+			border-color: #5e5e5e;
+		}
+		.flatpickr-calendar.inline {
+			display: grid;
+			grid-gap: 30px;
+			position: relative;
+			left: 150px;
+			top: 15px;
+		}
+		.flatpickr-day {
+			transition: background 0.3s, transform 0.3s;
+		}
+		.flatpickr-day:hover {
+			background: #b3e6b3;
+			transform: scale(1.1);
+			cursor: pointer;
+		}
+		.flatpickr-day.consultation {
+			background: #c8e6c9 !important;
+			color: #2e4d3d !important;
+			border-radius: 50%;
+			font-weight: bold;
+			border: 2px solid #66cc66 !important;
+			transition: all 0.3s ease-in-out;
+		}
+		.flatpickr-day.consultation:hover {
+			background: #66cc66 !important;
+			color: white !important;
+			transform: scale(1.15);
+			cursor: pointer;
+		}
+		#consultation-popup,
+		.form-popup,
+		#edit-modal {
+			position: fixed;
+			top: 80px;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.5);
+			display: none;
+			align-items: center;
+			justify-content: center;
+			z-index: 1000;
+		}
+		.popup-content {
+			background: #ffffff;
+			padding: 20px;
+			border-radius: 10px;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+			max-width: 500px;
+			width: 90%;
+			text-align: center;
+			position: relative;
+			top: 20px;
+			animation: fadeIn 0.3s ease-in-out;
+			z-index: 1001;
+			max-height: 90vh;
+			overflow-y: auto;
+		}
+		.popup-close,
+		.modal-close {
+			position: absolute;
+			top: 10px;
+			right: 15px;
+			cursor: pointer;
+			font-size: 18px;
+			color: #ff4d4d;
+		}
+		@keyframes fadeIn {
+			from {
+				transform: translateY(-10px);
+				opacity: 0;
+			}
+			to {
+				transform: translateY(0);
+				opacity: 1;
+			}
+		}
+		.buttons {
+			display: flex;
+			flex-direction: row;
+			gap: 10px;
+			padding-top: 20px;
+		}
+		button {
+			background: #66cc66;
+			color: white;
+			padding: 5px 10px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background 0.3s ease-in-out;
+			font-size: 14px;
+			margin: 20px;
+		}
+		button:hover {
+			background: #28a745;
+		}
+		ul {
+			list-style: none;
+			padding: 0;
+		}
+		li {
+			margin: 10px 0;
+		}
+		.popup-content form label,
+		.popup-content form input,
+		.popup-content form textarea,
+		.popup-content form select {
+			display: block;
+			width: 100%;
+			margin-bottom: 5px;
+			box-sizing: border-box;
+		}
+		.form-error {
+			color: #d9534f;
+			background-color: #f9e2e2;
+			border: 1px solid #d9534f;
+			padding: 6px 10px;
+			border-radius: 4px;
+			font-size: 0.9em;
+			margin-top: 5px;
+		}
+		input.error,
+		select.error,
+		textarea.error {
+			border: 1px solid #d9534f;
+			background-color: #f9e2e2;
+		}
+		.formeditrapport {
+			padding-top: 50px;
+			height: 500px;
+		}
+	</style>
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+	<div class="search-container">
+		<form method="get" action="{{ path('app_vache_search') }}" id="vache-search-form">
+			<input type="text" name="nom" id="vache-search" placeholder="Nom de la vache" list="vache-list">
+			<datalist id="vache-list">
+				{% if allVaches is defined %}
+					{% for v in allVaches %}
+						<option value="{{ v.name }}">
+						{% endfor %}
+					{% endif %}
+				</datalist>
+				<button type="submit">Rechercher</button>
+			</form>
+		</div>
+
+		{# Affichage des consultations d'une vache dans une popup si elle est trouvée #}
+		{% if vache is defined and vache %}
+			<script>
+				document.addEventListener("DOMContentLoaded", function () {
+let popup = document.getElementById("consultation-popup");
+let popupContent = document.querySelector("#consultation-popup .popup-content");
+let html = `<h3>Consultations pour {{ vache.name }}</h3>`;{% if consultations|length > 0 %}html += `<ul>`;{% for consultation in consultations %}html += `<li>
+							<strong>{{ consultation.nom }}</strong> le {{ consultation.date ? consultation.date|date('d/m/Y') : 'N/A' }}
+							à {{ consultation.heure ? consultation.heure|date('H:i') : 'N/A' }} - {{ consultation.lieu }}
+						</li>`;{% endfor %}html += `</ul>`;
+html += `<a href="{{ path('app_vache_pdf', {'id': vache.id}) }}" target="_blank" class="button">Exporter en PDF</a>`;
+{% else %}html += `<p>Aucune consultation trouvée pour cette vache.</p>`;{% endif %}popupContent.innerHTML = html;
+popup.style.display = "flex";
+});
+			</script>
+		{% endif %}
+
+		{% set tomorrow = "now"|date_modify("+1 day")|date("Y-m-d") %}
+		{% set consultationToken = csrf_token('consultation') %}
+
+		<h1>📆 Consultations</h1>
+		<div class="button-container">
+			<button onclick="toggleFormPopup('consultation-form-popup')">Ajouter une consultation</button>
+			<button onclick="toggleFormPopup('rapport-medical-form-popup')">Ajouter un rapport médical</button>
+		</div>
+
+		{# --- Popup création Consultation --- #}
+		<div id="consultation-form-popup" class="form-popup">
+			<div class="popup-content">
+				<span class="popup-close" onclick="toggleFormPopup('consultation-form-popup')">✖</span>
+				<h2>Ajouter une Consultation</h2>
+				{{ form_start(consultationForm, {'attr': {'class': 'form-group', 'novalidate': 'novalidate'}}) }}
+				<div class="form-group">
+					{{ form_label(consultationForm.nom) }}
+					{{ form_widget(consultationForm.nom, {
+					'attr': {
+						'placeholder': 'Entrez le nom',
+						'pattern': '^[A-Za-z0-9À-ÿ\\s]+$'
+					}
+				}) }}
+					{{ form_errors(consultationForm.nom) }}
+				</div>
+				<div class="form-group">
+					{{ form_label(consultationForm.date) }}
+					{{ form_widget(consultationForm.date, {'attr': {'min': tomorrow}}) }}
+					{{ form_errors(consultationForm.date) }}
+				</div>
+				<div class="form-group">
+					{{ form_label(consultationForm.heure) }}
+					{{ form_widget(consultationForm.heure, {'attr': {'min': '09:00', 'max': '18:00'}}) }}
+					{{ form_errors(consultationForm.heure) }}
+				</div>
+				<div class="form-group">
+					{{ form_label(consultationForm.lieu) }}
+					{{ form_widget(consultationForm.lieu, {
+					'attr': {
+						'placeholder': 'Entrez le lieu',
+						'pattern': '^[A-Za-z0-9À-ÿ\\s]+$'
+					}
+				}) }}
+					{{ form_errors(consultationForm.lieu) }}
+				</div>
+				<div class="form-group">
+					{{ form_label(consultationForm.rapportmedical) }}
+					{{ form_widget(consultationForm.rapportmedical) }}
+					{{ form_errors(consultationForm.rapportmedical) }}
+				</div>
+				<div class="form-group">
+					{{ form_label(consultationForm.vache) }}
+					{{ form_widget(consultationForm.vache) }}
+					{{ form_errors(consultationForm.vache) }}
+				</div>
+				<button type="submit">Enregistrer la consultation</button>
+				{{ form_end(consultationForm) }}
+			</div>
+		</div>
+
+		{# --- Popup création Rapport Médical --- #}
+		<div id="rapport-medical-form-popup" class="form-popup">
+			<div class="popup-content">
+				<span class="popup-close" onclick="toggleFormPopup('rapport-medical-form-popup')">✖</span>
+				<h2>Ajouter un Rapport Médical</h2>
+				{{ form_start(rapportMedicalForm, {'attr': {'class': 'form-group', 'novalidate': 'novalidate'}}) }}
+				<div class="form-group">
+					{{ form_label(rapportMedicalForm.num) }}
+					{{ form_widget(rapportMedicalForm.num, { 'attr': {'placeholder': 'Entrez le numéro'} }) }}
+					{{ form_errors(rapportMedicalForm.num) }}
+				</div>
+				<div class="form-group">
+					{{ form_label(rapportMedicalForm.race) }}
+					{{ form_widget(rapportMedicalForm.race, { 'attr': {'placeholder': 'Entrez la race'} }) }}
+					{{ form_errors(rapportMedicalForm.race) }}
+				</div>
+				<div class="form-group">
+					{{ form_label(rapportMedicalForm.historique_de_maladie) }}
+					{{ form_widget(rapportMedicalForm.historique_de_maladie, { 'attr': {'placeholder': "Entrez l'historique de maladie"} }) }}
+					{{ form_errors(rapportMedicalForm.historique_de_maladie) }}
+				</div>
+				<div class="form-group">
+					{{ form_label(rapportMedicalForm.cas_medical) }}
+					{{ form_widget(rapportMedicalForm.cas_medical, { 'attr': {'placeholder': 'Entrez le cas médical'} }) }}
+					{{ form_errors(rapportMedicalForm.cas_medical) }}
+				</div>
+				<div class="form-group">
+					{{ form_label(rapportMedicalForm.solution) }}
+					{{ form_widget(rapportMedicalForm.solution, { 'attr': {'placeholder': 'Entrez la solution'} }) }}
+					{{ form_errors(rapportMedicalForm.solution) }}
+				</div>
+				<button type="submit">Enregistrer le rapport médical</button>
+				{{ form_end(rapportMedicalForm) }}
+			</div>
+		</div>
+
+		{# --- Calendrier --- #}
+		<div class="calendar-container">
+			<input type="text" id="calendar-input">
+		</div>
+
+		{# --- Popup d'affichage des détails d'une consultation --- #}
+		<div id="consultation-popup" class="popup">
+			<div class="popup-content">
+				<span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
+				{# Le contenu sera injecté via JavaScript #}
+			</div>
+		</div>
+
+		{# --- Modal pour l'édition AJAX --- #}
+		<div id="edit-modal" class="modal">
+			<div id="edit-modal-content">
+				<span class="modal-close" onclick="closeModal('edit-modal')">✖</span>
+				{# Le formulaire d'édition sera chargé ici via AJAX #}
+			</div>
+		</div>
+
+		{% block javascripts %}
+			<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+			<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+			<script>
+				// Affiche les erreurs directement dans le formulaire
+function displayFormErrors(form, errors) { // Supprime les anciens messages d'erreur
+form.querySelectorAll('.form-error').forEach(function (el) {
+el.remove();
+});
+// Parcourt chaque champ d'erreur et les affiche
+for (let field in errors) { // Recherche dans les formulaires consultation ou rapport_medical
+let input = form.querySelector('[name^="consultation[' + field + ']"]') || form.querySelector('[name^="rapport_medical[' + field + ']"]');
+if (input) {
+let errorDiv = document.createElement('div');
+errorDiv.className = 'form-error';
+errorDiv.innerText = errors[field].join(', ');
+input.parentNode.insertBefore(errorDiv, input.nextSibling);
+}
+}
+}
+
+// Fonction utilitaire pour formater les erreurs en une chaîne de caractères
+function formatErrors(errors) {
+let messages = [];
+for (let field in errors) {
+messages.push(errors[field].join(', '));
+}
+return messages.join('\n');
+}
+
+// Fonctions utilitaires pour les popups
+function toggleFormPopup(popupId) {
+var popup = document.getElementById(popupId);
+popup.style.display = (popup.style.display === 'none' || popup.style.display === '') ? 'flex' : 'none';
+}
+function closePopup(popupId) {
+document.getElementById(popupId).style.display = "none";
+}
+function closeModal(modalId) {
+document.getElementById(modalId).style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", function () { // Création d'une consultation en AJAX
+const consultationForm = document.querySelector("#consultation-form-popup form");
+consultationForm.addEventListener("submit", function (e) {
+e.preventDefault();
+let formData = new FormData(consultationForm);
+fetch(consultationForm.action, {
+method: "POST",
+body: formData,
+headers: {
+"X-Requested-With": "XMLHttpRequest"
+}
+}).then(response => {
+return response.json().then(data => {
+if (!response.ok) {
+return Promise.reject(data);
+}
+return data;
+});
+}).then(data => {
+if (data.status === 'success') {
+Swal.fire("Succès", data.message, "success");
+closePopup("consultation-form-popup");
+location.reload();
+} else { // Affiche les erreurs détaillées dans le formulaire
+displayFormErrors(consultationForm, data.errors);
+Swal.fire("Erreur", data.message, "error");
+}
+}).catch(errorData => {
+let errorMessage = errorData && errorData.message ? errorData.message : "Une erreur est survenue.";
+Swal.fire("Erreur", errorMessage, "error");
+});
+});
+
+
+// Création d'un rapport médical en AJAX
+const rapportMedicalForm = document.querySelector("#rapport-medical-form-popup form");
+rapportMedicalForm.addEventListener("submit", function (e) {
+e.preventDefault();
+let formData = new FormData(rapportMedicalForm);
+fetch(rapportMedicalForm.action, {
+method: "POST",
+body: formData,
+headers: {
+"X-Requested-With": "XMLHttpRequest"
+}
+}).then(response => {
+return response.json().then(data => {
+if (!response.ok) {
+return Promise.reject(data);
+}
+return data;
+});
+}).then(data => {
+if (data.status === 'success') {
+Swal.fire("Succès", data.message, "success");
+closePopup("rapport-medical-form-popup");
+location.reload();
+} else { // Affiche les erreurs détaillées dans le formulaire
+displayFormErrors(rapportMedicalForm, data.errors);
+Swal.fire("Erreur", data.message, "error");
+}
+}).catch(errorData => {
+let errorMessage = errorData && errorData.message ? errorData.message : "Une erreur est survenue.";
+Swal.fire("Erreur", errorMessage, "error");
+});
+});
+
+
+// --- Edition d'une consultation ---
+window.editConsultation = function (dateStr, index) {
+var consultation = consultationsByDate[dateStr][index];
+if (! consultation) 
+return;
+
+
+
+var rapportMedicalId = consultation.rapportmedical ? consultation.rapportmedical.id : "";
+var formHtml = `
+						<span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
+						<h3>Modifier la consultation</h3>
+						<form id="consultation-edit-form">
+							<input type="hidden" id="consultation-id" value="${
+consultation.id
+}" />
+							<label for="consultation-nom">Nom :</label>
+							<input type="text" id="consultation-nom" name="consultation[nom]" value="${
+consultation.nom
+}" required pattern="^[A-Za-z0-9À-ÿ\\s]+$" /><br/>
+							<label for="consultation-date">Date :</label>
+							<input type="date" id="consultation-date" name="consultation[date]" value="${dateStr}" required min="{{ tomorrow }}" /><br/>
+							<label for="consultation-heure">Heure :</label>
+							<input type="time" id="consultation-heure" name="consultation[heure]" value="${
+consultation.time
+}" required min="09:00" max="18:00" /><br/>
+							<label for="consultation-lieu">Lieu :</label>
+							<input type="text" id="consultation-lieu" name="consultation[lieu]" value="${
+consultation.location
+}" required pattern="^[A-Za-z0-9À-ÿ\\s]+$" /><br/>
+							<input type="hidden" id="consultation-vache" name="consultation[vache]" value="${
+consultation.vache
+}" />
+							<input type="hidden" id="consultation-token" name="consultation[_token]" value="{{ consultationToken }}" />
+							<input type="hidden" id="consultation-rapportmedical" name="consultation[rapportmedical]" value="${rapportMedicalId}" />
+							<button type="button" onclick="confirmEditConsultation('${dateStr}', ${index})">Enregistrer</button>
+						</form>
+					`;
+document.querySelector("#consultation-popup .popup-content").innerHTML = formHtml;
+document.getElementById("consultation-popup").style.display = "flex";
+};
+
+window.confirmEditConsultation = function (dateStr, index) {
+Swal.fire({
+title: "Modifier la consultation ?",
+text: "Voulez-vous enregistrer les modifications ?",
+icon: "question",
+showCancelButton: true,
+confirmButtonText: "Oui, modifier",
+cancelButtonText: "Annuler"
+}).then((result) => {
+if (result.isConfirmed) {
+submitEditConsultation(dateStr, index);
+}
+});
+};
+
+window.submitEditConsultation = function (dateStr, index) {
+var consultation = consultationsByDate[dateStr][index];
+var editData = new URLSearchParams();
+editData.append('consultation[nom]', document.getElementById('consultation-nom').value);
+editData.append('consultation[date]', document.getElementById('consultation-date').value);
+editData.append('consultation[heure]', document.getElementById('consultation-heure').value);
+editData.append('consultation[lieu]', document.getElementById('consultation-lieu').value);
+editData.append('consultation[vache]', document.getElementById('consultation-vache').value);
+editData.append('consultation[_token]', document.getElementById('consultation-token').value);
+editData.append('consultation[rapportmedical]', document.getElementById('consultation-rapportmedical').value);
+
+fetch (`/consultation/${
+consultation.id
+}/edit`, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/x-www-form-urlencoded',
+'X-Requested-With': 'XMLHttpRequest'
+},
+body: editData.toString()
+}).then(response => {
+if (!response.ok) {
+return response.text().then(text => {
+throw new Error(text);
+});
+}
+return response.json();
+}).then(data => {
+if (data.status === 'success') {
+Swal.fire("Modifiée!", data.message, "success").then(() => location.reload());
+} else {
+displayFormErrors(document.getElementById('consultation-edit-form'), data.errors);
+}
+}).catch(error => {
+console.error("Erreur lors de l'édition de la consultation :", error);
+displayFormErrors(document.getElementById('consultation-edit-form'), {"global": ["Une erreur technique est survenue. Veuillez réessayer."]});
+});
+};
+
+// --- Edition d'un rapport médical ---
+window.editRapportMedical = function (dateStr, index) {
+var consultation = consultationsByDate[dateStr][index];
+if (! consultation || ! consultation.rapportmedical) 
+return;
+
+
+
+var formHtml = `
+						<div class="formeditrapport">
+							<span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
+							<h3>Modifier le rapport médical</h3>
+							<form id="rapportmedical-edit-form">
+								<input type="hidden" id="rapportmedical-id" value="${
+consultation.rapportmedical.id
+}" />
+								<label for="rapportmedical-num">Numéro :</label>
+								<input type="text" id="rapportmedical-num" name="rapport_medical[num]" value="${
+consultation.rapportmedical.num
+}" required /><br/>
+								<label for="rapportmedical-race">Race :</label>
+								<input type="text" id="rapportmedical-race" name="rapport_medical[race]" value="${
+consultation.rapportmedical.race
+}" required /><br/>
+								<label for="rapportmedical-historique">Historique de maladie :</label>
+								<textarea id="rapportmedical-historique" name="rapport_medical[historique_de_maladie]" required>${
+consultation.rapportmedical.historiqueDeMaladie
+}</textarea><br/>
+								<label for="rapportmedical-cas">Cas médical :</label>
+								<textarea id="rapportmedical-cas" name="rapport_medical[cas_medical]" required>${
+consultation.rapportmedical.casMedical
+}</textarea><br/>
+								<label for="rapportmedical-solution">Solution :</label>
+								<textarea id="rapportmedical-solution" name="rapport_medical[solution]" required>${
+consultation.rapportmedical.solution
+}</textarea><br/>
+								<input type="hidden" id="rapportmedical-token" name="rapport_medical[_token]" value="{{ csrf_token('rapport_medical') }}" />
+								<button type="button" onclick="confirmEditRapportMedical('${dateStr}', ${index})">Enregistrer</button>
+							</form>
+						</div>
+					`;
+document.querySelector("#consultation-popup .popup-content").innerHTML = formHtml;
+document.getElementById("consultation-popup").style.display = "flex";
+};
+
+window.confirmEditRapportMedical = function (dateStr, index) {
+Swal.fire({
+title: "Modifier le rapport médical ?",
+text: "Voulez-vous enregistrer les modifications ?",
+icon: "question",
+showCancelButton: true,
+confirmButtonText: "Oui, modifier",
+cancelButtonText: "Annuler"
+}).then((result) => {
+if (result.isConfirmed) {
+submitEditRapportMedical(dateStr, index);
+}
+});
+};
+
+window.submitEditRapportMedical = function (dateStr, index) {
+var consultation = consultationsByDate[dateStr][index];
+if (! consultation || ! consultation.rapportmedical) 
+return;
+
+
+
+var editData = new URLSearchParams();
+editData.append('rapport_medical[num]', document.getElementById('rapportmedical-num').value);
+editData.append('rapport_medical[race]', document.getElementById('rapportmedical-race').value);
+editData.append('rapport_medical[historique_de_maladie]', document.getElementById('rapportmedical-historique').value);
+editData.append('rapport_medical[cas_medical]', document.getElementById('rapportmedical-cas').value);
+editData.append('rapport_medical[solution]', document.getElementById('rapportmedical-solution').value);
+editData.append('rapport_medical[_token]', document.getElementById('rapportmedical-token').value);
+
+fetch (`/rapportmedical/${
+consultation.rapportmedical.id
+}/edit`, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/x-www-form-urlencoded',
+'X-Requested-With': 'XMLHttpRequest'
+},
+body: editData.toString()
+}).then(response => {
+if (!response.ok) {
+return response.text().then(text => {
+throw new Error(text);
+});
+}
+return response.json();
+}).then(data => {
+if (data.status === 'success') {
+Swal.fire("Modifié!", data.message, "success").then(() => location.reload());
+} else {
+displayFormErrors(document.getElementById('rapportmedical-edit-form'), data.errors);
+}
+}).catch(error => {
+console.error("Erreur lors de l'édition du rapport médical :", error);
+displayFormErrors(document.getElementById('rapportmedical-edit-form'), {"global": ["Une erreur technique est survenue."]});
+});
+};
+
+// --- Suppression d'une consultation ---
+window.deleteConsultation = function (dateStr, index) {
+var consultation = consultationsByDate[dateStr][index];
+if (! consultation) 
+return;
+
+
+
+Swal.fire({
+title: "Supprimer la consultation ?",
+text: "Cette action est irréversible.",
+icon: "warning",
+showCancelButton: true,
+confirmButtonText: "Oui, supprimer",
+cancelButtonText: "Annuler"
+}).then((result) => {
+if (result.isConfirmed) {
+const params = new URLSearchParams();
+params.append('_token', consultation.csrfToken);
+fetch (`/consultation/${
+consultation.id
+}/delete`, {
+method: "POST",
+headers: {
+"Content-Type": "application/x-www-form-urlencoded",
+"X-Requested-With": "XMLHttpRequest"
+},
+body: params.toString()
+}).then(response => {
+if (!response.ok) {
+return response.text().then(text => {
+throw new Error(text);
+});
+}
+return response.json();
+}).then(data => {
+if (data.status === 'success') {
+Swal.fire("Supprimée!", data.message, "success").then(() => location.reload());
+} else {
+let message = data.errors ? formatErrors(data.errors) : data.message;
+Swal.fire("Erreur", message || "Erreur lors de la suppression", "error");
+}
+}).catch(error => {
+console.error(error);
+Swal.fire("Erreur", "Une erreur est survenue lors de la suppression", "error");
+});
+}
+});
+};
+
+// --- Suppression d'un rapport médical ---
+window.deleteMedicalReport = function (dateStr, index) {
+var consultation = consultationsByDate[dateStr][index];
+if (! consultation || ! consultation.rapportmedical) 
+return;
+
+
+
+var reportId = consultation.rapportmedical.id;
+Swal.fire({
+title: "Supprimer le rapport médical ?",
+text: "Cette action est irréversible.",
+icon: "warning",
+showCancelButton: true,
+confirmButtonText: "Oui, supprimer",
+cancelButtonText: "Annuler"
+}).then((result) => {
+if (result.isConfirmed) {
+const params = new URLSearchParams();
+params.append('_token', consultation.rapportmedical.csrfToken);
+fetch (`/rapportmedical/${reportId}/delete`, {
+method: "POST",
+headers: {
+"Content-Type": "application/x-www-form-urlencoded",
+"X-Requested-With": "XMLHttpRequest"
+},
+body: params.toString()
+}).then(response => {
+if (!response.ok) {
+return response.text().then(text => {
+throw new Error(text);
+});
+}
+return response.json();
+}).then(data => {
+if (data.status === 'success') {
+Swal.fire("Supprimé!", data.message || "Le rapport médical a été supprimé.", "success").then(() => location.reload());
+} else {
+let message = data.errors ? formatErrors(data.errors) : data.message;
+Swal.fire("Erreur", message || "Erreur lors de la suppression", "error");
+}
+}).catch(error => {
+console.error(error);
+Swal.fire("Erreur", "Une erreur est survenue lors de la suppression", "error");
+});
+}
+});
+};
+
+// Fermeture de la popup en cliquant en dehors du contenu
+document.getElementById('consultation-popup').addEventListener('click', function (e) {
+if (e.target === this) {
+closePopup('consultation-popup');
+}
+});
+});
+
+// --- Calendrier ---
+var consultationsByDate = {};{% for consultation in consultations %}{% set dateStr = consultation.date|date('Y-m-d') %}if (! consultationsByDate["{{ dateStr }}"]) {
+consultationsByDate["{{ dateStr }}"] = [];
+}
+consultationsByDate["{{ dateStr }}"].push({
+id: "{{ consultation.id }}",
+time: "{{ consultation.heure|date('H:i') }}",
+nom: "{{ consultation.nom }}",
+location: "{{ consultation.lieu }}",
+vache: "{{ consultation.vache ? consultation.vache.id : '' }}",
+csrfToken: "{{ csrf_token('delete' ~ consultation.id) }}",{% if consultation.rapportmedical is defined and consultation.rapportmedical %}rapportmedical : {
+id: "{{ consultation.rapportmedical.id }}",
+num: "{{ consultation.rapportmedical.num }}",
+race: "{{ consultation.rapportmedical.race }}",
+historiqueDeMaladie: "{{ consultation.rapportmedical.historiqueDeMaladie }}",
+casMedical: "{{ consultation.rapportmedical.casMedical }}",
+solution: "{{ consultation.rapportmedical.solution }}",
+csrfToken: "{{ csrf_token('deleteRapportMedical' ~ consultation.rapportmedical.id) }}"
+}
+{% else %}
+rapportmedical : null
+{% endif %}
+});{% endfor %}console.log("ConsultationsByDate:", consultationsByDate);
+
+function formatDate(dateObj) {
+var year = dateObj.getFullYear();
+var month = ('0' + (
+dateObj.getMonth() + 1
+)).slice(-2);
+var day = ('0' + dateObj.getDate()).slice(-2);
+return year + '-' + month + '-' + day;
+}
+
+flatpickr("#calendar-input", {
+inline: true,
+locale: "fr",
+dateFormat: "Y-m-d",
+onDayCreate: function (dObj, dStr, fp, dayElem) {
+var dateStr = formatDate(dayElem.dateObj);
+if (consultationsByDate[dateStr]) {
+dayElem.classList.add("consultation");
+}
+},
+onChange: function (selectedDates, dateStr) {
+var consultations = consultationsByDate[dateStr] || [];
+if (consultations.length > 0) {
+showConsultations(dateStr);
+}
+}
+});
+
+window.showConsultations = function (dateStr) {
+var consultations = consultationsByDate[dateStr] || [];
+var listHtml = `<h3>Consultations du ${dateStr}</h3><ul>`;
+consultations.forEach((c, index) => {
+listHtml += `<li>
+						<button onclick="showDetails('${dateStr}', ${index})">
+							${
+c.time
+} - ${
+c.nom
+}
+						</button>
+					</li>`;
+});
+listHtml += `</ul>`;
+document.querySelector("#consultation-popup .popup-content").innerHTML = listHtml;
+document.getElementById("consultation-popup").style.display = "flex";
+};
+
+window.showDetails = function (dateStr, index) {
+var consultation = consultationsByDate[dateStr][index];
+if (! consultation) 
+return;
+
+
+
+var detailsHtml = `
+					<span class="popup-close" onclick="closePopup('consultation-popup')">✖</span>
+					<h3>Détails de la consultation</h3>
+					<p><strong>Nom :</strong> ${
+consultation.nom
+}</p>
+					<p>📍 Lieu : ${
+consultation.location
+}</p>
+					<p>⏰ Heure : ${
+consultation.time
+}</p>
+				`;
+if (consultation.rapportmedical) {
+detailsHtml += `
+						<h3>📋 Rapport Médical</h3>
+						<p><strong>Numéro :</strong> ${
+consultation.rapportmedical.num || 'N/A'
+}</p>
+						<p><strong>Race :</strong> ${
+consultation.rapportmedical.race || 'N/A'
+}</p>
+						<p><strong>Historique :</strong> ${
+consultation.rapportmedical.historiqueDeMaladie || 'N/A'
+}</p>
+						<p><strong>Cas Médical :</strong> ${
+consultation.rapportmedical.casMedical || 'N/A'
+}</p>
+						<p><strong>Solution :</strong> ${
+consultation.rapportmedical.solution || 'N/A'
+}</p>
+						<div class="buttons">
+							<button onclick="editRapportMedical('${dateStr}', ${index})">Modifier rapport médical</button>
+							<button onclick="deleteMedicalReport('${dateStr}', ${index})">Supprimer rapport médical</button>
+						</div>
+					`;
+} else {
+detailsHtml += `<p><em>Aucun rapport médical disponible.</em></p>`;
+} detailsHtml += `
+					<div class="buttons">
+						<br/><button onclick="showConsultations('${dateStr}')">⬅ Retour</button>
+						<button onclick="editConsultation('${dateStr}', ${index})">Modifier consultation</button>
+						<button onclick="deleteConsultation('${dateStr}', ${index})">Supprimer consultation</button>
+					</div>
+				`;
+document.querySelector("#consultation-popup .popup-content").innerHTML = detailsHtml;
+document.getElementById("consultation-popup").style.display = "flex";
+};
+			</script>
+			{{ parent() }}
+		{% endblock %}
+	{% endblock %}

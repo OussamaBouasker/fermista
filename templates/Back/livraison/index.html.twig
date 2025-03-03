@@ -65,12 +65,14 @@
 				</table>
 
 
-				{% block javascripts %}
-					{{ parent() }}
-				{% endblock %}
+				<a href="{{ path('app_livraison_edit', {'id': livraison.id}) }}" class="btn btn-success" style="text-decoration: none; color: #F2F2F2;">Edit</a>
 
-			{% endblock %}
-		</body>
 
-	</html>
-{% endblock %}
+				<a href="{{ path('app_livraison_delete', {'id': livraison.id}) }}" class="btn btn-danger" style="text-decoration: none; color: #F2F2F2;">Delete</a>
+			</body>
+		</html>
+	</td>
+</tr>{% else %}
+<tr>
+	<td colspan="5">no records found</td>
+</tr>{% endfor %}</tbody></table>{% block javascripts %}{{ parent() }}{% endblock %}{% endblock %}</body></html>{% endblock %}

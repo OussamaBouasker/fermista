@@ -74,6 +74,7 @@ final class VacheController extends AbstractController
     public function delete(Request $request, Vache $vache, EntityManagerInterface $entityManager): Response
     {
         // Correct method for CSRF token validation
+
         if ($this->isCsrfTokenValid('delete' . $vache->getId(), $request->get('_token'))) {
             $entityManager->remove($vache);
             $entityManager->flush();

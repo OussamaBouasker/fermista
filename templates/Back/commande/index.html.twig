@@ -64,12 +64,11 @@
 				</table>
 
 
-				{% block javascripts %}
-					{{ parent() }}
-				{% endblock %}
-
-			{% endblock %}
-		</body>
-
-	</html>
-{% endblock %}
+				<a href="{{ path('app_commande_delete', {'id': commande.id}) }}" class="btn btn-danger" style="text-decoration: none; color: #F2F2F2;">Delete</a>
+			</body>
+		</html>
+	</td>
+</tr>{% else %}
+<tr>
+	<td colspan="5">no records found</td>
+</tr>{% endfor %}</tbody></table>{% block javascripts %}{{ parent() }}{% endblock %}{% endblock %}</body></html>{% endblock %}

@@ -26,7 +26,6 @@
             "./migrations/.gitignore"
         ]
     },
-<<<<<<< HEAD
     "google/apiclient": {
         "version": "2.18",
         "recipe": {
@@ -42,8 +41,6 @@
     "knplabs/knp-paginator-bundle": {
         "version": "v6.6.1"
     },
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     "phpunit/phpunit": {
         "version": "9.6",
         "recipe": {
@@ -301,7 +298,6 @@
             "./config/routes/web_profiler.yaml"
         ]
     },
-<<<<<<< HEAD
     "symfonycasts/reset-password-bundle": {
         "version": "1.23",
         "recipe": {
@@ -317,8 +313,6 @@
     "symfonycasts/verify-email-bundle": {
         "version": "v1.17.3"
     },
-=======
->>>>>>> 7c535b1bed9f0b42015bf80bdc2d087f96aa8d3f
     "twig/extra-bundle": {
         "version": "v3.19.0"
     }

@@ -99,7 +99,7 @@ class VeterinaireController extends AbstractController
         // Récupérer toutes les consultations pour affichage dans le calendrier
         $consultations = $doctrine->getRepository(Consultation::class)->findAll();
 
-        return $this->render('Front/veterinaire/calendrier.html.twig', [
+        return $this->render('Front/veterinaire/calendrier2.html.twig', [
             'consultationForm'   => $consultationForm->createView(),
             'rapportMedicalForm' => $rapportMedicalForm->createView(),
             'consultations'      => $consultations,
@@ -308,7 +308,7 @@ class VeterinaireController extends AbstractController
             ]);
         }
 
-        return $this->render('Front/veterinaire/calendrier.html.twig', [
+        return $this->render('Front/veterinaire/calendrier2.html.twig', [
             'vache'              => $vache,
             'consultations'      => $consultations,
             'allVaches'          => $allVaches,
