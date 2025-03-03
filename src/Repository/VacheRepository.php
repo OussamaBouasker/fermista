@@ -5,10 +5,8 @@ namespace App\Repository;
 use App\Entity\Vache;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\QueryBuilder;
 
-/**
- * @extends ServiceEntityRepository<Vache>
- */
 class VacheRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,28 +14,24 @@ class VacheRepository extends ServiceEntityRepository
         parent::__construct($registry, Vache::class);
     }
 
-    //    /**
-    //     * @return Vache[] Returns an array of Vache objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('v')
-    //            ->andWhere('v.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('v.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function searchVaches(?string $searchTerm, ?string $orderBy): QueryBuilder
+    {
+        $queryBuilder = $this->createQueryBuilder('v');
 
-    //    public function findOneBySomeField($value): ?Vache
-    //    {
-    //        return $this->createQueryBuilder('v')
-    //            ->andWhere('v.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($searchTerm) {
+            $queryBuilder->where('v.age LIKE :searchTerm')
+                ->orWhere('v.race LIKE :searchTerm')
+                ->orWhere('v.etatMedical LIKE :searchTerm')
+                ->orWhere('v.name LIKE :searchTerm')
+                ->setParameter('searchTerm', '%' . $searchTerm . '%');
+        }
+
+        if ($orderBy === 'name_asc') {
+            $queryBuilder->orderBy('v.name', 'ASC');
+        } elseif ($orderBy === 'name_desc') {
+            $queryBuilder->orderBy('v.name', 'DESC');
+        }
+
+        return $queryBuilder;
+    }
 }

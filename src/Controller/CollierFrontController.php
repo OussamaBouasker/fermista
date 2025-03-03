@@ -34,7 +34,7 @@ final class CollierFrontController extends AbstractController
             $entityManager->persist($collier);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_collier_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_mescollier', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('front/collier_front/news.html.twig', [
@@ -62,7 +62,7 @@ final class CollierFrontController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_collier_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_mescollier', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('front/collier_front/news.html.twig', [
@@ -81,6 +81,6 @@ final class CollierFrontController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_collier_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_mescollier', [], Response::HTTP_SEE_OTHER);
     }
 }
