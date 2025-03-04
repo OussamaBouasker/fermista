@@ -18,22 +18,19 @@
 			{% block body %}
 
 
+				<div style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; width:100% ">
+					<h1>Create new Reclamation</h1>
+					{{ include('Back/reclamation/_form.html.twig') }}
+					<a href="{{path('app_reclamation_index') }}" style="text-decoration: none; color: black; padding-left:500px">back to list</a>
+				</div>
 
-								<div style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; width:100% ">
-									<h1>Create new Reclamation</h1>
-									{{ include('Back/reclamation/_form.html.twig') }}
-									<a href="{{path('app_reclamation_index') }}" style="text-decoration: none; color: black; padding-left:500px">back to list</a>
-								</div>
 
-
-							
-
-					{% block javascripts %}
-						{{ parent() }}
-					{% endblock %}
-
+				{% block javascripts %}
+					{{ parent() }}
 				{% endblock %}
-			</body>
-		</body>
-	</html>
-{% endblock %}
+
+			{% endblock %}
+
+		{% endblock %}
+	</body>
+</html></body></html>{% endblock %}

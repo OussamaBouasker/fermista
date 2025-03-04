@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
+
 #[Route('/vache')]
 final class VacheController extends AbstractController
 {
@@ -43,7 +44,7 @@ final class VacheController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_vache_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_vache_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(Vache $vache): Response
     {
         return $this->render('Back/vache/show.html.twig', [
@@ -51,7 +52,7 @@ final class VacheController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_vache_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_vache_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Request $request, Vache $vache, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(VacheType::class, $vache);
@@ -69,11 +70,12 @@ final class VacheController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_vache_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_vache_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, Vache $vache, EntityManagerInterface $entityManager): Response
     {
         // Correct method for CSRF token validation
-        if ($this->isCsrfTokenValid('delete'.$vache->getId(), $request->get('_token'))) {
+
+        if ($this->isCsrfTokenValid('delete' . $vache->getId(), $request->get('_token'))) {
             $entityManager->remove($vache);
             $entityManager->flush();
         }

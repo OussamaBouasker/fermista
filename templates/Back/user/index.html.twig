@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
+
 {% block content %}
-	<!DOCTYPE html>
 	<html>
 		<head>
 			<meta charset="UTF-8">
@@ -8,68 +8,235 @@
 				{% block title %}Welcome!
 				{% endblock %}
 			</title>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 			<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
 			{% block stylesheets %}
-				{{ parent() }}
+				<style>
+					table thead th {
+						background-color: rgb(211, 211, 211) !important; /* Gris pastel */
+						color: white !important; /* Texte en blanc */
+						font-weight: bold !important;
+						font-size: 16px !important;
+						font-family: 'Arial', sans-serif !important;
+						text-align: center !important;
+						padding: 12px 15px !important;
+						border: 1px solid #ddd !important;
+						text-transform: uppercase !important;
+						letter-spacing: 1px !important;
+					}
 
+					/* Centering h1 */
+					h1 {
+						text-align: center;
+						width: 100%;
+					}
+
+					
+					/* Pagination styles */
+					.pagination {
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						padding: 15px;
+						list-style: none;
+						gap: 6px;
+					}
+					.pagination a,
+					.pagination span {
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						width: 40px;
+						height: 40px;
+						text-decoration: none;
+						border-radius: 50%;
+						font-size: 15px;
+						font-weight: 600;
+						background-color: #D3D3D3; /* Gris pastel simple */
+						border: none;
+						color: #4F4F4F; /* Gris foncé */
+						transition: all 0.3s ease-in-out;
+						box-shadow: 0 3px 6px rgba(169, 169, 169, 0.3);
+					}
+					.pagination a:hover {
+						background-color: #C0C0C0; /* Gris clair */
+						color: white;
+						transform: translateY(-2px);
+						box-shadow: 0 5px 10px rgba(169, 169, 169, 0.4);
+					}
+					/* Décalage de la table vers la droite */
+					.table-container {
+						margin-left: 90px; /* Décale la table de 20px vers la droite */
+					}
+
+					/* Styles d'image */
+					.user-image {
+						width: 50px;
+						height: 50px;
+						border-radius: 50%;
+						object-fit: cover;
+					}
+				</style>
+				{{ parent() }}
 			{% endblock %}
 		</head>
 		<body>
 			{% block body %}
-
-				<div style="display: flex; justify-content: space-between; align-items: center; padding-left: 50px;">
-					<h1>Gestion User</h1>
-					<div class="col-sm-6 col-md-4 col-lg-3" style="padding: 10px; size:20px">
+				<div style="display: flex; justify-content: center; align-items: center;">
+					<h1>Gestion Utilisateurs</h1>
+					<div class="col-sm-6 col-md-4 col-lg-3" style="padding: 10px; font-size: 20px;">
 						<i class="fa fa-plus-square"></i>
 						<a href="{{ path('app_user_new') }}" style="text-decoration: none; color: black;">Create new</a>
 					</div>
 				</div>
-				<table class="table">
-					<thead>
-						<tr>
 
-							<th>Nom</th>
-							<th>Prénom</th>
-							<th>numéro de télephone</th>
-							<th>Email</th>
+				<!-- Champ de recherche -->
+				<div class="form-group mx-2 mb-4" style="text-align: center;">
+					<input type="text" id="searchInput" class="form-control" placeholder="Rechercher par nom, prénom, email ou téléphone..." style="width: 60%; margin: 0 auto;">
+				</div>
 
-							<th>Role</th>
-							<th>actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for user in users %}
+				<!-- Tableau des utilisateurs -->
+				<div class="table-container">
+					<table class="table">
+						<thead>
 							<tr>
-
-								<td>{{ user.firstName }}</td>
-								<td>{{ user.lastName }}</td>
-								<td>{{ user.number }}</td>
-								<td>{{ user.email }}</td>
-
-								<td>{{ user.roles|join(' ') }}
-								</td>
-
-								<td>
-
-									<a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-success" style="text-decoration: none; color: #F2F2F2;">Edit</a>
-									<a href="{{ path('app_user_delete', {'id': user.id}) }}" class="btn btn-danger" style="text-decoration: none; color: #F2F2F2;">Delete</a>
-
-								</td>
+								<th>Image</th>
+								<th>Nom</th>
+								<th>Prénom</th>
+								<th>Numéro de téléphone</th>
+								<th>Email</th>
+								<th>Role</th>
+								<th>Actions</th>
 							</tr>
-						{% else %}
-							<tr>
-								<td colspan="5">no records found</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+						</thead>
+						<tbody id="userTableBody">
+							
+						</tbody>
+					</table>
+				</div>
 
+				<!-- Pagination -->
+				<div class="navigation">
+					<ul class="pagination">
+						
+					</ul>
+				</div>
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        let currentPage = 1; // Page actuelle
+        const limit = 5; // Nombre d'éléments par page
 
-				{% block javascripts %}
-					{{ parent() }}
-				{% endblock %}
+        // Fonction pour charger les utilisateurs
+        function loadUsers(searchTerm, page) {
+            fetch(`{{ path('app_user_search') }}?searchTerm=${encodeURIComponent(searchTerm)}&page=${page}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('userTableBody');
+                tbody.innerHTML = ''; // Vide le tableau
 
+                if (data.users.length === 0) {
+                    // Affiche un message si aucun résultat n'est trouvé
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7">Aucun utilisateur trouvé</td>
+                        </tr>
+                    `;
+                } else {
+                    // Ajoute chaque utilisateur au tableau
+                    data.users.forEach(user => {
+                        const row = `
+                            <tr>
+                                <td>
+                                    <img src="${user.image ? '{{ asset('') }}' + user.image : '{{ asset('uploads/images/default-avatar.png') }}'}" alt="Image de ${user.firstName}" class="user-image">
+                                </td>
+                                <td>${user.firstName}</td>
+                                <td>${user.lastName}</td>
+                                <td>${user.number}</td>
+                                <td>${user.email}</td>
+                                <td>${user.roles.join(', ')}</td> <!-- Affiche les rôles -->
+                                <td>
+                                    <a href="{{ path('app_user_edit', {'id': 'USER_ID'}) }}" class="btn btn-success">Edit</a>
+                                    <a href="{{ path('app_user_delete', {'id': 'USER_ID'}) }}" class="btn btn-danger">Delete</a>
+                                </td>
+                            </tr>
+                        `.replace(/USER_ID/g, user.id); // Remplace USER_ID par l'ID de l'utilisateur
+
+                        tbody.insertAdjacentHTML('beforeend', row); // Ajoute la ligne au tableau
+                    });
+                }
+
+                // Met à jour la pagination
+                updatePagination(data.total, data.page, data.limit);
+            })
+            .catch(error => console.error('Erreur:', error)); // Affiche les erreurs dans la console
+        }
+
+        // Fonction pour mettre à jour la pagination
+        function updatePagination(total, page, limit) {
+            const totalPages = Math.ceil(total / limit); // Calcule le nombre total de pages
+            const pagination = document.querySelector('.pagination');
+            pagination.innerHTML = ''; // Vide la pagination
+
+            // Bouton "Précédent"
+            if (page > 1) {
+                pagination.innerHTML += `
+                    <li class="pagination-prev">
+                        <a href="#" onclick="loadUsers('${document.getElementById('searchInput').value}', ${page - 1})">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                `;
+            }
+
+            // Numéros de page
+            for (let i = 1; i <= totalPages; i++) {
+                pagination.innerHTML += `
+                    <li class="${i === page ? 'active' : ''}">
+                        <a href="#" onclick="loadUsers('${document.getElementById('searchInput').value}', ${i})">${i}</a>
+                    </li>
+                `;
+            }
+
+            // Bouton "Suivant"
+            if (page < totalPages) {
+                pagination.innerHTML += `
+                    <li class="pagination-next">
+                        <a href="#" onclick="loadUsers('${document.getElementById('searchInput').value}', ${page + 1})">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                `;
+            }
+        }
+
+        // Fonction debounce pour limiter les requêtes AJAX
+        function debounce(func, timeout = 300) {
+            let timer;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => { func.apply(this, args); }, timeout);
+            };
+        }
+
+        // Écouteur d'événement pour la recherche avec debounce
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', debounce(function (e) {
+            const searchTerm = e.target.value.trim();
+            currentPage = 1; // Réinitialise la page à 1 lors d'une nouvelle recherche
+            loadUsers(searchTerm, currentPage);
+        }));
+
+        // Charger les utilisateurs au démarrage
+        loadUsers('', currentPage);
+    </script>
+{% endblock %}
 			{% endblock %}
 		</body>
 	</html>
-</body></html>{% endblock %}
+{% endblock %}

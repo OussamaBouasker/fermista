@@ -8,6 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Doctrine\ORM\Query;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -31,6 +32,14 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    public function findVeterinariansQuery(): Query
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.roles LIKE :role')
+            ->setParameter('role', '%ROLE_VETERINAIR%')
+            ->getQuery();
     }
 
     //    /**
@@ -57,4 +66,54 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+
+
+    // src/Repository/UserRepository.php
+
+public function countUsersByRole(string $role): int
+{
+    return $this->createQueryBuilder('u')
+        ->select('COUNT(u.id)')
+        ->where('u.roles LIKE :role')
+        ->setParameter('role', '%"'.$role.'"%')
+        ->getQuery()
+        ->getSingleScalarResult();
 }
+
+// src/Repository/UserRepository.php
+// src/Repository/UserRepository.php
+
+public function searchAndFilter($searchTerm, $offset = 0, $limit = 5)
+{
+    $queryBuilder = $this->createQueryBuilder('u');
+
+    if (!empty($searchTerm)) {
+        $queryBuilder
+            ->andWhere('u.firstName LIKE :searchTerm OR u.lastName LIKE :searchTerm OR u.email LIKE :searchTerm OR u.number LIKE :searchTerm OR u.roles LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . $searchTerm . '%');
+    }
+
+    // Ajoute la pagination
+    $queryBuilder
+        ->setFirstResult($offset)
+        ->setMaxResults($limit);
+
+    return $queryBuilder->getQuery();
+}
+
+public function countSearchResults($searchTerm)
+{
+    $queryBuilder = $this->createQueryBuilder('u')
+        ->select('COUNT(u.id)');
+
+    if (!empty($searchTerm)) {
+        $queryBuilder
+            ->andWhere('u.firstName LIKE :searchTerm OR u.lastName LIKE :searchTerm OR u.email LIKE :searchTerm OR u.number LIKE :searchTerm OR u.roles LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . $searchTerm . '%');
+    }
+
+    return $queryBuilder->getQuery()->getSingleScalarResult();
+}
+}
+

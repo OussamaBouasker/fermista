@@ -1,64 +1,60 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-<!DOCTYPE html>
-<html>
+	<!DOCTYPE html>
+	<html>
 
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-    {% block stylesheets %}
-    {{ parent() }}
+		<head>
+			<meta charset="UTF-8">
+			<title>
+				{% block title %}Welcome!
+				{% endblock %}
+			</title>
+			<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+			{% block stylesheets %}
+				{{ parent() }}
 
-    {% endblock %}
-</head>
+			{% endblock %}
+		</head>
 
-<body>
-    {% block body %}
- 
-    <h1>Livraison</h1>
+		<body>
+			{% block body %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ livraison.id }}</td>
-            </tr>
-            <tr>
-                <th>Date</th>
-                <td>{{ livraison.Date ? livraison.Date|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Lieu</th>
-                <td>{{ livraison.lieu ? livraison.lieu : '' }}</td>
-            </tr>
-            <tr>
-                <th>Livreur</th>
-                <td>{{ livraison.Livreur }}</td>
-            </tr>
-        </tbody>
-    </table>
+				<h1>Livraison</h1>
 
-    <div class="text-center mt-3">
-        <a href="{{ path('app_livraison_index') }}" class="btn btn-secondary btn-lg">Back to List</a>
-    </div>
-    
-    {{ include('Back/livraison/_delete_form.html.twig') }}
+				<table class="table">
+					<tbody>
+						<tr>
+							<th>Id</th>
+							<td>{{ livraison.id }}</td>
+						</tr>
+						<tr>
+							<th>Date</th>
+							<td>{{ livraison.Date ? livraison.Date|date('Y-m-d') : '' }}</td>
+						</tr>
+						<tr>
+							<th>Lieu</th>
+							<td>{{ livraison.lieu ? livraison.lieu : '' }}</td>
+						</tr>
+						<tr>
+							<th>Livreur</th>
+							<td>{{ livraison.Livreur }}</td>
+						</tr>
+					</tbody>
+				</table>
 
+				<div class="text-center mt-3">
+					<a href="{{ path('app_livraison_index') }}" class="btn btn-secondary btn-lg">Back to List</a>
+				</div>
 
-
-
+				{{ include('Back/livraison/_delete_form.html.twig') }}
 
 
+				{% block javascripts %}
+					{{ parent() }}
+				{% endblock %}
 
+			{% endblock %}
+		</body>
 
-    {% block javascripts %}
-    {{ parent() }}
-    {% endblock %}
-
-    {% endblock %}
-</body>
-
-</html>
+	</html>
 {% endblock %}

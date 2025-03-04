@@ -84,7 +84,7 @@ class Produit
 
     public function setId(?int $Id): static
     {
-        $this->Id = $Id;
+        $this->id = $Id;
         return $this;
     }
 

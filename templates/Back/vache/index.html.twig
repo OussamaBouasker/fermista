@@ -1,77 +1,82 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-<!DOCTYPE html>
-<html>
+	<!DOCTYPE html>
+	<html>
 
-<head>
-  <meta charset="UTF-8">
-  <title>{% block title %}Welcome!{% endblock %}</title>
-  <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-  {% block stylesheets %}
-  {{ parent() }}
+		<head>
+			<meta charset="UTF-8">
+			<title>
+				{% block title %}Welcome!
+				{% endblock %}
+			</title>
+			<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+			{% block stylesheets %}
+				{{ parent() }}
 
-  {% endblock %}
-</head>
+			{% endblock %}
+		</head>
 
-<body>
-  {% block body %}
-
-
-  <div style="display: flex; justify-content: space-between; align-items: center; padding-left: 50px;">
-    <h1 class="display-1 ">Vache</h1>
-    <div class="col-sm-6 col-md-4 col-lg-3" style="padding: 10px; size:20px">
-      <i class="fa fa-plus-square"></i>
-      <a href="{{ path('app_vache_new') }}" style="text-decoration: none; color: black;">Create
-        new rapport Vache</a>
-    </div>
-  </div>
+		<body>
+			{% block body %}
 
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Nom</th>
-        <th>Age</th>
-        <th>Race</th>
-        <th>EtatMedical</th>
-        <th>actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for vache in vaches %}
-      <tr>
-        <td>{{ vache.id }}</td>
-        <td>{{ vache.name }}</td>
-        <td>{{ vache.age }}</td>
-        <td>{{ vache.race }}</td>
-        <td>{{ vache.EtatMedical }}</td>
-        <td>
+				<div style="display: flex; justify-content: space-between; align-items: center; padding-left: 50px;">
+					<h1 class="display-1 ">Vache</h1>
+					<div class="col-sm-6 col-md-4 col-lg-3" style="padding: 10px; size:20px">
+						<i class="fa fa-plus-square"></i>
+						<a href="{{ path('app_vache_new') }}" style="text-decoration: none; color: black;">Create
+							        new rapport Vache</a>
+					</div>
+				</div>
 
 
-             <a href="{{ path('app_vache_edit', {'id': vache.id})}}"  class="btn btn-success"
-              style="text-decoration: none; color: #F2F2F2;">Edit</a>
- 
-             <a href="{{ path('app_vache_delete', {'id': vache.id}) }}"class="btn btn-danger"
-              style="text-decoration: none; color: #F2F2F2;">Delete</a>
-         </td>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Nom</th>
+							<th>Age</th>
+							<th>Race</th>
+							<th>EtatMedical</th>
+							<th>actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for vache in vaches %}
+							<tr>
+								<td>{{ vache.id }}</td>
+								<td>{{ vache.name }}</td>
+								<td>{{ vache.age }}</td>
+								<td>{{ vache.race }}</td>
+								<td>{{ vache.EtatMedical }}</td>
+								<td>
 
-      </tr>
-      {% else %}
-      <tr>
-        <td colspan="5">no records found</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
 
-  {% block javascripts %}
-  {{ parent() }}
-  {% endblock %}
+									<a href="{{ path('app_vache_edit', {'id': vache.id})}}" class="btn btn-success" style="text-decoration: none; color: #F2F2F2;">Edit</a>
 
-  {% endblock %}
-</body>
+									<a href="{{ path('app_vache_delete', {'id': vache.id}) }}" class="btn btn-danger" style="text-decoration: none; color: #F2F2F2;">Delete</a>
+								</td>
 
-</html>
-{% endblock %}
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="5">no records found</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+
+
+				{% block javascripts %}
+					{{ parent() }}
+				{% endblock %}
+
+			{% endblock %}
+		</body>
+
+
+		{% block javascripts %}
+			{{ parent() }}
+		{% endblock %}
+	{% endblock %}
+</html></body></html>{% endblock %}

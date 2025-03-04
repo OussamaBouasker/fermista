@@ -39,12 +39,12 @@ class Reclamation
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
-    
+
     private ?string $status = self::STATUS_PENDING;
 
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-   
+
     private ?\DateTimeInterface $dateSoumission = null;
 
 

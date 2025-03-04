@@ -30,8 +30,8 @@ class ReclamationType extends AbstractType
             ->add('dateSoumission', DateTimeType::class, [
                 'widget' => 'single_text',
                 'attr' => ['class' => 'datetime-picker'],
-                'mapped'=> true 
-            ])    
+                'mapped' => true
+            ])
             ->add('user', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'id',

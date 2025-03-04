@@ -42,10 +42,10 @@ final class ConsultationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_consultation_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_consultations_show', methods: ['GET'])]
     public function show(Consultation $consultation): Response
     {
-        return $this->render('Back/consultation/show.html.twig', [
+        return $this->render('Back/consultation/show.ht+ml.twig', [
             'consultation' => $consultation,
         ]);
     }

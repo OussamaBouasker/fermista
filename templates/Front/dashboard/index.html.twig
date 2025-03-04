@@ -3,211 +3,373 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
-<div class="container" >
+<div class="container">
     <div class="az-dashboard-one-title" style="margin-top: 150px;">
         <div>
-            <h2 class="az-dashboard-title">Bonjour, nous vous souhaitons à nouveau la bienvenue!</h2>
+            <h2 class="az-dashboard-title">Bonjour, nous vous souhaitons à nouveau la bienvenue !</h2>
             <p class="az-dashboard-text">Votre tableau de bord d'analytique web</p>
         </div>
+       
 
-        <!-- Graphique de la température -->
+
+        <!-- Évolution de la Température -->
         <div class="row row-sm mg-b-20">
             <div class="col-lg-12">
                 <div class="card card-dashboard-one">
+                    <div class="card-header">
+                        <h4 class="card-title">Évolution de la Température</h4>
+                    </div>
                     <div class="card-body">
-                        <canvas id="myChart" style="width: 100%; height: 400px;"></canvas>
+                        <canvas id="temperatureChart" style="width: 100%; height: 400px;"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row row-sm mg-b-20">
-            <!-- Jauge de Température -->
-            <div class="col-lg-3">
-                <div class="card card-dashboard-one text-center">
-                    <div class="card-body">
-                        <canvas id="gaugeChart" width="120" height="120"></canvas>
-                        <p id="gaugeValue" style="font-size: 18px; font-weight: bold; margin-top: 10px;">0°C</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Informations de la vache -->
+        <!-- Température Actuelle avec Jauge et Dernière Température -->
+        <div class="row row-sm mg-b-20" style="margin-top: 30px;">
             <div class="col-lg-6">
-                <div class="card card-dashboard-one">
-                    <div class="card-body">
-                        <h5 class="card-title">Informations de la Vache</h5>
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>Température</th>
-                                <td id="realTimeTemp">0°C</td>
-                            </tr>
-
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Graphique de l'Agitation -->
-        <div class="row row-sm mg-b-20">
-            <div class="col-lg-12">
-                <div class="card card-dashboard-one">
-                    <div class="card-body">
-                        <canvas id="agitationChart" style="width: 100%; height: 400px;"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row row-sm mg-b-20">
-            <!-- Jauge d'Agitation -->
-            <div class="col-lg-3">
                 <div class="card card-dashboard-one text-center">
-                    <div class="card-body">
-                        <canvas id="agitationGauge" width="120" height="120"></canvas>
-                        <p id="agitationValue" style="font-size: 18px; font-weight: bold; margin-top: 10px;">0</p>
+                    <div class="card-header">
+                        <h4 class="card-title">Température Actuelle</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <canvas id="temperatureGauge" style="width: 100%; height: 250px;"></canvas>
+                        <p id="temperatureValue" style="font-size: 24px; font-weight: bold; margin-top: 10px;"></p>
                     </div>
                 </div>
             </div>
 
-            <!-- Informations de l'Agitation -->
+            <!-- Dernière Température et Date à côté de la jauge -->
             <div class="col-lg-6">
-                <div class="card card-dashboard-one">
-                    <div class="card-body">
-                        <h5 class="card-title">État d'Agitation</h5>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-
-                                    
-                                    <th>Niveau d'Agitation</th>
-                                    <th>Interprétation</th>
-                                </tr>
-                            </thead>
-                            <tbody id="agitationInfoTable">
-                                <tr>
-                                    
-                                    <td id="agitationLevel">0</td>
-                                    <td id="agitationState">Calme</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="card card-dashboard-one text-center">
+                    <div class="card-header">
+                        <h4 class="card-title">Dernière Température</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <p id="lastTemperature" style="font-size: 20px; font-weight: bold;"></p>
+                        <p id="lastDate" style="font-size: 16px; color: #666;"></p>
+                    </div>
+                    <!-- Bouton vers l'historique de température -->
+                    <div class="row row-sm mg-b-20" style="margin-top: 30px;">
+                        <div class="col-lg-12 text-center">
+                            <a href="{{ path('historique_temperature') }}" class="btn-historique">Voir l'historique de
+                                température</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
+
+            <!-- Évolution de l'Agitation -->
+            <div class="row row-sm mg-b-20"  style="margin-top: 20px;">
+                <div class="col-lg-12">
+                    <div class="card card-dashboard-one">
+                        <div class="card-header">
+                            <h4 class="card-title">Évolution de l'Agitation</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="agitationChart" style="width: 100%; height: 400px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Jauge et Tableau de l'Agitation -->
+            <div class="row row-sm mg-b-20">
+                <div class="col-lg-6 text-center">
+                    <div class="card card-dashboard-one" style="margin-top: 20px;">
+                        <div class="card-header"  >
+                            <h4 class="card-title">Intensité de l'Agitation</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="agitationGauge" style="width: 100%; height: 250px;"></canvas>
+                            <p id="agitationValue" style="font-size: 24px; font-weight: bold; margin-top: 10px;"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card card-dashboard-one" style="margin-top: 20px;">
+                        <div class="card-header">
+                            <h4 class="card-title">Données d'Agitation</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Temps</th>
+                                        <th>X</th>
+                                        <th>Y</th>
+                                        <th>Z</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="agitationTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Bouton vers l'historique d'agitation -->
+                        <div class="row row-sm mg-b-20" style="margin-top: 30px;">
+                            <div class="col-lg-12 text-center">
+                                <a href="{{ path('historique_agitation') }}" class="btn-historique">Voir l'historique
+                                    d'agitation</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
     </div>
+
+     <!-- Bouton retour -->
+     <div class="mb-3" style="margin-top: 20px;">
+        <a href="{{ path('app_mes_vaches') }}" class="btn btn-secondary">
+            ⬅ retour
+        </a>
+    </div>
+
+</div>
+</div>
 </div>
 
+
 {% block javascripts %}
+<!-- Importation de Chart.js et Gauge.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gaugeJS/dist/gauge.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Graphique de Température
-        const ctx = document.getElementById("myChart").getContext("2d");
-        const gaugeCtx = document.getElementById("gaugeChart").getContext("2d");
-        const gaugeValue = document.getElementById("gaugeValue");
-        const realTimeTemp = document.getElementById("realTimeTemp");
-
+        // Initialisation du graphique en ligne
+        const ctx = document.getElementById("temperatureChart").getContext("2d");
         let xValues = [];
         let yValues = [];
 
-        const chart = new Chart(ctx, {
+        const tempChart = new Chart(ctx, {
             type: "line",
             data: {
                 labels: xValues,
                 datasets: [{
-                    fill: false,
-                    lineTension: 0,
-                    backgroundColor: "rgba(107, 142, 35, 1)",
-                    borderColor: "rgba(107, 142, 35, 1)",
-                    data: yValues
+                    label: "Température (°C)",
+                    data: yValues,
+                    backgroundColor: "rgba(75, 192, 192, 0.2)",
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    borderWidth: 2,
+                    tension: 0.3,
+                    pointRadius: 3,
+                    pointBackgroundColor: "rgba(75, 192, 192, 1)"
                 }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Heure' }
+                    },
+                    y: {
+                        title: { display: true, text: 'Température (°C)' },
+                        beginAtZero: false
+                    }
+                },
+                plugins: {
+                    legend: { display: true, position: 'top' }
+                }
             }
         });
 
-        // Jauge de Température
-        const gaugeChart = new Chart(gaugeCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Température'],
-                datasets: [{
-                    data: [0, 5],
-                    backgroundColor: ["rgba(107, 142, 35, 1)", "#e0e0e0"],
-                }]
+        // Initialisation de la jauge
+        const gaugeCtx = document.getElementById("temperatureGauge");
+        let gaugeOptions = {
+            angle: -0.2,
+            lineWidth: 0.25,
+            radiusScale: 1,
+            pointer: {
+                length: 0.6,
+                strokeWidth: 0.04,
+                color: '#000'
+            },
+            limitMax: false,
+            limitMin: false,
+            colorStart: '#6B8E23', // Nouveau vert
+            colorStop: '#6B8E23',  // Nouveau vert
+            strokeColor: '#E0E0E0',
+            generateGradient: true,
+            highDpiSupport: true,
+            staticLabels: {
+                font: "10px sans-serif",
+                labels: [0, 10, 20, 30, 36.5, 38, 40.5],
+                color: "#333",
+                fractionDigits: 1
             }
-        });
+        };
+        const gauge = new Gauge(gaugeCtx).setOptions(gaugeOptions);
+        gauge.maxValue = 40.5;
+        gauge.setMinValue(0);
+        gauge.animationSpeed = 45;
+        gauge.set(0);
 
-        // Graphique d'Agitation
-        const agitationCtx = document.getElementById("agitationChart").getContext("2d");
-        let agitationValues = [];
-
-        const agitationChart = new Chart(agitationCtx, {
-            type: "line",
-            data: {
-                labels: xValues,
-                datasets: [{
-                    fill: false,
-                    backgroundColor: "rgba(255, 99, 132, 1)",
-                    borderColor: "rgba(255, 99, 132, 1)",
-                    data: agitationValues
-                }]
+        // Fonction pour changer la couleur de la jauge en fonction de la température
+        function updateGaugeColor(value) {
+            if (value < 36.5) {
+                gaugeOptions.colorStart = "#6B8E23"; // Nouveau vert
+                gaugeOptions.colorStop = "#6B8E23";
+            } else if (value >= 36.5 && value < 38) {
+                gaugeOptions.colorStart = "#FFDB58"; // Nouveau jaune
+                gaugeOptions.colorStop = "#FFDB58";
+            } else if (value >= 38) {
+                gaugeOptions.colorStart = "#FF0000"; // Rouge
+                gaugeOptions.colorStop = "#FF0000";
             }
-        });
-
-        // Jauge d'Agitation
-        const agitationGaugeCtx = document.getElementById("agitationGauge").getContext("2d");
-        const agitationValue = document.getElementById("agitationValue");
-        const agitationLevel = document.getElementById("agitationLevel");
-        const agitationState = document.getElementById("agitationState");
-
-        const agitationGauge = new Chart(agitationGaugeCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Agitation'],
-                datasets: [{
-                    data: [0, 10],
-                    backgroundColor: ["rgba(255, 99, 132, 1)", "#e0e0e0"],
-                }]
-            }
-        });
-
-        function updateChart() {
-            const now = new Date().toLocaleTimeString();
-            const newTemp = (36 + Math.random() * 5).toFixed(2);
-            const newAgitation = Math.floor(Math.random() * 10);
-
-            if (xValues.length >= 10) {
-                xValues.shift();
-                yValues.shift();
-                agitationValues.shift();
-            }
-
-            xValues.push(now);
-            yValues.push(newTemp);
-            agitationValues.push(newAgitation);
-
-            chart.update();
-            agitationChart.update();
-
-            gaugeChart.data.datasets[0].data[0] = newTemp - 36;
-            agitationGauge.data.datasets[0].data[0] = newAgitation;
-
-            gaugeChart.update();
-            agitationGauge.update();
-
-            gaugeValue.textContent = newTemp + "°C";
-            gaugeValue.textContent = newTemp + "°C";
-            realTimeTemp.textContent = newTemp + "°C";
-            agitationValue.textContent = newAgitation;
-            agitationLevel.textContent = newAgitation;
-
-            agitationState.textContent = newAgitation < 3 ? "Calme" : newAgitation < 7 ? "Moyenne" : "Élevée";
+            gauge.setOptions(gaugeOptions);
         }
 
-        setInterval(updateChart, 1000);
+        // Fonction pour récupérer les données depuis l'API
+        async function fetchTemperatureData() {
+            try {
+                const response = await fetch("{{ path('api_temperature') }}");
+                const data = await response.json();
+
+                // Vider les anciennes valeurs
+                xValues.length = 0;
+                yValues.length = 0;
+
+                // Dernière température et date
+                let lastTemperature = null;
+                let lastDate = null;
+
+                data.forEach(item => {
+                    xValues.push(item.date);
+                    yValues.push(item.valeur);
+                });
+
+                tempChart.update();
+
+                // Mise à jour de la jauge avec la dernière valeur de température
+                if (data.length > 0) {
+                    lastTemperature = data[data.length - 1].valeur;
+                    lastDate = data[data.length - 1].date;
+                    gauge.set(lastTemperature);
+                    document.getElementById("temperatureValue").textContent = lastTemperature + " °C";
+                    updateGaugeColor(lastTemperature);
+
+                    // Affichage de la dernière température et date
+                    document.getElementById("lastTemperature").textContent = `Température: ${lastTemperature} °C`;
+                    document.getElementById("lastDate").textContent = `Heure: ${lastDate}`;
+                }
+            } catch (error) {
+                console.error("Erreur lors du chargement des données :", error);
+            }
+        }
+
+
+
+        // Initialisation du graphique d'Agitation
+        const ctxAgit = document.getElementById("agitationChart").getContext("2d");
+        let timeLabels = [];
+        let xValuesAgit = [];
+        let yValuesAgit = [];
+        let zValuesAgit = [];
+
+        const agitationChart = new Chart(ctxAgit, {
+            type: "line",
+            data: {
+                labels: timeLabels,
+                datasets: [
+                    { label: "X", data: xValuesAgit, borderColor: "red", borderWidth: 2, fill: false },
+                    { label: "Y", data: yValuesAgit, borderColor: "blue", borderWidth: 2, fill: false },
+                    { label: "Z", data: zValuesAgit, borderColor: "green", borderWidth: 2, fill: false }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { title: { display: true, text: "Temps" } },
+                    y: { title: { display: true, text: "Valeur" } }
+                }
+            }
+        });
+
+        // Initialisation de la jauge d'agitation
+        const agitationGaugeCtx = document.getElementById("agitationGauge");
+        const agitationGauge = new Gauge(agitationGaugeCtx).setOptions({
+            angle: -0.2,
+            lineWidth: 0.25,
+            radiusScale: 1,
+            pointer: {
+                length: 0.6,
+                strokeWidth: 0.04,
+                color: '#000'
+            },
+            limitMax: false,
+            limitMin: false,
+            colorStart: '#FFDB58',  // Jaune pour agitation
+            colorStop: '#FFDB58',
+            strokeColor: '#E0E0E0',
+            generateGradient: true,
+            highDpiSupport: true
+        });
+        agitationGauge.maxValue = 10; // Ajuste selon les valeurs possibles d'agitation
+        agitationGauge.setMinValue(0);
+        agitationGauge.animationSpeed = 45;
+        agitationGauge.set(0);
+
+        // Mise à jour du graphique d'agitation et des autres éléments
+        async function fetchAgitationData() {
+            try {
+                const response = await fetch("{{ path('api_dashboard_data') }}");
+                const data = await response.json();
+
+                // Vider les anciennes valeurs du graphique d'agitation
+                timeLabels.length = 0;
+                xValuesAgit.length = 0;
+                yValuesAgit.length = 0;
+                zValuesAgit.length = 0;
+
+                data.agitation.forEach(item => {
+                    timeLabels.push(item.time);
+                    xValuesAgit.push(item.accel_x);
+                    yValuesAgit.push(item.accel_y);
+                    zValuesAgit.push(item.accel_z);
+                });
+
+                // Mise à jour du graphique
+                agitationChart.update();
+
+                // Récupérer le dernier élément de la liste d'agitation pour la jauge et le tableau
+                if (data.agitation && data.agitation.length > 0) {
+                    const lastItem = data.agitation[data.agitation.length - 1];
+
+                    // Calculer l'intensité de l'agitation (valeur scalaire)
+                    const agitationValue = Math.sqrt(lastItem.accel_x ** 2 + lastItem.accel_y ** 2 + lastItem.accel_z ** 2);
+
+                    // Mettre à jour la jauge d'agitation
+                    agitationGauge.set(agitationValue);
+                    document.getElementById("agitationValue").textContent = `Agitation: ${Math.round(agitationValue)} (unité)`;
+
+                    // Mise à jour du tableau d'agitation avec les dernières valeurs de X, Y, Z
+                    let tableBody = document.getElementById("agitationTableBody");
+                    tableBody.innerHTML = "";
+
+                    let row = document.createElement("tr");
+                    row.innerHTML = `
+                <td>Dernière Valeur</td>
+                <td>${lastItem.accel_x}</td>
+                <td>${lastItem.accel_y}</td>
+                <td>${lastItem.accel_z}</td>
+            `;
+                    tableBody.appendChild(row);
+                }
+            } catch (error) {
+                console.error("Erreur lors du chargement des données d'agitation :", error);
+            }
+        }
+
+        // Chargement initial et rafraîchissement toutes les 5 secondes
+        fetchTemperatureData();
+        setInterval(fetchTemperatureData, 5000);
+
+        // Chargement initial des données d'agitation et rafraîchissement toutes les 2 secondes
+        fetchAgitationData();
+        setInterval(fetchAgitationData, 2000);
     });
 </script>
 {% endblock %}

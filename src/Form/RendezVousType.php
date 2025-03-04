@@ -20,6 +20,7 @@ class RendezVousType extends AbstractType
             ])
             ->add('sex')
             ->add('cause')
+
         ;
     }
 

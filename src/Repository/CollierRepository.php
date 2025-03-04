@@ -1,14 +1,11 @@
 <?php
-
 namespace App\Repository;
 
 use App\Entity\Collier;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\QueryBuilder;
 
-/**
- * @extends ServiceEntityRepository<Collier>
- */
 class CollierRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,28 +13,24 @@ class CollierRepository extends ServiceEntityRepository
         parent::__construct($registry, Collier::class);
     }
 
-    //    /**
-    //     * @return Collier[] Returns an array of Collier objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Retourne une QueryBuilder pour la recherche des colliers
+     *
+     * @param string|null $searchTerm
+     * @return QueryBuilder
+     */
+    public function findBySearchTermQuery(?string $searchTerm): QueryBuilder
+    {
+        $queryBuilder = $this->createQueryBuilder('c');
 
-    //    public function findOneBySomeField($value): ?Collier
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($searchTerm) {
+            $queryBuilder->where('c.reference LIKE :searchTerm')
+                         ->orWhere('c.taille LIKE :searchTerm')
+                         ->orWhere('c.valeurTemperature LIKE :searchTerm')
+                         ->orWhere('c.valeurAgitation LIKE :searchTerm')
+                         ->setParameter('searchTerm', '%' . $searchTerm . '%');
+        }
+
+        return $queryBuilder;
+    }
 }
