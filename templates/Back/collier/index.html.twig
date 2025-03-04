@@ -60,6 +60,27 @@
 
 								<a href="{{ path('app_collier_edit', {'id': collier.id}) }} " class="btn btn-success" style="text-decoration: none; color: #F2F2F2;">Edit</a>
 
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Reference</th>
+        <th>Taille</th>
+        <th>ValeurTemperature</th>
+        <th>ValeurAgitation</th>
+        <th>actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for collier in colliers %}
+      <tr>
+        <td>{{ collier.id }}</td>
+        <td>{{ collier.reference }}</td>
+        <td>{{ collier.taille }}</td>
+        <td>{{ collier.valeurTemperature }}</td>
+        <td>{{ collier.valeurAgitation }}</td>
+
+        <td>
 
 								<a href="{{ path('app_collier_delete', {'id': collier.id}) }}" class="btn btn-danger" style="text-decoration: none; color: #F2F2F2;">Delete</a>
 							</tr>
@@ -75,6 +96,14 @@
 	</tbody>
 </table>
 
+         
+            <a href="{{ path('app_collier_edit', {'id': collier.id})  }} " class="btn btn-success"
+              style="text-decoration: none; color: #F2F2F2;">Edit</a>
+     
+ 
+            <a href="{{ path('app_collier_delete', {'id': collier.id}) }}"class="btn btn-danger"
+              style="text-decoration: none; color: #F2F2F2;">Delete</a>
+        </td>
 
 {% block javascripts %}
 	{{ parent() }}
