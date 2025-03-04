@@ -94,6 +94,7 @@
 <div class="mb-3" style="gap: 20px; width:600px">
 	{{ form_label(form.nbrPlacesMax, "Nombre maximum de places", {'label_attr': {'class': 'form-label'}}) }}
 	{{ form_widget(form.nbrPlacesMax, {'attr': {'class': 'form-control' ~ (form.nbrPlacesMax.vars.errors|length > 0 ? ' is-invalid' : ''), 'placeholder': 'Entrez le nombre maximum de places'}}) }}
+	
     {% if form.nbrPlacesMax.vars.errors|length > 0 %}
 		<div class="text-danger mt-1">
 			{% for error in form.nbrPlacesMax.vars.errors %}

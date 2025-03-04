@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Produit;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,6 +31,7 @@ class PanierController extends AbstractController
         return $this->render('panier/index.html.twig', [
             'panier' => $panier,
             'total' => $total,
+
             'cart_count' => $cartCount
         ]);
     }
@@ -52,15 +54,15 @@ class PanierController extends AbstractController
         } else {
             $panier[$id] = [
                 'id' => $produit->getId(),
-                'image' => $produit->getImage(),
                 'name' => $produit->getNom(),
                 'price' => $produit->getPrix(),
-                'quantity' => 1
-                
+                'quantity' => 1,
+                'image' => $produit->getImage()
             ];
         }
 
         $session->set('panier', $panier);
+
 
         return $this->redirectToRoute('panier_index');
     }

@@ -32,6 +32,7 @@ final class WorkshopController extends AbstractController
         $form = $this->createForm(WorkshopType::class, $workshop);
         $form->handleRequest($request);
     
+
         if ($form->isSubmitted() && $form->isValid()) {
             // Handle file upload
             $imageFile = $form->get('image')->getData();
